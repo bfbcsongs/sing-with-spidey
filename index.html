@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Spider-Man Chord Karaoke</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: monospace; background-color: #090d16; color: #f8fafc; touch-action: manipulation; }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #ef4444; border-radius: 4px; }
+    
+    .spidey-container { position: relative; width: 100%; min-height: 250px; }
+    
+    /* Animated Spider-Man Sprite */
+    #spidey-sprite {
+      position: absolute;
+      width: 42px;
+      height: 42px;
+      z-index: 50;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+      filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.8));
+    }
+
+    /* Web Line Effect */
+    #web-line {
+      position: absolute;
+      stroke: #ffffff;
+      stroke-width: 2.5;
+      stroke-dasharray: 4;
+      pointer-events: none;
+      z-index: 40;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .word-token { display: inline-flex; margin-right: 0.6rem; margin-top: 2.2rem; position: relative; }
+    .line-row { display: flex; flex-wrap: wrap; align-items: flex-end; min-height: 3.5rem; margin-bottom: 1.2rem; }
+    
+    .chord-box {
+      position: absolute;
+      bottom: 115%;
+      left: 0;
+      font-weight: 900;
+      font-size: 0.85rem;
+      padding: 3px 6px;
+      border-radius: 6px;
+      white-space: nowrap;
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1px solid #0284c7;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+      transition: all 0.3s;
+    }
+
+    .chord-box.active-target {
+      background: #ef4444;
+      color: #ffffff;
+      border-color: #fca5a5;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.9);
+      transform: scale(1.15);
+    }
+  </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden select-none">
+  <!-- Top Marvel-themed Navigation -->
+  <header class="bg-slate-900 border-b border-red-600/40 px-4 py-2.5 flex items-center justify-between shrink-0 z-30">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white font-black text-lg border border-red-400">
+        <i class="fa-solid fa-spider"></i>
+      </div>
+      <div>
+        <h1 class="font-black text-sm tracking-wide text-red-500 uppercase">Spidey Karaoke</h1>
+        <p class="text-[10px] text-slate-400">Thwip-Sync Edition</p>
+      </div>
+    </div>
+
+    <!-- Mode Buttons -->
+    <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800">
+      <button id="btn-mode-setup" onclick="setMode('setup')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400">Setup</button>
+      <button id="btn-mode-play" onclick="setMode('play')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-600 text-white">Play</button>
+    </div>
+  </header>
+
+  <!-- CONTROL TOOLBAR -->
+  <div id="play-toolbar" class="bg-slate-900 border-b border-slate-800 px-4 py-2 flex items-center justify-between shrink-0 z-10">
+    <button onclick="nextChord()" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-black rounded-lg text-xs flex items-center gap-2 shadow-lg shadow-red-600/30 active:scale-95 transition">
+      <i class="fa-solid fa-bolt"></i> <span>THWIP / NEXT CHORD</span>
+    </button>
+    <button onclick="resetSync()" class="px-3 py-2 bg-slate-800 text-slate-300 rounded-lg text-xs font-bold border border-slate-700">
+      <i class="fa-solid fa-rotate-left"></i> Reset
+    </button>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 relative overflow-hidden bg-slate-950">
+    
+    <!-- SETUP VIEW -->
+    <div id="view-setup" class="absolute inset-0 p-4 flex flex-col gap-3 hidden">
+      <label class="text-xs font-bold text-red-400 uppercase tracking-wider">I-paste ang Lyrics & Chords Dito:</label>
+      <textarea id="raw-input" class="flex-1 w-full bg-slate-900 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 focus:outline-none focus:border-red-500 resize-none custom-scrollbar font-mono" placeholder="I-paste ang lyrics at chords dito..."></textarea>
+      <button onclick="saveSetup()" class="w-full py-3 bg-red-600 text-white font-bold rounded-xl text-sm shadow-lg"><i class="fa-solid fa-play"></i> Launch Spidey Player</button>
+    </div>
+
+    <!-- PLAY VIEW (WITH SVG WEB & SPIDEY SPRITE) -->
+    <div id="view-play" class="absolute inset-0 overflow-y-auto custom-scrollbar p-6">
+      <svg id="svg-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-40">
+        <line id="web-line" x1="0" y1="0" x2="0" y2="0" />
+      </svg>
+
+      <!-- SPIDER-MAN ANIMATED SPRITE (SVG Icon) -->
+      <div id="spidey-sprite">
+        <svg viewBox="0 0 100 100" class="w-full h-full text-red-500">
+          <circle cx="50" cy="50" r="45" fill="#ef4444" stroke="#ffffff" stroke-width="4"/>
+          <!-- Spider-Man Mask Eyes -->
+          <path d="M 25 40 Q 40 30 45 55 Q 30 55 25 40 Z" fill="#ffffff" stroke="#000000" stroke-width="3"/>
+          <path d="M 75 40 Q 60 30 55 55 Q 70 55 75 40 Z" fill="#ffffff" stroke="#000000" stroke-width="3"/>
+        </svg>
+      </div>
+
+      <div id="song-area" class="max-w-2xl mx-auto pt-8 pb-32"></div>
+    </div>
+
+  </main>
+  <script>
+    let rawText = "C          G             C\nAkoy nananabik Sa'Yong pagbabalik\nC          G      C\nLahat ng luha ay mapapawi";
+    let chordsList = [];
+    let currentChordIndex = -1;
+
+    window.onload = () => {
+      document.getElementById('raw-input').value = rawText;
+      parseAndRender();
+    };
+
+    function setMode(mode) {
+      document.getElementById('view-setup').classList.toggle('hidden', mode !== 'setup');
+      document.getElementById('view-play').classList.toggle('hidden', mode !== 'play');
+      if (mode === 'play') parseAndRender();
+    }
+
+    function saveSetup() {
+      rawText = document.getElementById('raw-input').value;
+      setMode('play');
+    }
+
+    function isChordLine(line) {
+      const tokens = line.trim().split(/\s+/);
+      let matches = 0;
+      tokens.forEach(t => { if (/^[A-G][#b]?(m|maj|dim|aug|sus\d?|add\d?|\d)*(\/[A-G][#b]?)?$/.test(t)) matches++; });
+      return tokens.length > 0 && (matches / tokens.length) >= 0.5;
+    }
+
+    function parseAndRender() {
+      const container = document.getElementById('song-area');
+      container.innerHTML = '';
+      chordsList = [];
+      currentChordIndex = -1;
+
+      const lines = rawText.split('\n');
+      for (let i = 0; i < lines.length; i++) {
+        if (isChordLine(lines[i]) && i + 1 < lines.length && !isChordLine(lines[i + 1])) {
+          renderLineWithChords(lines[i + 1], lines[i], container);
+          i++;
+        } else {
+          renderLineWithChords(lines[i], null, container);
+        }
+      }
+
+      if (chordsList.length > 0) {
+        setTimeout(() => nextChord(), 300);
+      }
+    }
+
+    function renderLineWithChords(lyricStr, chordStr, container) {
+      const lineEl = document.createElement('div');
+      lineEl.className = 'line-row';
+
+      const chars = lyricStr.split('').map(c => ({ char: c, chord: null }));
+      if (chordStr) {
+        const regex = /([A-G][#b]?(?:m|maj|dim|aug|sus\d?|add\d?|\d)*(?:\/[A-G][#b]?)?)/g;
+        let m;
+        while ((m = regex.exec(chordStr)) !== null) {
+          if (m.index < chars.length) chars[m.index].chord = m[1];
+        }
+      }
+
+      chars.forEach((cObj) => {
+        const wordEl = document.createElement('div');
+        wordEl.className = 'word-token';
+        
+        const charEl = document.createElement('span');
+        charEl.innerText = cObj.char === ' ' ? '\u00A0' : cObj.char;
+        wordEl.appendChild(charEl);
+
+        if (cObj.chord) {
+          const chordBadge = document.createElement('div');
+          chordBadge.className = 'chord-box';
+          chordBadge.innerText = cObj.chord;
+          wordEl.appendChild(chordBadge);
+
+          chordsList.push({ element: chordBadge, chord: cObj.chord });
+        }
+
+        lineEl.appendChild(wordEl);
+      });
+
+      container.appendChild(lineEl);
+    }
+
+    function nextChord() {
+      if (chordsList.length === 0) return;
+
+      // Remove previous active state
+      if (currentChordIndex >= 0 && currentChordIndex < chordsList.length) {
+        chordsList[currentChordIndex].element.classList.remove('active-target');
+      }
+
+      currentChordIndex = (currentChordIndex + 1) % chordsList.length;
+      const targetObj = chordsList[currentChordIndex];
+      targetObj.element.classList.add('active-target');
+
+      // Move Spider-Man Sprite & Draw Web Line
+      moveSpideyToElement(targetObj.element);
+    }
+
+    function moveSpideyToElement(targetEl) {
+      const spidey = document.getElementById('spidey-sprite');
+      const webLine = document.getElementById('web-line');
+      
+      const targetRect = targetEl.getBoundingClientRect();
+      const containerRect = document.getElementById('view-play').getBoundingClientRect();
+
+      // Target Coordinates (X, Y)
+      const targetX = targetRect.left - containerRect.left + (targetRect.width / 2) - 21;
+      const targetY = targetRect.top - containerRect.top - 38;
+
+      // Current Spidey Position
+      const currentX = parseFloat(spidey.style.left || 0);
+      const currentY = parseFloat(spidey.style.top || 0);
+
+      // Trigger Web Line Animation (THWIP!)
+      if (currentX !== 0) {
+        webLine.setAttribute('x1', currentX + 21);
+        webLine.setAttribute('y1', currentY + 21);
+        webLine.setAttribute('x2', targetX + 21);
+        webLine.setAttribute('y2', targetY + 21);
+        webLine.style.opacity = '1';
+
+        setTimeout(() => { webLine.style.opacity = '0'; }, 300);
+      }
+
+      // Move Spider-Man
+      spidey.style.left = `${targetX}px`;
+      spidey.style.top = `${targetY}px`;
+    }
+
+    function resetSync() {
+      currentChordIndex = -1;
+      nextChord();
+    }
+  </script>
+</body>
+</html>
