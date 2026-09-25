@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Full-Body Spidey Karaoke</title>
+  <title>Spidey Timestamp Karaoke</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -11,36 +11,27 @@
     .custom-scrollbar::-webkit-scrollbar { width: 6px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #ef4444; border-radius: 4px; }
     
-    /* Full-Body Spidey Container */
     #spidey-sprite {
       position: absolute;
       width: 48px;
       height: 60px;
       z-index: 50;
-      transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1), top 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      transition: left 0.35s cubic-bezier(0.25, 1, 0.5, 1), top 0.35s cubic-bezier(0.25, 1, 0.5, 1);
       pointer-events: none;
       filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.8));
     }
 
-    /* Idle Dancing / Bouncing Motion on Chord */
-    .spidey-idle {
-      animation: spideyDance 0.6s infinite alternate ease-in-out;
-    }
-
+    .spidey-idle { animation: spideyDance 0.6s infinite alternate ease-in-out; }
     @keyframes spideyDance {
       0% { transform: translateY(0) scaleY(1); }
       50% { transform: translateY(-6px) scaleY(1.05) rotate(-3deg); }
       100% { transform: translateY(-2px) scaleY(0.95) rotate(3deg); }
     }
 
-    /* Jumping Trajectory Class */
-    .spidey-jumping {
-      animation: spideyArcJump 0.4s ease-in-out;
-    }
-
+    .spidey-jumping { animation: spideyArcJump 0.35s ease-in-out; }
     @keyframes spideyArcJump {
       0% { transform: scale(1) rotate(0deg); }
-      50% { transform: translateY(-25px) scale(1.2) rotate(180deg); } /* Somersault in air */
+      50% { transform: translateY(-25px) scale(1.2) rotate(180deg); }
       100% { transform: scale(1) rotate(360deg); }
     }
 
@@ -84,15 +75,15 @@
   </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden select-none">
-  <!-- Top Navigation & Controls -->
+  <!-- Header -->
   <header class="bg-slate-900 border-b border-red-600/40 px-4 py-2 flex items-center justify-between shrink-0 z-30">
     <div class="flex items-center gap-2">
       <div class="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white font-black text-lg border border-red-400">
         <i class="fa-solid fa-spider"></i>
       </div>
       <div>
-        <h1 class="font-black text-sm text-red-500 uppercase">Dancing Spidey</h1>
-        <p class="text-[10px] text-slate-400">Full-Body Arc Jump</p>
+        <h1 class="font-black text-sm text-red-500 uppercase">Spidey Karaoke</h1>
+        <p class="text-[10px] text-slate-400">Time-Synced Edition</p>
       </div>
     </div>
 
@@ -102,20 +93,21 @@
     </div>
   </header>
 
-  <!-- MP3 & CONTROL BAR -->
+  <!-- PLAYER TOOLBAR -->
   <div id="play-toolbar" class="bg-slate-900 border-b border-slate-800 p-2.5 flex flex-col gap-2 shrink-0 z-20">
     <div class="flex items-center justify-between gap-2">
       <label class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-red-400 border border-red-500/30 rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1.5">
         <i class="fa-solid fa-file-audio"></i> <span>Load MP3</span>
         <input type="file" id="audio-file-input" accept="audio/*" class="hidden" onchange="loadAudioFile(event)">
       </label>
-      <span id="audio-name" class="text-[11px] text-slate-400 truncate max-w-[140px]">Pumili ng MP3...</span>
+      <span id="audio-name" class="text-[11px] text-slate-400 truncate max-w-[160px]">Load MP3 muna...</span>
 
-      <button onclick="nextChord()" class="px-4 py-1.5 bg-red-600 active:scale-95 text-white font-black rounded-lg text-xs flex items-center gap-1.5 shadow-lg shadow-red-600/40">
-        <i class="fa-solid fa-bolt"></i> <span>JUMP / THWIP!</span>
+      <button onclick="nextChord()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold">
+        Manual Next
       </button>
     </div>
 
+    <!-- AUDIO CONTROLS -->
     <div class="flex items-center gap-2">
       <button id="btn-play-audio" onclick="toggleAudio()" class="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-xs shrink-0">
         <i class="fa-solid fa-play" id="play-icon"></i>
@@ -129,12 +121,14 @@
 
   <!-- MAIN VIEWPORT -->
   <main class="flex-1 relative overflow-hidden bg-slate-950">
-    
     <!-- SETUP VIEW -->
-    <div id="view-setup" class="absolute inset-0 p-4 flex flex-col gap-3 hidden">
-      <label class="text-xs font-bold text-red-400 uppercase">I-paste ang Lyrics & Chords Dito:</label>
-      <textarea id="raw-input" class="flex-1 w-full bg-slate-900 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 focus:outline-none focus:border-red-500 resize-none font-mono" placeholder="I-paste ang lyrics..."></textarea>
-      <button onclick="saveSetup()" class="w-full py-3 bg-red-600 text-white font-bold rounded-xl text-sm"><i class="fa-solid fa-play"></i> Launch Dancing Spidey</button>
+    <div id="view-setup" class="absolute inset-0 p-4 flex flex-col gap-2 hidden">
+      <div class="flex justify-between items-center">
+        <label class="text-xs font-bold text-red-400 uppercase">Input Format: [MM:SS]Chord</label>
+        <span class="text-[10px] text-slate-500">Halimbawa: [00:02]C [00:05]G</span>
+      </div>
+      <textarea id="raw-input" class="flex-1 w-full bg-slate-900 border border-slate-800 rounded-xl p-4 text-xs text-slate-200 focus:outline-none focus:border-red-500 resize-none font-mono" placeholder="I-paste ang lyrics..."></textarea>
+      <button onclick="saveSetup()" class="w-full py-3 bg-red-600 text-white font-bold rounded-xl text-sm shadow-lg shadow-red-600/30"><i class="fa-solid fa-play"></i> Launch Auto-Sync Player</button>
     </div>
 
     <!-- PLAY VIEW -->
@@ -143,30 +137,20 @@
         <line id="web-line" x1="0" y1="0" x2="0" y2="0" />
       </svg>
 
-      <!-- FULL-BODY SPIDER-MAN SPRITE SVG -->
+      <!-- SPIDER-MAN SPRITE -->
       <div id="spidey-sprite" class="spidey-idle">
         <svg viewBox="0 0 100 130" class="w-full h-full">
-          <!-- Head -->
           <circle cx="50" cy="22" r="16" fill="#ef4444" stroke="#ffffff" stroke-width="2"/>
           <path d="M 40 18 Q 48 12 50 26 Q 42 26 40 18 Z" fill="#ffffff" stroke="#000000" stroke-width="2"/>
           <path d="M 60 18 Q 52 12 50 26 Q 58 26 60 18 Z" fill="#ffffff" stroke="#000000" stroke-width="2"/>
-          
-          <!-- Body / Torso -->
           <path d="M 38 38 L 62 38 L 58 70 L 42 70 Z" fill="#ef4444" stroke="#000000" stroke-width="2"/>
-          <!-- Blue Suit Sides -->
           <path d="M 38 45 L 44 45 L 43 65 L 39 65 Z" fill="#0284c7"/>
           <path d="M 62 45 L 56 45 L 57 65 L 61 65 Z" fill="#0284c7"/>
-          <!-- Chest Spider Emblem -->
           <path d="M 50 48 L 47 54 L 53 54 Z" fill="#000000"/>
-
-          <!-- Arms -->
           <path d="M 38 40 L 22 55 L 28 60 L 40 48 Z" fill="#ef4444" stroke="#000000" stroke-width="1.5"/>
           <path d="M 62 40 L 78 55 L 72 60 L 60 48 Z" fill="#ef4444" stroke="#000000" stroke-width="1.5"/>
-
-          <!-- Legs -->
           <path d="M 42 70 L 32 110 L 42 112 L 48 70 Z" fill="#0284c7" stroke="#000000" stroke-width="1.5"/>
           <path d="M 58 70 L 68 110 L 58 112 L 52 70 Z" fill="#0284c7" stroke="#000000" stroke-width="1.5"/>
-          <!-- Boots -->
           <path d="M 32 100 L 26 112 L 42 112 Z" fill="#ef4444"/>
           <path d="M 68 100 L 74 112 L 58 112 Z" fill="#ef4444"/>
         </svg>
@@ -174,10 +158,11 @@
 
       <div id="song-area" class="max-w-2xl mx-auto pt-8 pb-32"></div>
     </div>
-
   </main>
   <script>
-    let rawText = "C          G             C\nAkoy nananabik Sa'Yong pagbabalik\nC          G      C\nLahat ng luha ay mapapawi";
+    // Sample default format with timestamps inside brackets!
+    let rawText = "[00:01]C          [00:04]G             [00:08]C\nAkoy nananabik Sa'Yong pagbabalik\n[00:12]C          [00:15]G      [00:18]C\nLahat ng luha ay mapapawi";
+    
     let chordsList = [];
     let currentChordIndex = -1;
 
@@ -196,6 +181,15 @@
         audio.src = URL.createObjectURL(file);
         audio.load();
       }
+    }
+
+    function parseTimestamp(timeStr) {
+      // Converts "01:23.5" or "00:04" into total seconds (float)
+      const parts = timeStr.split(':');
+      if (parts.length === 2) {
+        return parseFloat(parts[0]) * 60 + parseFloat(parts[1]);
+      }
+      return 0;
     }
 
     function toggleAudio() {
@@ -220,12 +214,24 @@
     function setupAudioListeners() {
       audio.ontimeupdate = () => {
         if (!audio.duration) return;
-        const progress = (audio.currentTime / audio.duration) * 100;
+        const currentTime = audio.currentTime;
+
+        const progress = (currentTime / audio.duration) * 100;
         document.getElementById('audio-seekbar').value = progress;
 
-        const mins = Math.floor(audio.currentTime / 60);
-        const secs = Math.floor(audio.currentTime % 60);
+        const mins = Math.floor(currentTime / 60);
+        const secs = Math.floor(currentTime % 60);
         document.getElementById('audio-time').innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+
+        // AUTOMATIC TIME-TRIGGER FOR SPIDEY JUMP
+        for (let i = chordsList.length - 1; i >= 0; i--) {
+          if (currentTime >= chordsList[i].timestampSeconds) {
+            if (currentChordIndex !== i) {
+              jumpToChordIndex(i);
+            }
+            break;
+          }
+        }
       };
 
       audio.onended = () => document.getElementById('play-icon').className = "fa-solid fa-play";
@@ -242,13 +248,6 @@
       setMode('play');
     }
 
-    function isChordLine(line) {
-      const tokens = line.trim().split(/\s+/);
-      let matches = 0;
-      tokens.forEach(t => { if (/^[A-G][#b]?(m|maj|dim|aug|sus\d?|add\d?|\d)*(\/[A-G][#b]?)?$/.test(t)) matches++; });
-      return tokens.length > 0 && (matches / tokens.length) >= 0.5;
-    }
-
     function parseAndRender() {
       const container = document.getElementById('song-area');
       container.innerHTML = '';
@@ -257,61 +256,80 @@
 
       const lines = rawText.split('\n');
       for (let i = 0; i < lines.length; i++) {
-        if (isChordLine(lines[i]) && i + 1 < lines.length && !isChordLine(lines[i + 1])) {
-          renderLineWithChords(lines[i + 1], lines[i], container);
+        if (lines[i].includes('[') && lines[i].includes(']')) {
+          renderLineWithChords(lines[i + 1] || '', lines[i], container);
           i++;
         } else {
           renderLineWithChords(lines[i], null, container);
         }
       }
 
-      if (chordsList.length > 0) setTimeout(() => nextChord(), 300);
+      if (chordsList.length > 0) setTimeout(() => jumpToChordIndex(0), 300);
     }
 
     function renderLineWithChords(lyricStr, chordStr, container) {
       const lineEl = document.createElement('div');
       lineEl.className = 'line-row';
 
-      const chars = lyricStr.split('').map(c => ({ char: c, chord: null }));
+      const chars = lyricStr.split('').map(c => ({ char: c }));
+      const chordNodes = [];
+
       if (chordStr) {
-        const regex = /([A-G][#b]?(?:m|maj|dim|aug|sus\d?|add\d?|\d)*(?:\/[A-G][#b]?)?)/g;
-        let m;
-        while ((m = regex.exec(chordStr)) !== null) {
-          if (m.index < chars.length) chars[m.index].chord = m[1];
+        // Regex detects timestamps like [00:04] or [01:12.5] followed by the Chord name
+        const regex = /\[(\d{2}:\d{2}(?:\.\d+)?)\]\s*([A-G][#b]?(?:m|maj|dim|aug|sus\d?|add\d?|\d)*(?:\/[A-G][#b]?)?)/g;
+        let match;
+        while ((match = regex.exec(chordStr)) !== null) {
+          chordNodes.push({
+            timeStr: match[1],
+            timeSec: parseTimestamp(match[1]),
+            chord: match[2],
+            charIndex: match.index
+          });
         }
       }
 
-      chars.forEach((cObj) => {
+      const totalChars = Math.max(chars.length, 1);
+      for (let idx = 0; idx < totalChars; idx++) {
         const wordEl = document.createElement('div');
         wordEl.className = 'word-token';
         
         const charEl = document.createElement('span');
-        charEl.innerText = cObj.char === ' ' ? '\u00A0' : cObj.char;
+        charEl.innerText = chars[idx] ? (chars[idx].char === ' ' ? '\u00A0' : chars[idx].char) : '\u00A0';
         wordEl.appendChild(charEl);
 
-        if (cObj.chord) {
+        // Attach Chords to exact character placement
+        const matchedChord = chordNodes.find(c => c.charIndex === idx || (idx >= chars.length && c.charIndex >= chars.length));
+        if (matchedChord) {
           const chordBadge = document.createElement('div');
           chordBadge.className = 'chord-box';
-          chordBadge.innerText = cObj.chord;
+          chordBadge.innerText = matchedChord.chord;
           wordEl.appendChild(chordBadge);
 
-          chordsList.push({ element: chordBadge, chord: cObj.chord });
+          chordsList.push({ 
+            element: chordBadge, 
+            chord: matchedChord.chord,
+            timestampSeconds: matchedChord.timeSec 
+          });
         }
 
         lineEl.appendChild(wordEl);
-      });
+      }
 
       container.appendChild(lineEl);
     }
 
     function nextChord() {
       if (chordsList.length === 0) return;
+      const nextIdx = (currentChordIndex + 1) % chordsList.length;
+      jumpToChordIndex(nextIdx);
+    }
 
+    function jumpToChordIndex(index) {
       if (currentChordIndex >= 0 && currentChordIndex < chordsList.length) {
         chordsList[currentChordIndex].element.classList.remove('active-target');
       }
 
-      currentChordIndex = (currentChordIndex + 1) % chordsList.length;
+      currentChordIndex = index;
       const targetObj = chordsList[currentChordIndex];
       targetObj.element.classList.add('active-target');
 
@@ -325,14 +343,12 @@
       const targetRect = targetEl.getBoundingClientRect();
       const containerRect = document.getElementById('view-play').getBoundingClientRect();
 
-      // Target Coordinates (X, Y)
       const targetX = targetRect.left - containerRect.left + (targetRect.width / 2) - 24;
       const targetY = targetRect.top - containerRect.top - 58;
 
       const currentX = parseFloat(spidey.style.left || 0);
       const currentY = parseFloat(spidey.style.top || 0);
 
-      // Trigger Web Line Effect
       if (currentX !== 0) {
         webLine.setAttribute('x1', currentX + 24);
         webLine.setAttribute('y1', currentY + 30);
@@ -343,18 +359,16 @@
         setTimeout(() => { webLine.style.opacity = '0'; }, 300);
       }
 
-      // Trigger Jumping Arc Motion
       spidey.classList.remove('spidey-idle');
       spidey.classList.add('spidey-jumping');
 
       spidey.style.left = `${targetX}px`;
       spidey.style.top = `${targetY}px`;
 
-      // Back to dancing idle animation after jump finishes
       setTimeout(() => {
         spidey.classList.remove('spidey-jumping');
         spidey.classList.add('spidey-idle');
-      }, 400);
+      }, 350);
 
       targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
