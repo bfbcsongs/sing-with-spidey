@@ -2,645 +2,661 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#111827">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Karaoke Editor V1</title>
+<title>Karaoke Keyframe Editor</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    min-height: 100%;
-    background: #0b1120;
-    color: #f8fafc;
-    font-family: Arial, Helvetica, sans-serif;
+body{
+  margin:0;
+  background:#0b0f14;
+  color:#f3f4f6;
+  font-family:Arial,Helvetica,sans-serif;
+  overflow:hidden;
 }
 
-body {
-    overflow-x: hidden;
+button,input,textarea{
+  font:inherit;
 }
 
-button,
-input,
-textarea {
-    font: inherit;
+button{
+  border:0;
+  cursor:pointer;
 }
 
-button {
-    border: 0;
-    cursor: pointer;
+.app{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
 }
 
-.app {
-    width: 100%;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding-bottom: 30px;
-}
-
-/* HEADER */
-
-.header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 12px 14px;
-    background: rgba(11,17,32,0.96);
-    border-bottom: 1px solid #263247;
-    backdrop-filter: blur(10px);
-}
-
-.logo {
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: .3px;
-}
-
-.logo span {
-    color: #38bdf8;
-}
-
-.header-actions {
-    display: flex;
-    gap: 6px;
-}
-
-.icon-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    background: #1e293b;
-    color: #e2e8f0;
-    font-size: 18px;
-}
-
-/* MAIN */
-
-.main {
-    padding: 14px;
-}
-
-.card {
-    background: #111827;
-    border: 1px solid #263247;
-    border-radius: 16px;
-    margin-bottom: 14px;
-    overflow: hidden;
-}
-
-.card-header {
-    padding: 13px 14px;
-    border-bottom: 1px solid #263247;
-    font-size: 15px;
-    font-weight: 700;
-}
-
-.card-body {
-    padding: 14px;
-}
-
-/* BUTTONS */
-
-.btn {
-    min-height: 42px;
-    padding: 9px 14px;
-    border-radius: 10px;
-    background: #1e293b;
-    color: #f8fafc;
-    font-weight: 700;
-}
-
-.btn:active,
-.icon-btn:active {
-    transform: scale(.97);
-}
-
-.btn-primary {
-    background: #0284c7;
-}
-
-.btn-success {
-    background: #059669;
-}
-
-.btn-danger {
-    background: #dc2626;
-}
-
-.btn-warning {
-    background: #d97706;
-}
-
-.btn-purple {
-    background: #7c3aed;
-}
-
-.btn-small {
-    min-height: 36px;
-    padding: 7px 11px;
-    font-size: 13px;
-}
-
-.button-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-/* FILE */
-
-.file-area {
-    display: grid;
-    gap: 10px;
-}
-
-.file-label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 80px;
-    padding: 15px;
-    border: 2px dashed #334155;
-    border-radius: 12px;
-    background: #0f172a;
-    text-align: center;
-    color: #94a3b8;
-    cursor: pointer;
-}
-
-.file-label strong {
-    display: block;
-    color: #f8fafc;
-    margin-bottom: 5px;
-}
-
-.file-label input {
-    display: none;
-}
-
-.song-name {
-    font-size: 14px;
-    color: #38bdf8;
-    word-break: break-word;
-}
+/* TOP BAR */
+.topbar{
+  height:58px;
+  min-height:58px;
+  background:#111827;
+  border-bottom:1px solid #273142;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 10px;
+  overflow-x:auto;
+}
+
+.logo{
+  font-weight:800;
+  font-size:17px;
+  white-space:nowrap;
+  margin-right:8px;
+}
+
+.topbtn{
+  background:#202938;
+  color:#e5e7eb;
+  padding:9px 12px;
+  border-radius:7px;
+  white-space:nowrap;
+  font-size:13px;
+}
+
+.topbtn:hover{
+  background:#2d394c;
+}
 
-/* LYRICS */
-
-textarea {
-    width: 100%;
-    min-height: 180px;
-    resize: vertical;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #334155;
-    outline: none;
-    background: #0f172a;
-    color: #f8fafc;
-    line-height: 1.6;
-}
-
-textarea:focus,
-input:focus {
-    border-color: #38bdf8;
-}
-
-.help {
-    margin-top: 8px;
-    color: #94a3b8;
-    font-size: 12px;
-    line-height: 1.5;
-}
-
-/* PLAYER */
-
-.player {
-    padding: 14px;
-}
-
-.now-playing {
-    text-align: center;
-    min-height: 34px;
-    color: #cbd5e1;
-    font-size: 14px;
-    margin-bottom: 10px;
-    word-break: break-word;
-}
-
-.time-display {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: #94a3b8;
-    margin-bottom: 6px;
-}
-
-.progress-wrap {
-    width: 100%;
-    height: 12px;
-    background: #1e293b;
-    border-radius: 20px;
-    overflow: hidden;
-    cursor: pointer;
-}
-
-.progress {
-    width: 0%;
-    height: 100%;
-    background: #38bdf8;
-    transition: width .05s linear;
-}
-
-audio {
-    display: none;
-}
-
-.player-controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-top: 13px;
-}
-
-.play-btn {
-    width: 58px;
-    height: 58px;
-    border-radius: 50%;
-    background: #0284c7;
-    color: white;
-    font-size: 23px;
-}
-
-.control-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: #1e293b;
-    color: white;
-    font-size: 17px;
-}
-
-.speed-control {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    margin-top: 12px;
-    font-size: 12px;
-    color: #94a3b8;
+.topbtn.primary{
+  background:#2563eb;
+  color:white;
 }
 
-.speed-control select {
-    background: #1e293b;
-    color: white;
-    border: 1px solid #334155;
-    border-radius: 8px;
-    padding: 6px 8px;
+/* PREVIEW */
+.preview{
+  height:235px;
+  min-height:235px;
+  background:#05070a;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
 }
-
-/* TIMELINE */
-
-.timeline {
-    position: relative;
-    width: 100%;
-    height: 90px;
-    background: #0f172a;
-    border: 1px solid #263247;
-    border-radius: 10px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    touch-action: pan-x;
-}
-
-.timeline-inner {
-    position: relative;
-    min-width: 100%;
-    height: 100%;
-}
-
-.timeline-grid {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-}
-
-.grid-line {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    background: #1e293b;
-}
-
-.grid-label {
-    position: absolute;
-    top: 5px;
-    transform: translateX(4px);
-    color: #64748b;
-    font-size: 10px;
-}
-
-.playhead {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: #f43f5e;
-    z-index: 20;
-    pointer-events: none;
-}
-
-.playhead::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 10px;
-    height: 10px;
-    background: #f43f5e;
-    border-radius: 50%;
-}
-
-/* KARAOKE DISPLAY */
-
-.karaoke-display {
-    min-height: 190px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px 12px;
-    background:
-        radial-gradient(circle at center, #172554 0%, #0f172a 45%, #080d18 100%);
-    text-align: center;
-}
-
-.karaoke-line {
-    min-height: 34px;
-    margin: 5px 0;
-    font-size: clamp(20px, 5vw, 34px);
-    font-weight: 700;
-    line-height: 1.35;
+
+.preview-inner{
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
 }
 
-.karaoke-word {
-    display: inline-block;
-    margin: 0 5px;
-    color: #64748b;
-    transition: all .08s linear;
+.preview-title{
+  color:#9ca3af;
+  font-size:11px;
+  position:absolute;
+  top:9px;
+  left:12px;
+  letter-spacing:.5px;
 }
 
-.karaoke-word.active {
-    color: #38bdf8;
-    transform: scale(1.08);
-    text-shadow: 0 0 18px rgba(56,189,248,.5);
+.lyric-preview{
+  position:relative;
+  font-size:clamp(24px,5vw,48px);
+  font-weight:800;
+  line-height:1.2;
+  text-align:center;
+  max-width:94%;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+
+.lyric-base{
+  color:#ffffff;
+}
+
+.lyric-highlight{
+  position:absolute;
+  inset:0;
+  color:#ffd83d;
+  overflow:hidden;
+  white-space:pre-wrap;
+  word-break:break-word;
+  width:0%;
 }
-
-.karaoke-word.done {
-    color: #f8fafc;
-}
-
-/* TIMING EDITOR */
-
-.timing-toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-    margin-bottom: 10px;
+
+.preview-time{
+  position:absolute;
+  bottom:8px;
+  color:#64748b;
+  font-size:11px;
 }
 
-.timing-status {
-    padding: 9px 11px;
-    border-radius: 9px;
-    background: #0f172a;
-    color: #94a3b8;
-    font-size: 12px;
-    margin-bottom: 10px;
+/* AUDIO BAR */
+.audio-bar{
+  height:54px;
+  min-height:54px;
+  background:#111827;
+  border-top:1px solid #273142;
+  border-bottom:1px solid #273142;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:7px 10px;
 }
 
-.word-list {
-    max-height: 420px;
-    overflow-y: auto;
-    display: grid;
-    gap: 5px;
+.playbtn{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#2563eb;
+  color:white;
+  font-size:17px;
+  flex:none;
 }
 
-.word-row {
-    display: grid;
-    grid-template-columns: 42px 1fr 85px 85px;
-    gap: 6px;
-    align-items: center;
-    padding: 7px;
-    background: #0f172a;
-    border: 1px solid #1e293b;
-    border-radius: 8px;
+.time-display{
+  font-size:12px;
+  color:#cbd5e1;
+  width:92px;
+  text-align:center;
+  font-variant-numeric:tabular-nums;
 }
 
-.word-number {
-    color: #64748b;
-    font-size: 11px;
-    text-align: center;
+.audio-seek{
+  flex:1;
+  accent-color:#3b82f6;
 }
 
-.word-text {
-    font-weight: 700;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+.zoom-box{
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+
+.zoom-box button{
+  width:27px;
+  height:27px;
+  background:#202938;
+  color:white;
+  border-radius:5px;
+}
 
-.time-input {
-    width: 100%;
-    padding: 6px 7px;
-    background: #111827;
-    border: 1px solid #334155;
-    border-radius: 7px;
-    color: white;
-    font-size: 12px;
+.zoom-value{
+  font-size:11px;
+  color:#94a3b8;
+  width:38px;
+  text-align:center;
 }
-
-.jump-btn {
-    min-height: 31px;
-    border-radius: 7px;
-    background: #1e293b;
-    color: #cbd5e1;
-    font-size: 11px;
+
+/* EDITOR */
+.editor{
+  flex:1;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
 }
-
-/* STATS */
 
-.stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 7px;
+.toolbar{
+  height:45px;
+  min-height:45px;
+  background:#111827;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:6px 9px;
+  border-bottom:1px solid #273142;
+  overflow-x:auto;
+}
+
+.toolbtn{
+  background:#202938;
+  color:#dbe4ef;
+  border-radius:6px;
+  padding:7px 11px;
+  font-size:12px;
+  white-space:nowrap;
 }
 
-.stat {
-    background: #0f172a;
-    border: 1px solid #263247;
-    border-radius: 10px;
-    padding: 10px 5px;
-    text-align: center;
+.toolbtn.active{
+  background:#334155;
+}
+
+.toolbtn.add{
+  background:#16a34a;
+  color:#fff;
+  font-weight:700;
 }
 
-.stat-value {
-    font-size: 18px;
-    font-weight: 800;
+.toolbtn.delete{
+  background:#dc2626;
+  color:#fff;
+  font-weight:700;
+}
+
+.editor-scroll{
+  flex:1;
+  min-height:0;
+  overflow:auto;
+  position:relative;
+  background:#090d13;
+}
+
+.timeline{
+  position:relative;
+  min-width:100%;
+  min-height:100%;
+}
+
+/* RULER */
+.ruler{
+  height:34px;
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:#111827;
+  border-bottom:1px solid #273142;
+  overflow:hidden;
 }
 
-.stat-label {
-    color: #64748b;
-    font-size: 10px;
-    margin-top: 3px;
+.ruler-inner{
+  position:absolute;
+  top:0;
+  height:100%;
+}
+
+.tick{
+  position:absolute;
+  top:0;
+  height:100%;
+  border-left:1px solid #334155;
+  color:#64748b;
+  font-size:9px;
+  padding-left:3px;
+  padding-top:17px;
+  pointer-events:none;
+}
+
+.tick.major{
+  border-left-color:#64748b;
+  color:#94a3b8;
+}
+
+/* WAVEFORM */
+.wave-track{
+  height:76px;
+  position:relative;
+  background:#0d131d;
+  border-bottom:1px solid #273142;
+}
+
+.wave-canvas{
+  position:absolute;
+  left:0;
+  top:0;
+  height:76px;
+}
+
+.wave-label{
+  position:absolute;
+  left:7px;
+  top:6px;
+  z-index:3;
+  font-size:9px;
+  color:#64748b;
+  background:#0b0f14cc;
+  padding:2px 5px;
+  border-radius:3px;
+}
+
+/* LYRIC TRACK */
+.lyric-track{
+  position:relative;
+  min-height:180px;
+  border-bottom:1px solid #273142;
+}
+
+.track-label{
+  position:absolute;
+  left:7px;
+  top:8px;
+  z-index:5;
+  color:#64748b;
+  font-size:9px;
+  pointer-events:none;
+}
+
+.lyric-clip{
+  position:absolute;
+  height:68px;
+  top:43px;
+  background:#172235;
+  border:1px solid #334155;
+  border-radius:7px;
+  overflow:visible;
+  user-select:none;
+  touch-action:none;
+}
+
+.lyric-clip.selected{
+  border:2px solid #3b82f6;
+  background:#1b2a42;
+  z-index:10;
+}
+
+.clip-body{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  border-radius:5px;
+  cursor:grab;
+}
+
+.clip-body:active{
+  cursor:grabbing;
+}
+
+.clip-text{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  padding:0 14px;
+  color:#cbd5e1;
+  font-size:14px;
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.clip-highlight{
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:0%;
+  background:rgba(255,216,61,.18);
+  pointer-events:none;
+}
+
+.clip-highlight-text{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  padding:0 14px;
+  color:#ffd83d;
+  font-size:14px;
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+.clip-left,
+.clip-right{
+  position:absolute;
+  top:-1px;
+  bottom:-1px;
+  width:9px;
+  z-index:5;
+  background:#3b82f6;
+  opacity:.85;
+  touch-action:none;
+}
+
+.clip-left{
+  left:-4px;
+  cursor:ew-resize;
+  border-radius:5px 0 0 5px;
+}
+
+.clip-right{
+  right:-4px;
+  cursor:ew-resize;
+  border-radius:0 5px 5px 0;
+}
+
+.clip-info{
+  position:absolute;
+  left:4px;
+  bottom:-18px;
+  font-size:8px;
+  color:#64748b;
+  white-space:nowrap;
+  pointer-events:none;
+}
+
+/* KEYFRAMES */
+.keyframe{
+  position:absolute;
+  top:-10px;
+  width:14px;
+  height:14px;
+  transform:translateX(-50%) rotate(45deg);
+  background:#fbbf24;
+  border:2px solid #111827;
+  border-radius:2px;
+  z-index:30;
+  cursor:pointer;
+  touch-action:none;
+}
+
+.keyframe.selected{
+  background:#f97316;
+  box-shadow:0 0 0 2px #fff,0 0 10px #f97316;
+}
+
+/* PLAYHEAD */
+.playhead{
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:2px;
+  background:#ef4444;
+  z-index:50;
+  pointer-events:none;
+}
+
+.playhead-head{
+  position:absolute;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:0;
+  height:0;
+  border-left:7px solid transparent;
+  border-right:7px solid transparent;
+  border-top:9px solid #ef4444;
+}
+
+/* BOTTOM KEYFRAME PANEL */
+.key-panel{
+  height:104px;
+  min-height:104px;
+  background:#111827;
+  border-top:1px solid #273142;
+  display:flex;
+  flex-direction:column;
+}
+
+.key-panel-top{
+  height:36px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:5px 9px;
+}
+
+.key-panel-title{
+  font-size:12px;
+  font-weight:700;
+  margin-right:auto;
+}
+
+.kfbtn{
+  width:34px;
+  height:28px;
+  border-radius:5px;
+  color:white;
+  font-size:17px;
+  font-weight:700;
+}
+
+.kf-add{
+  background:#16a34a;
+}
+
+.kf-delete{
+  background:#dc2626;
+}
+
+.kf-disabled{
+  opacity:.35;
+}
+
+.key-panel-bottom{
+  flex:1;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:2px 10px 8px;
+}
+
+.progress-label{
+  width:80px;
+  font-size:11px;
+  color:#94a3b8;
+}
+
+.progress-range{
+  flex:1;
+  accent-color:#fbbf24;
+}
+
+.progress-number{
+  width:42px;
+  text-align:right;
+  font-size:12px;
+  color:#fbbf24;
+  font-weight:700;
+}
+
+.selected-info{
+  width:105px;
+  font-size:10px;
+  color:#64748b;
+  text-align:right;
 }
 
 /* MODAL */
-
-.modal {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 15px;
-    background: rgba(0,0,0,.7);
+.modal{
+  position:fixed;
+  inset:0;
+  background:#0009;
+  z-index:100;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
 }
 
-.modal.show {
-    display: flex;
+.modal.show{
+  display:flex;
 }
 
-.modal-box {
-    width: 100%;
-    max-width: 500px;
-    max-height: 90vh;
-    overflow-y: auto;
-    background: #111827;
-    border: 1px solid #334155;
-    border-radius: 16px;
-    padding: 16px;
+.modal-card{
+  width:min(600px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:#111827;
+  border:1px solid #334155;
+  border-radius:12px;
+  padding:15px;
 }
 
-.modal-title {
-    font-size: 18px;
-    font-weight: 800;
-    margin-bottom: 12px;
+.modal-card h3{
+  margin:0 0 12px;
 }
 
-.modal-text {
-    color: #cbd5e1;
-    font-size: 13px;
-    line-height: 1.6;
-    white-space: pre-wrap;
+.modal-card textarea{
+  width:100%;
+  min-height:240px;
+  resize:vertical;
+  background:#0b0f14;
+  color:white;
+  border:1px solid #334155;
+  border-radius:7px;
+  padding:10px;
 }
 
-/* TOAST */
-
-.toast {
-    position: fixed;
-    left: 50%;
-    bottom: 20px;
-    transform: translate(-50%, 120px);
-    z-index: 200;
-    background: #f8fafc;
-    color: #0f172a;
-    padding: 11px 16px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 700;
-    box-shadow: 0 8px 30px rgba(0,0,0,.35);
-    transition: transform .25s ease;
-    max-width: calc(100% - 30px);
-    text-align: center;
+.modal-actions{
+  display:flex;
+  gap:8px;
+  justify-content:flex-end;
+  margin-top:10px;
 }
 
-.toast.show {
-    transform: translate(-50%, 0);
+.modal-actions button{
+  padding:9px 13px;
+  border-radius:6px;
+  background:#334155;
+  color:white;
 }
 
-/* DESKTOP */
-
-@media (min-width: 700px) {
-    .main {
-        padding: 20px;
-    }
-
-    .two-column {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
-    }
-
-    .two-column .card {
-        margin-bottom: 0;
-    }
-
-    .word-row {
-        grid-template-columns: 42px 1fr 100px 100px;
-    }
-}
-
-/* MOBILE */
-
-@media (max-width: 520px) {
-    .header {
-        padding: 10px;
-    }
-
-    .logo {
-        font-size: 17px;
-    }
-
-    .main {
-        padding: 10px;
-    }
-
-    .card {
-        border-radius: 13px;
-    }
-
-    .card-body {
-        padding: 11px;
-    }
-
-    .word-row {
-        grid-template-columns: 30px 1fr 70px;
-    }
-
-    .word-row .jump-btn {
-        display: none;
-    }
-
-    .time-input {
-        font-size: 11px;
-    }
-
-    .stats {
-        grid-template-columns: repeat(3, 1fr);
-    }
+.modal-actions .ok{
+  background:#2563eb;
 }
 
 /* EMPTY */
+.empty{
+  color:#475569;
+  text-align:center;
+  padding-top:55px;
+  font-size:13px;
+}
 
-.empty {
-    text-align: center;
-    padding: 30px 15px;
-    color: #64748b;
-    font-size: 13px;
+/* MOBILE */
+@media(max-width:600px){
+  .topbar{
+    height:52px;
+    min-height:52px;
+  }
+
+  .preview{
+    height:190px;
+    min-height:190px;
+  }
+
+  .audio-bar{
+    height:52px;
+    min-height:52px;
+  }
+
+  .time-display{
+    width:72px;
+    font-size:10px;
+  }
+
+  .toolbar{
+    height:42px;
+    min-height:42px;
+  }
+
+  .key-panel{
+    height:96px;
+    min-height:96px;
+  }
+
+  .clip-text,
+  .clip-highlight-text{
+    font-size:12px;
+  }
 }
 </style>
 </head>
@@ -649,3150 +665,2522 @@ audio {
 
 <div class="app">
 
-    <header class="header">
-        <div class="logo">
-            🎤 Karaoke<span>Editor</span>
-        </div>
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="logo">🎤 KARAOKE FX</div>
 
-        <div class="header-actions">
-            <button class="icon-btn" id="helpBtn" title="Help">?</button>
-            <button class="icon-btn" id="resetBtn" title="Reset">↻</button>
-        </div>
-    </header>
+    <button class="topbtn primary" id="audioBtn">🎵 Audio</button>
+    <input id="audioFile" type="file" accept="audio/*" hidden>
 
-    <main class="main">
+    <button class="topbtn" id="lyricsBtn">📝 Lyrics</button>
 
-        <!-- AUDIO -->
+    <button class="topbtn" id="saveBtn">💾 Save</button>
+    <button class="topbtn" id="loadBtn">📂 Load</button>
 
-        <section class="card">
-            <div class="card-header">
-                🎵 Song
-            </div>
+    <button class="topbtn" id="exportBtn">⬇ Export</button>
+    <button class="topbtn" id="importBtn">⬆ Import</button>
+    <input id="projectFile" type="file" accept=".json,application/json" hidden>
+  </div>
 
-            <div class="card-body file-area">
+  <!-- PREVIEW -->
+  <div class="preview">
+    <div class="preview-title">KARAOKE PREVIEW</div>
 
-                <label class="file-label">
-                    <input type="file" id="audioFile" accept="audio/*">
-                    <div>
-                        <strong>Tap to select audio</strong>
-                        MP3, WAV, OGG and other browser-supported audio
-                    </div>
-                </label>
+    <div class="preview-inner">
+      <div class="lyric-preview">
+        <div class="lyric-base" id="previewBase"></div>
+        <div class="lyric-highlight" id="previewHighlight"></div>
+      </div>
+    </div>
 
-                <div class="song-name" id="songName">
-                    No audio selected
-                </div>
+    <div class="preview-time" id="previewTime">00:00.000</div>
+  </div>
 
-                <div class="button-row">
-                    <button class="btn btn-primary" id="loadDemoBtn">
-                        Load Demo
-                    </button>
+  <!-- AUDIO CONTROLS -->
+  <div class="audio-bar">
 
-                    <button class="btn" id="clearAudioBtn">
-                        Clear Audio
-                    </button>
-                </div>
+    <button class="playbtn" id="playBtn">▶</button>
 
-            </div>
-        </section>
+    <div class="time-display">
+      <span id="currentTime">00:00.000</span>
+      /
+      <span id="duration">00:00.000</span>
+    </div>
 
+    <input
+      class="audio-seek"
+      id="audioSeek"
+      type="range"
+      min="0"
+      max="1"
+      step="0.001"
+      value="0"
+    >
 
-        <!-- LYRICS -->
+    <div class="zoom-box">
+      <button id="zoomOut">−</button>
+      <div class="zoom-value" id="zoomValue">80px/s</div>
+      <button id="zoomIn">+</button>
+    </div>
 
-        <section class="card">
-            <div class="card-header">
-                📝 Lyrics
-            </div>
+  </div>
 
-            <div class="card-body">
+  <!-- EDITOR -->
+  <div class="editor">
 
-                <textarea
-                    id="lyricsInput"
-                    placeholder="Paste your lyrics here...
+    <div class="toolbar">
 
-Example:
+      <button class="toolbtn" id="splitBtn">✂ Split</button>
+      <button class="toolbtn" id="duplicateBtn">▣ Duplicate</button>
+      <button class="toolbtn" id="deleteLineBtn">🗑 Delete Line</button>
 
-Amazing grace how sweet the sound
-That saved a wretch like me
-I once was lost but now am found
-Was blind but now I see"
-                ></textarea>
+      <button class="toolbtn" id="autoKeysBtn">◆ Auto 0→100</button>
 
-                <div class="help">
-                    Each line becomes a karaoke line. Words are automatically separated for timing.
-                </div>
-
-                <div class="button-row" style="margin-top:10px;">
-                    <button class="btn btn-primary" id="prepareLyricsBtn">
-                        Prepare Lyrics
-                    </button>
-
-                    <button class="btn" id="clearLyricsBtn">
-                        Clear Lyrics
-                    </button>
-                </div>
-
-            </div>
-        </section>
-
-
-        <!-- PLAYER -->
-
-        <section class="card">
-            <div class="card-header">
-                ▶️ Player
-            </div>
-
-            <div class="player">
-
-                <div class="now-playing" id="nowPlaying">
-                    No song loaded
-                </div>
-
-                <div class="time-display">
-                    <span id="currentTime">00:00.000</span>
-                    <span id="duration">00:00.000</span>
-                </div>
-
-                <div class="progress-wrap" id="progressWrap">
-                    <div class="progress" id="progress"></div>
-                </div>
-
-                <div class="player-controls">
-
-                    <button class="control-btn" id="back5Btn" title="Back 5 seconds">
-                        ↶
-                    </button>
-
-                    <button class="play-btn" id="playBtn" title="Play/Pause">
-                        ▶
-                    </button>
-
-                    <button class="control-btn" id="forward5Btn" title="Forward 5 seconds">
-                        ↷
-                    </button>
-
-                </div>
-
-                <div class="speed-control">
-                    Speed
-                    <select id="speedSelect">
-                        <option value="0.5">0.5x</option>
-                        <option value="0.75">0.75x</option>
-                        <option value="1" selected>1x</option>
-                        <option value="1.25">1.25x</option>
-                        <option value="1.5">1.5x</option>
-                        <option value="2">2x</option>
-                    </select>
-                </div>
-
-                <audio id="audio"></audio>
-
-            </div>
-        </section>
-
-
-        <!-- KARAOKE -->
-
-        <section class="card">
-            <div class="card-header">
-                🎤 Karaoke Preview
-            </div>
-
-            <div class="karaoke-display" id="karaokeDisplay">
-                <div class="empty">
-                    Prepare lyrics to begin
-                </div>
-            </div>
-        </section>
-
-
-        <!-- TIMELINE -->
-
-        <section class="card">
-            <div class="card-header">
-                📊 Timeline
-            </div>
-
-            <div class="card-body">
-
-                <div class="timeline" id="timeline">
-                    <div class="timeline-inner" id="timelineInner">
-
-                        <div class="timeline-grid" id="timelineGrid"></div>
-
-                        <div class="playhead" id="playhead"></div>
-
-                    </div>
-                </div>
-
-                <div class="help">
-                    The red line shows the current playback position.
-                </div>
-
-            </div>
-        </section>
-
-
-        <!-- TIMING -->
-
-        <section class="card">
-            <div class="card-header">
-                ⏱️ Word Timing
-            </div>
-
-            <div class="card-body">
-
-                <div class="timing-toolbar">
-
-                    <button class="btn btn-success btn-small" id="startTimingBtn">
-                        ● Start Timing
-                    </button>
-
-                    <button class="btn btn-warning btn-small" id="stopTimingBtn">
-                        ■ Stop Timing
-                    </button>
-
-                    <button class="btn btn-small" id="undoTimingBtn">
-                        ↩ Undo
-                    </button>
-
-                </div>
-
-                <div class="timing-status" id="timingStatus">
-                    Timing mode is OFF
-                </div>
-
-                <div class="word-list" id="wordList">
-                    <div class="empty">
-                        Prepare lyrics first.
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-
-        <!-- STATS -->
-
-        <section class="card">
-            <div class="card-header">
-                📈 Project
-            </div>
-
-            <div class="card-body">
-
-                <div class="stats">
-
-                    <div class="stat">
-                        <div class="stat-value" id="statWords">0</div>
-                        <div class="stat-label">WORDS</div>
-                    </div>
-
-                    <div class="stat">
-                        <div class="stat-value" id="statTimed">0</div>
-                        <div class="stat-label">TIMED</div>
-                    </div>
-
-                    <div class="stat">
-                        <div class="stat-value" id="statProgress">0%</div>
-                        <div class="stat-label">PROGRESS</div>
-                    </div>
-
-                </div>
-
-            </div>
-        </section>
-
-
-        <!-- PROJECT -->
-
-        <section class="card">
-            <div class="card-header">
-                💾 Project
-            </div>
-
-            <div class="card-body">
-
-                <div class="button-row">
-
-                    <button class="btn btn-primary" id="saveProjectBtn">
-                        Save Project
-                    </button>
-
-                    <button class="btn" id="loadProjectBtn">
-                        Load Project
-                    </button>
-
-                    <button class="btn btn-purple" id="exportBtn">
-                        Export JSON
-                    </button>
-
-                    <button class="btn" id="importBtn">
-                        Import JSON
-                    </button>
-
-                </div>
-
-                <input
-                    type="file"
-                    id="projectFile"
-                    accept=".json,application/json"
-                    style="display:none;"
-                >
-
-                <div class="help">
-                    Save Project stores the current project on this device. Export JSON creates a portable project file.
-                </div>
-
-            </div>
-        </section>
-
-    </main>
-</div>
-
-
-<!-- HELP MODAL -->
-
-<div class="modal" id="helpModal">
-
-    <div class="modal-box">
-
-        <div class="modal-title">
-            🎤 Karaoke Editor V1
-        </div>
-
-        <div class="modal-text">
-1. Select your MP3/WAV/OGG file.
-
-2. Paste the lyrics.
-
-3. Tap "Prepare Lyrics".
-
-4. Tap "Start Timing".
-
-5. Play the song.
-
-6. Press SPACE or tap the "Next Word" area while each word is being sung.
-
-7. The timing of every word is recorded.
-
-8. Stop Timing when finished.
-
-9. Use the word timing list to manually correct timing.
-
-10. Save Project or Export JSON.
-
-Keyboard shortcuts:
-
-SPACE = timestamp next word while timing
-P = Play/Pause
-← = Back 5 seconds
-→ = Forward 5 seconds
-
-The project is stored locally in your browser.
-        </div>
-
-        <div class="button-row" style="margin-top:15px;">
-            <button class="btn btn-primary" id="closeHelpBtn">
-                Close
-            </button>
-        </div>
+      <button class="toolbtn" id="resetKeysBtn">Reset Keys</button>
 
     </div>
+
+    <div class="editor-scroll" id="editorScroll">
+
+      <div class="timeline" id="timeline">
+
+        <div class="ruler">
+          <div class="ruler-inner" id="rulerInner"></div>
+        </div>
+
+        <div class="wave-track">
+          <div class="wave-label">AUDIO</div>
+          <canvas class="wave-canvas" id="waveCanvas"></canvas>
+        </div>
+
+        <div class="lyric-track" id="lyricTrack">
+          <div class="track-label">LYRICS</div>
+        </div>
+
+        <div class="playhead" id="playhead">
+          <div class="playhead-head"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- KEYFRAME PANEL -->
+  <div class="key-panel">
+
+    <div class="key-panel-top">
+
+      <div class="key-panel-title">
+        KEYFRAME
+      </div>
+
+      <button class="kfbtn kf-delete" id="minusKey">−</button>
+      <button class="kfbtn kf-add" id="plusKey">+</button>
+
+      <div class="selected-info" id="selectedKeyInfo">
+        No keyframe
+      </div>
+
+    </div>
+
+    <div class="key-panel-bottom">
+
+      <div class="progress-label">
+        Shading
+      </div>
+
+      <input
+        class="progress-range"
+        id="progressRange"
+        type="range"
+        min="0"
+        max="100"
+        step="1"
+        value="0"
+      >
+
+      <div class="progress-number" id="progressNumber">
+        0%
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
 
+<!-- LYRICS MODAL -->
+<div class="modal" id="lyricsModal">
 
-<!-- TOAST -->
+  <div class="modal-card">
 
-<div class="toast" id="toast">
-    Ready
+    <h3>Paste Lyrics</h3>
+
+    <textarea
+      id="lyricsInput"
+      placeholder="Paste one lyric line per line...
+
+Amazing grace
+How sweet the sound
+That saved a wretch like me"
+    ></textarea>
+
+    <div class="modal-actions">
+      <button id="cancelLyrics">Cancel</button>
+      <button class="ok" id="applyLyrics">Create Timeline</button>
+    </div>
+
+  </div>
+
 </div>
 
+<audio id="audio" preload="metadata"></audio>
 
 <script>
-
-/* =========================================================
-   KARAOKE EDITOR V1
+/* ============================================================
+   KARAOKE FX EDITOR
    PART 1
-   Core UI + state + audio + lyrics preparation
-   ========================================================= */
+   ============================================================ */
 
 const audio = document.getElementById("audio");
+
+const audioBtn = document.getElementById("audioBtn");
 const audioFile = document.getElementById("audioFile");
 
-const songName = document.getElementById("songName");
-const nowPlaying = document.getElementById("nowPlaying");
-
+const lyricsBtn = document.getElementById("lyricsBtn");
+const lyricsModal = document.getElementById("lyricsModal");
 const lyricsInput = document.getElementById("lyricsInput");
-const karaokeDisplay = document.getElementById("karaokeDisplay");
-const wordList = document.getElementById("wordList");
+const applyLyrics = document.getElementById("applyLyrics");
+const cancelLyrics = document.getElementById("cancelLyrics");
 
 const playBtn = document.getElementById("playBtn");
-const back5Btn = document.getElementById("back5Btn");
-const forward5Btn = document.getElementById("forward5Btn");
+const audioSeek = document.getElementById("audioSeek");
 
 const currentTimeEl = document.getElementById("currentTime");
 const durationEl = document.getElementById("duration");
-
-const progressWrap = document.getElementById("progressWrap");
-const progress = document.getElementById("progress");
-
-const speedSelect = document.getElementById("speedSelect");
+const previewTime = document.getElementById("previewTime");
 
 const timeline = document.getElementById("timeline");
-const timelineInner = document.getElementById("timelineInner");
-const timelineGrid = document.getElementById("timelineGrid");
+const rulerInner = document.getElementById("rulerInner");
+const lyricTrack = document.getElementById("lyricTrack");
 const playhead = document.getElementById("playhead");
 
-const timingStatus = document.getElementById("timingStatus");
+const waveCanvas = document.getElementById("waveCanvas");
 
-const statWords = document.getElementById("statWords");
-const statTimed = document.getElementById("statTimed");
-const statProgress = document.getElementById("statProgress");
+const previewBase = document.getElementById("previewBase");
+const previewHighlight = document.getElementById("previewHighlight");
 
-const helpModal = document.getElementById("helpModal");
-const toast = document.getElementById("toast");
+const plusKey = document.getElementById("plusKey");
+const minusKey = document.getElementById("minusKey");
 
-let audioURL = null;
+const progressRange = document.getElementById("progressRange");
+const progressNumber = document.getElementById("progressNumber");
+const selectedKeyInfo = document.getElementById("selectedKeyInfo");
 
-let project = {
-    version: 1,
-    name: "",
-    audioName: "",
-    lyrics: "",
-    lines: [],
-    words: [],
-    duration: 0,
-    created: null,
-    modified: null
+const zoomOut = document.getElementById("zoomOut");
+const zoomIn = document.getElementById("zoomIn");
+const zoomValue = document.getElementById("zoomValue");
+
+const splitBtn = document.getElementById("splitBtn");
+const duplicateBtn = document.getElementById("duplicateBtn");
+const deleteLineBtn = document.getElementById("deleteLineBtn");
+const autoKeysBtn = document.getElementById("autoKeysBtn");
+const resetKeysBtn = document.getElementById("resetKeysBtn");
+
+const saveBtn = document.getElementById("saveBtn");
+const loadBtn = document.getElementById("loadBtn");
+const exportBtn = document.getElementById("exportBtn");
+const importBtn = document.getElementById("importBtn");
+const projectFile = document.getElementById("projectFile");
+
+const editorScroll = document.getElementById("editorScroll");
+
+let state = {
+  audioName: "",
+  audioDuration: 0,
+
+  zoom: 80,
+
+  lines: [],
+
+  selectedLineId: null,
+  selectedKeyId: null,
+
+  currentTime: 0
 };
 
-let timingMode = false;
-let timingIndex = 0;
-let lastTimedIndex = -1;
+let audioBuffer = null;
 
 
-/* =========================================================
-   UTILITY
-   ========================================================= */
+/* ============================================================
+   BASIC HELPERS
+   ============================================================ */
 
-function showToast(message) {
-    toast.textContent = message;
-    toast.classList.add("show");
+function uid(prefix = "id"){
+  return prefix + "_" +
+    Math.random().toString(36).slice(2,9) +
+    Date.now().toString(36);
+}
 
-    clearTimeout(showToast.timer);
+function clamp(v,min,max){
+  return Math.max(min,Math.min(max,v));
+}
 
-    showToast.timer = setTimeout(() => {
-        toast.classList.remove("show");
-    }, 1800);
+function formatTime(seconds){
+  seconds = Number(seconds) || 0;
+
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  const ms = Math.floor((seconds % 1) * 1000);
+
+  return (
+    String(m).padStart(2,"0") +
+    ":" +
+    String(s).padStart(2,"0") +
+    "." +
+    String(ms).padStart(3,"0")
+  );
+}
+
+function formatShortTime(seconds){
+  seconds = Number(seconds) || 0;
+
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+
+  return (
+    String(m).padStart(2,"0") +
+    ":" +
+    String(s).padStart(2,"0")
+  );
+}
+
+function getDuration(){
+  return Number(state.audioDuration) || Number(audio.duration) || 0;
+}
+
+function timeToX(time){
+  return time * state.zoom;
+}
+
+function xToTime(x){
+  return x / state.zoom;
+}
+
+function selectedLine(){
+  return state.lines.find(
+    l => l.id === state.selectedLineId
+  ) || null;
+}
+
+function selectedKey(){
+  const line = selectedLine();
+
+  if(!line) return null;
+
+  return line.keyframes.find(
+    k => k.id === state.selectedKeyId
+  ) || null;
 }
 
 
-function formatTime(seconds) {
+/* ============================================================
+   AUDIO
+   ============================================================ */
 
-    if (!isFinite(seconds) || seconds < 0) {
-        seconds = 0;
-    }
-
-    const minutes = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    const millis = Math.floor((seconds % 1) * 1000);
-
-    return (
-        String(minutes).padStart(2, "0") +
-        ":" +
-        String(secs).padStart(2, "0") +
-        "." +
-        String(millis).padStart(3, "0")
-    );
-}
-
-
-function parseTime(value) {
-
-    if (typeof value === "number") {
-        return value;
-    }
-
-    if (!value) {
-        return null;
-    }
-
-    value = String(value).trim();
-
-    if (value.includes(":")) {
-
-        const parts = value.split(":");
-
-        if (parts.length === 2) {
-
-            const min = parseFloat(parts[0]);
-            const sec = parseFloat(parts[1]);
-
-            if (
-                Number.isFinite(min) &&
-                Number.isFinite(sec)
-            ) {
-                return min * 60 + sec;
-            }
-        }
-    }
-
-    const n = parseFloat(value);
-
-    return Number.isFinite(n) ? n : null;
-}
-
-
-function escapeHTML(text) {
-
-    return String(text)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-
-/* =========================================================
-   AUDIO FILE
-   ========================================================= */
-
-audioFile.addEventListener("change", function(event) {
-
-    const file = event.target.files[0];
-
-    if (!file) {
-        return;
-    }
-
-    if (audioURL) {
-        URL.revokeObjectURL(audioURL);
-    }
-
-    audioURL = URL.createObjectURL(file);
-
-    audio.src = audioURL;
-
-    project.audioName = file.name;
-    project.name = file.name.replace(/\.[^/.]+$/, "");
-    project.modified = new Date().toISOString();
-
-    songName.textContent = file.name;
-    nowPlaying.textContent = file.name;
-
-    audio.load();
-
-    showToast("Audio loaded");
+audioBtn.addEventListener("click",()=>{
+  audioFile.click();
 });
 
+audioFile.addEventListener("change",async e=>{
 
-audio.addEventListener("loadedmetadata", function() {
+  const file = e.target.files[0];
 
-    project.duration = audio.duration || 0;
+  if(!file) return;
 
-    durationEl.textContent = formatTime(audio.duration);
+  state.audioName = file.name;
 
-    buildTimeline();
+  const url = URL.createObjectURL(file);
 
-    updateStats();
+  audio.src = url;
+
+  audio.load();
+
+  try{
+
+    const arrayBuffer = await file.arrayBuffer();
+
+    const AC =
+      window.AudioContext ||
+      window.webkitAudioContext;
+
+    const ctx = new AC();
+
+    audioBuffer =
+      await ctx.decodeAudioData(arrayBuffer);
+
+    drawWaveform();
+
+  }catch(err){
+
+    console.warn("Waveform decode failed",err);
+
+  }
+
 });
 
+audio.addEventListener("loadedmetadata",()=>{
 
-audio.addEventListener("timeupdate", function() {
+  state.audioDuration = audio.duration || 0;
 
-    updatePlayer();
+  durationEl.textContent =
+    formatTime(state.audioDuration);
 
-    updateKaraoke();
+  audioSeek.max =
+    state.audioDuration || 1;
 
-    updatePlayhead();
+  if(state.lines.length === 0){
+
+    renderTimeline();
+
+  }else{
+
+    renderTimeline();
+
+  }
+
 });
 
+audio.addEventListener("timeupdate",()=>{
 
-audio.addEventListener("play", function() {
+  state.currentTime = audio.currentTime;
+
+  updatePlaybackUI();
+
+});
+
+audio.addEventListener("ended",()=>{
+
+  playBtn.textContent = "▶";
+
+});
+
+playBtn.addEventListener("click",()=>{
+
+  if(!audio.src){
+
+    alert("Load an audio file first.");
+
+    return;
+  }
+
+  if(audio.paused){
+
+    audio.play();
+
     playBtn.textContent = "❚❚";
-});
 
+  }else{
 
-audio.addEventListener("pause", function() {
-    playBtn.textContent = "▶";
-});
-
-
-audio.addEventListener("ended", function() {
+    audio.pause();
 
     playBtn.textContent = "▶";
 
-    if (timingMode) {
-        timingMode = false;
-        timingStatus.textContent = "Timing finished — song ended.";
-        timingStatus.style.color = "#34d399";
-    }
+  }
+
+});
+
+audioSeek.addEventListener("input",()=>{
+
+  const t = Number(audioSeek.value) || 0;
+
+  audio.currentTime = t;
+
+  state.currentTime = t;
+
+  updatePlaybackUI();
+
 });
 
 
-/* =========================================================
-   PLAYER
-   ========================================================= */
+/* ============================================================
+   LYRIC INPUT
+   ============================================================ */
 
-playBtn.addEventListener("click", togglePlay);
+lyricsBtn.addEventListener("click",()=>{
 
+  lyricsInput.value =
+    state.lines.map(l=>l.text).join("\n");
 
-function togglePlay() {
+  lyricsModal.classList.add("show");
 
-    if (!audio.src) {
-        showToast("Load an audio file first");
-        return;
-    }
+});
 
-    if (audio.paused) {
-        audio.play().catch(() => {
-            showToast("Unable to play audio");
-        });
-    } else {
-        audio.pause();
-    }
-}
+cancelLyrics.addEventListener("click",()=>{
 
+  lyricsModal.classList.remove("show");
 
-back5Btn.addEventListener("click", function() {
+});
 
-    if (!audio.src) return;
+applyLyrics.addEventListener("click",()=>{
 
-    audio.currentTime = Math.max(
-        0,
-        audio.currentTime - 5
-    );
+  const text =
+    lyricsInput.value.trim();
+
+  if(!text){
+
+    alert("Paste some lyrics first.");
+
+    return;
+  }
+
+  createLyrics(text);
+
+  lyricsModal.classList.remove("show");
+
 });
 
 
-forward5Btn.addEventListener("click", function() {
-
-    if (!audio.src) return;
-
-    audio.currentTime = Math.min(
-        audio.duration || Infinity,
-        audio.currentTime + 5
-    );
-});
-
-
-speedSelect.addEventListener("change", function() {
-
-    audio.playbackRate = parseFloat(
-        speedSelect.value
-    );
-});
-
-
-progressWrap.addEventListener("click", function(event) {
-
-    if (!audio.duration) {
-        return;
-    }
-
-    const rect = progressWrap.getBoundingClientRect();
-
-    const ratio =
-        (event.clientX - rect.left) /
-        rect.width;
-
-    audio.currentTime =
-        Math.max(
-            0,
-            Math.min(1, ratio)
-        ) * audio.duration;
-});
-
-
-function updatePlayer() {
-
-    if (!audio.duration) {
-        return;
-    }
-
-    const current = audio.currentTime;
-    const total = audio.duration;
-
-    currentTimeEl.textContent =
-        formatTime(current);
-
-    durationEl.textContent =
-        formatTime(total);
-
-    progress.style.width =
-        ((current / total) * 100) + "%";
-}
-
-
-function updatePlayhead() {
-
-    if (!audio.duration) {
-        return;
-    }
-
-    const ratio =
-        audio.currentTime / audio.duration;
-
-    playhead.style.left =
-        (ratio * 100) + "%";
-}
-
-
-/* =========================================================
-   LYRICS PREPARATION
-   ========================================================= */
-
-document
-    .getElementById("prepareLyricsBtn")
-    .addEventListener("click", prepareLyrics);
-
-
-function prepareLyrics() {
-
-    const raw = lyricsInput.value.trim();
-
-    if (!raw) {
-        showToast("Enter lyrics first");
-        return;
-    }
-
-    const oldWords = project.words || [];
-
-    const lines = raw
-        .split(/\r?\n/)
-        .map(line => line.trim())
-        .filter(line => line.length > 0);
-
-    const newWords = [];
-    const newLines = [];
-
-    let globalIndex = 0;
-
-    lines.forEach((line, lineIndex) => {
-
-        const parts = line
-            .split(/\s+/)
-            .filter(Boolean);
-
-        const lineWords = [];
-
-        parts.forEach(word => {
-
-            const old = oldWords[globalIndex];
-
-            const item = {
-                index: globalIndex,
-                line: lineIndex,
-                text: word,
-                start: old && old.text === word
-                    ? old.start
-                    : null,
-                end: old && old.text === word
-                    ? old.end
-                    : null
-            };
-
-            newWords.push(item);
-            lineWords.push(item);
-
-            globalIndex++;
-        });
-
-        newLines.push({
-            index: lineIndex,
-            text: line,
-            words: lineWords
-        });
-    });
-
-    project.lyrics = raw;
-    project.lines = newLines;
-    project.words = newWords;
-    project.modified = new Date().toISOString();
-
-    timingIndex = findFirstUntimed();
-    lastTimedIndex = timingIndex - 1;
-
-    renderKaraoke();
-    renderWordList();
-    updateStats();
-
-    showToast(
-        newWords.length +
-        " words prepared"
-    );
-}
-
-
-function findFirstUntimed() {
-
-    const index = project.words.findIndex(
-        word => word.start === null
-    );
-
-    return index === -1
-        ? project.words.length
-        : index;
-}
-
-
-/* =========================================================
-   KARAOKE DISPLAY
-   ========================================================= */
-
-function renderKaraoke() {
-
-    if (!project.lines.length) {
-
-        karaokeDisplay.innerHTML =
-            '<div class="empty">Prepare lyrics to begin</div>';
-
-        return;
-    }
-
-    karaokeDisplay.innerHTML = "";
-
-    project.lines.forEach(line => {
-
-        const lineEl =
-            document.createElement("div");
-
-        lineEl.className = "karaoke-line";
-
-        line.words.forEach(word => {
-
-            const span =
-                document.createElement("span");
-
-            span.className = "karaoke-word";
-
-            span.dataset.index = word.index;
-
-            span.textContent = word.text;
-
-            lineEl.appendChild(span);
-        });
-
-        karaokeDisplay.appendChild(lineEl);
-    });
-}
-
-
-function updateKaraoke() {
-
-    if (!project.words.length) {
-        return;
-    }
-
-    const current = audio.currentTime;
-
-    project.words.forEach(word => {
-
-        const el =
-            document.querySelector(
-                `.karaoke-word[data-index="${word.index}"]`
-            );
-
-        if (!el) return;
-
-        el.classList.remove(
-            "active",
-            "done"
-        );
-
-        if (
-            word.start !== null &&
-            current >= word.start
-        ) {
-
-            if (
-                word.end === null ||
-                current < word.end
-            ) {
-                el.classList.add("active");
-            } else {
-                el.classList.add("done");
-            }
-        }
-    });
-}
-
-
-/* =========================================================
-   TIMELINE
-   ========================================================= */
-
-function buildTimeline() {
-
-    timelineGrid.innerHTML = "";
-
-    const duration =
-        project.duration || audio.duration || 0;
-
-    if (!duration) {
-        timelineInner.style.width = "100%";
-        return;
-    }
-
-    /*
-       Minimum visual width:
-       100 pixels per 10 seconds.
-       This keeps longer songs scrollable.
-    */
-
-    const width =
-        Math.max(
-            timeline.clientWidth,
-            duration * 10
-        );
-
-    timelineInner.style.width =
-        width + "px";
-
-    const interval = 5;
-
-    for (
-        let seconds = 0;
-        seconds <= duration;
-        seconds += interval
-    ) {
-
-        const x =
-            (seconds / duration) * width;
-
-        const line =
-            document.createElement("div");
-
-        line.className = "grid-line";
-        line.style.left = x + "px";
-
-        const label =
-            document.createElement("div");
-
-        label.className = "grid-label";
-        label.style.left = x + "px";
-        label.textContent =
-            formatTime(seconds).substring(0, 5);
-
-        timelineGrid.appendChild(line);
-        timelineGrid.appendChild(label);
-    }
-
-    updatePlayhead();
-}
-
-
-/* =========================================================
-   WORD LIST
-   ========================================================= */
-
-function renderWordList() {
-
-    if (!project.words.length) {
-
-        wordList.innerHTML =
-            '<div class="empty">Prepare lyrics first.</div>';
-
-        return;
-    }
-
-    wordList.innerHTML = "";
-
-    project.words.forEach((word, index) => {
-
-        const row =
-            document.createElement("div");
-
-        row.className = "word-row";
-
-        row.innerHTML = `
-
-            <div class="word-number">
-                ${index + 1}
-            </div>
-
-            <div class="word-text"
-                 title="${escapeHTML(word.text)}">
-                ${escapeHTML(word.text)}
-            </div>
-
-            <input
-                class="time-input"
-                type="text"
-                inputmode="decimal"
-                placeholder="start"
-                value="${
-                    word.start !== null
-                        ? word.start.toFixed(3)
-                        : ""
-                }"
-                data-start="${index}"
-            >
-
-            <button
-                class="jump-btn"
-                data-jump="${index}">
-                Jump
-            </button>
-        `;
-
-        wordList.appendChild(row);
-    });
-
-    /*
-       End-time editing is added in Part 2.
-    */
-
-    document
-        .querySelectorAll("[data-start]")
-        .forEach(input => {
-
-            input.addEventListener(
-                "change",
-                function() {
-
-                    const index =
-                        Number(
-                            input.dataset.start
-                        );
-
-                    const value =
-                        parseTime(input.value);
-
-                    project.words[index].start =
-                        value;
-
-                    if (
-                        index > 0 &&
-                        value !== null
-                    ) {
-                        project.words[index - 1].end =
-                            value;
-                    }
-
-                    project.modified =
-                        new Date().toISOString();
-
-                    updateStats();
-                    renderKaraoke();
-                }
-            );
-        });
-
-    document
-        .querySelectorAll("[data-jump]")
-        .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                function() {
-
-                    const index =
-                        Number(
-                            button.dataset.jump
-                        );
-
-                    const word =
-                        project.words[index];
-
-                    if (
-                        word.start !== null
-                    ) {
-                        audio.currentTime =
-                            word.start;
-                    }
-                }
-            );
-        });
-}
-
-
-/* =========================================================
-   STATS
-   ========================================================= */
-
-function updateStats() {
-
-    const total =
-        project.words.length;
-
-    const timed =
-        project.words.filter(
-            word => word.start !== null
-        ).length;
-
-    const percent =
-        total
-            ? Math.round((timed / total) * 100)
-            : 0;
-
-    statWords.textContent = total;
-    statTimed.textContent = timed;
-    statProgress.textContent =
-        percent + "%";
-}
-
-
-/* =========================================================
-   TIMING MODE
-   ========================================================= */
-
-document
-    .getElementById("startTimingBtn")
-    .addEventListener("click", startTiming);
-
-
-document
-    .getElementById("stopTimingBtn")
-    .addEventListener("click", stopTiming);
-
-
-function startTiming() {
-
-    if (!audio.src) {
-        showToast("Load an audio file first");
-        return;
-    }
-
-    if (!project.words.length) {
-        showToast("Prepare lyrics first");
-        return;
-    }
-
-    timingMode = true;
-
-    timingIndex =
-        findFirstUntimed();
-
-    lastTimedIndex =
-        timingIndex - 1;
-
-    timingStatus.textContent =
-        "TIMING ON — press SPACE for each word";
-
-    timingStatus.style.color =
-        "#38bdf8";
-
-    /*
-       Start playback automatically.
-    */
-
-    audio.play().catch(() => {});
-
-    showToast(
-        "Timing started — press SPACE"
-    );
-}
-
-
-function stopTiming() {
-
-    timingMode = false;
-
-    timingStatus.textContent =
-        "Timing mode is OFF";
-
-    timingStatus.style.color =
-        "#94a3b8";
-
-    showToast("Timing stopped");
-}
-
-
-/* =========================================================
-   TIMESTAMP NEXT WORD
-   ========================================================= */
-
-function timestampNextWord() {
-
-    if (!timingMode) {
-        return;
-    }
-
-    if (!project.words.length) {
-        return;
-    }
-
-    if (
-        timingIndex >=
-        project.words.length
-    ) {
-
-        stopTiming();
-
-        showToast(
-            "All words have timing"
-        );
-
-        return;
-    }
-
-    const now =
-        audio.currentTime;
-
-    const word =
-        project.words[timingIndex];
-
-    /*
-       Set start.
-    */
-
-    word.start = now;
-
-    /*
-       Previous word ends when
-       the current word starts.
-    */
-
-    if (timingIndex > 0) {
-
-        const previous =
-            project.words[
-                timingIndex - 1
-            ];
-
-        if (
-            previous.start !== null &&
-            now >= previous.start
-        ) {
-            previous.end = now;
-        }
-    }
-
-    lastTimedIndex =
-        timingIndex;
-
-    timingIndex++;
-
-    project.modified =
-        new Date().toISOString();
-
-    updateStats();
-    renderWordList();
-    renderKaraoke();
-
-    /*
-       Automatically scroll the current
-       word into view.
-    */
-
-    const currentEl =
-        document.querySelector(
-            `.karaoke-word[data-index="${lastTimedIndex}"]`
-        );
-
-    if (currentEl) {
-        currentEl.scrollIntoView({
-            behavior: "smooth",
-            block: "center"
-        });
-    }
-
-    if (
-        timingIndex >=
-        project.words.length
-    ) {
-
-        timingStatus.textContent =
-            "All words timed!";
-
-        timingStatus.style.color =
-            "#34d399";
-
-        timingMode = false;
-
-        showToast(
-            "Timing complete!"
-        );
-    }
-}
-
-
-/* =========================================================
-   KEYBOARD SHORTCUTS
-   ========================================================= */
-
-document.addEventListener("keydown", function(event) {
-
-    /*
-       Don't capture keys while typing
-       inside input/textarea.
-    */
-
-    const tag =
-        document.activeElement.tagName;
-
-    const typing =
-        tag === "INPUT" ||
-        tag === "TEXTAREA" ||
-        tag === "SELECT";
-
-    if (typing) {
-        return;
-    }
-
-    if (
-        event.code === "Space"
-    ) {
-
-        event.preventDefault();
-
-        if (timingMode) {
-            timestampNextWord();
-        } else {
-            togglePlay();
-        }
-
-        return;
-    }
-
-    if (
-        event.key === "p" ||
-        event.key === "P"
-    ) {
-        togglePlay();
-        return;
-    }
-
-    if (
-        event.key === "ArrowLeft"
-    ) {
-
-        if (audio.src) {
-            audio.currentTime =
-                Math.max(
-                    0,
-                    audio.currentTime - 5
-                );
-        }
-
-        return;
-    }
-
-    if (
-        event.key === "ArrowRight"
-    ) {
-
-        if (audio.src) {
-            audio.currentTime =
-                Math.min(
-                    audio.duration || Infinity,
-                    audio.currentTime + 5
-                );
-        }
-
-        return;
-    }
-});
-
-
-/* =========================================================
-   TAP ANYWHERE ON KARAOKE DISPLAY
-   DURING TIMING
-   ========================================================= */
-
-karaokeDisplay.addEventListener(
-    "click",
-    function() {
-
-        if (timingMode) {
-            timestampNextWord();
-        }
-    }
-);
-
-
-/* =========================================================
-   CLEAR LYRICS
-   ========================================================= */
-
-document
-    .getElementById("clearLyricsBtn")
-    .addEventListener("click", function() {
-
-        lyricsInput.value = "";
-
-        project.lyrics = "";
-        project.lines = [];
-        project.words = [];
-
-        timingMode = false;
-        timingIndex = 0;
-        lastTimedIndex = -1;
-
-        renderKaraoke();
-        renderWordList();
-        updateStats();
-
-        timingStatus.textContent =
-            "Timing mode is OFF";
-
-        showToast("Lyrics cleared");
-    });
-
-
-/* =========================================================
-   CLEAR AUDIO
-   ========================================================= */
-
-document
-    .getElementById("clearAudioBtn")
-    .addEventListener("click", function() {
-
-        audio.pause();
-
-        if (audioURL) {
-            URL.revokeObjectURL(audioURL);
-            audioURL = null;
-        }
-
-        audio.removeAttribute("src");
-        audio.load();
-
-        audioFile.value = "";
-
-        songName.textContent =
-            "No audio selected";
-
-        nowPlaying.textContent =
-            "No song loaded";
-
-        currentTimeEl.textContent =
-            "00:00.000";
-
-        durationEl.textContent =
-            "00:00.000";
-
-        progress.style.width = "0%";
-
-        project.audioName = "";
-        project.duration = 0;
-
-        buildTimeline();
-
-        showToast("Audio cleared");
-    });
-
-
-/* =========================================================
-   RESET
-   ========================================================= */
-
-document
-    .getElementById("resetBtn")
-    .addEventListener("click", function() {
-
-        const yes =
-            confirm(
-                "Reset the entire project?"
-            );
-
-        if (!yes) {
-            return;
-        }
-
-        location.reload();
-    });
-
-
-/* =========================================================
-   HELP
-   ========================================================= */
-
-document
-    .getElementById("helpBtn")
-    .addEventListener("click", function() {
-
-        helpModal.classList.add("show");
-    });
-
-
-document
-    .getElementById("closeHelpBtn")
-    .addEventListener("click", function() {
-
-        helpModal.classList.remove("show");
-    });
-
-
-helpModal.addEventListener(
-    "click",
-    function(event) {
-
-        if (
-            event.target === helpModal
-        ) {
-            helpModal.classList.remove(
-                "show"
-            );
-        }
-    }
-);
-
-
-/* =========================================================
-   DEMO
-   ========================================================= */
-
-document
-    .getElementById("loadDemoBtn")
-    .addEventListener("click", function() {
-
-        lyricsInput.value =
-`Amazing grace how sweet the sound
-That saved a wretch like me
-I once was lost but now am found
-Was blind but now I see`;
-
-        prepareLyrics();
-
-        showToast(
-            "Demo lyrics loaded"
-        );
-    });
-
-
-/* =========================================================
-   INITIALIZE
-   ========================================================= */
-
-audio.playbackRate = 1;
-
-renderKaraoke();
-renderWordList();
-updateStats();
-
-</script>
-<script>
-
-/* =========================================================
-   KARAOKE EDITOR V1
-   PART 2
-   Advanced timing + undo + save/load + export/import
-   ========================================================= */
-
-
-/* =========================================================
-   TIMING HISTORY
-   ========================================================= */
-
-let timingHistory = [];
-
-
-function saveTimingHistory() {
-
-    timingHistory.push(
-        project.words.map(word => ({
-            start: word.start,
-            end: word.end
-        }))
-    );
-
-    if (timingHistory.length > 30) {
-        timingHistory.shift();
-    }
-}
-
-
-function undoTiming() {
-
-    if (!timingHistory.length) {
-        showToast("Nothing to undo");
-        return;
-    }
-
-    const previous =
-        timingHistory.pop();
-
-    previous.forEach((item, index) => {
-
-        if (!project.words[index]) {
-            return;
-        }
-
-        project.words[index].start =
-            item.start;
-
-        project.words[index].end =
-            item.end;
-    });
-
-    timingIndex =
-        findFirstUntimed();
-
-    lastTimedIndex =
-        timingIndex - 1;
-
-    renderWordList();
-    renderKaraoke();
-    updateStats();
-
-    showToast("Timing undone");
-}
-
-
-document
-    .getElementById("undoTimingBtn")
-    .addEventListener(
-        "click",
-        undoTiming
-    );
-
-
-/* =========================================================
-   REPLACE TIMESTAMP FUNCTION
-   ========================================================= */
-
-function timestampNextWordAdvanced() {
-
-    if (!timingMode) {
-        return;
-    }
-
-    if (!project.words.length) {
-        return;
-    }
-
-    if (
-        timingIndex >=
-        project.words.length
-    ) {
-
-        timingMode = false;
-
-        timingStatus.textContent =
-            "All words timed!";
-
-        timingStatus.style.color =
-            "#34d399";
-
-        showToast(
-            "All words already timed"
-        );
-
-        return;
-    }
-
-    saveTimingHistory();
-
-    const now =
-        audio.currentTime;
-
-    const current =
-        project.words[timingIndex];
-
-    current.start = now;
-
-    /*
-       Previous word ends exactly
-       where the next word starts.
-    */
-
-    if (timingIndex > 0) {
-
-        const previous =
-            project.words[
-                timingIndex - 1
-            ];
-
-        if (
-            previous.start !== null &&
-            now >= previous.start
-        ) {
-            previous.end = now;
-        }
-    }
-
-    lastTimedIndex =
-        timingIndex;
-
-    timingIndex++;
-
-    project.modified =
-        new Date().toISOString();
-
-    renderWordList();
-    renderKaraoke();
-    updateStats();
-
-    /*
-       Scroll word list to current word.
-    */
-
-    const row =
-        wordList.children[
-            Math.max(
-                0,
-                timingIndex - 1
-            )
-        ];
-
-    if (row) {
-
-        row.scrollIntoView({
-            behavior: "smooth",
-            block: "center"
-        });
-    }
-
-    /*
-       If complete.
-    */
-
-    if (
-        timingIndex >=
-        project.words.length
-    ) {
-
-        timingMode = false;
-
-        timingStatus.textContent =
-            "All words timed!";
-
-        timingStatus.style.color =
-            "#34d399";
-
-        showToast(
-            "Timing complete!"
-        );
-
-    } else {
-
-        timingStatus.textContent =
-            "TIMING ON — next: " +
-            project.words[
-                timingIndex
-            ].text;
-    }
-}
-
-
-/*
-   Replace the original timing function
-   with the advanced version.
-*/
-
-timestampNextWord =
-    timestampNextWordAdvanced;
-
-
-/* =========================================================
-   MANUAL WORD TIMING
-   ========================================================= */
-
-function attachTimingInputs() {
-
-    document
-        .querySelectorAll("[data-start]")
-        .forEach(input => {
-
-            input.addEventListener(
-                "change",
-                function() {
-
-                    const index =
-                        Number(
-                            input.dataset.start
-                        );
-
-                    const value =
-                        parseTime(
-                            input.value
-                        );
-
-                    saveTimingHistory();
-
-                    project.words[index].start =
-                        value;
-
-                    /*
-                       Automatically update previous
-                       word end time.
-                    */
-
-                    if (
-                        index > 0 &&
-                        value !== null
-                    ) {
-
-                        const previous =
-                            project.words[
-                                index - 1
-                            ];
-
-                        if (
-                            previous.start !== null &&
-                            value >= previous.start
-                        ) {
-                            previous.end =
-                                value;
-                        }
-                    }
-
-                    /*
-                       If next word exists,
-                       keep its timing valid.
-                    */
-
-                    if (
-                        index <
-                        project.words.length - 1
-                    ) {
-
-                        const next =
-                            project.words[
-                                index + 1
-                            ];
-
-                        if (
-                            next.start !== null &&
-                            value !== null &&
-                            next.start < value
-                        ) {
-
-                            showToast(
-                                "Check next word timing"
-                            );
-                        }
-                    }
-
-                    project.modified =
-                        new Date().toISOString();
-
-                    updateStats();
-                    renderKaraoke();
-                }
-            );
-        });
-
-
-    document
-        .querySelectorAll("[data-jump]")
-        .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                function() {
-
-                    const index =
-                        Number(
-                            button.dataset.jump
-                        );
-
-                    const word =
-                        project.words[index];
-
-                    if (
-                        word.start !== null
-                    ) {
-
-                        audio.currentTime =
-                            word.start;
-
-                        /*
-                           Play from this word.
-                        */
-
-                        audio.play().catch(
-                            () => {}
-                        );
-                    }
-                }
-            );
-        });
-}
-
-
-/* =========================================================
-   END TIME CALCULATION
-   ========================================================= */
-
-function calculateEndTimes() {
-
-    for (
-        let i = 0;
-        i < project.words.length;
-        i++
-    ) {
-
-        const current =
-            project.words[i];
-
-        const next =
-            project.words[i + 1];
-
-        if (
-            current.start !== null &&
-            next &&
-            next.start !== null &&
-            next.start >= current.start
-        ) {
-
-            current.end =
-                next.start;
-
-        } else if (
-            current.start !== null &&
-            i === project.words.length - 1
-        ) {
-
-            current.end =
-                project.duration ||
-                audio.duration ||
-                current.start + 2;
-
-        } else {
-
-            current.end = null;
-        }
-    }
-}
-
-
-/* =========================================================
-   REBUILD WORD LIST WITH END TIMES
-   ========================================================= */
-
-function renderWordListAdvanced() {
-
-    if (!project.words.length) {
-
-        wordList.innerHTML =
-            '<div class="empty">Prepare lyrics first.</div>';
-
-        return;
-    }
-
-    calculateEndTimes();
-
-    wordList.innerHTML = "";
-
-    project.words.forEach(
-        (word, index) => {
-
-            const row =
-                document.createElement("div");
-
-            row.className =
-                "word-row";
-
-            row.innerHTML = `
-
-                <div class="word-number">
-                    ${index + 1}
-                </div>
-
-                <div
-                    class="word-text"
-                    title="${escapeHTML(word.text)}"
-                >
-                    ${escapeHTML(word.text)}
-                </div>
-
-                <input
-                    class="time-input"
-                    type="text"
-                    inputmode="decimal"
-                    placeholder="start"
-                    value="${
-                        word.start !== null
-                            ? Number(
-                                word.start
-                              ).toFixed(3)
-                            : ""
-                    }"
-                    data-start="${index}"
-                >
-
-                <button
-                    class="jump-btn"
-                    data-jump="${index}"
-                >
-                    ${
-                        word.start !== null
-                            ? formatTime(
-                                word.start
-                              ).substring(0,8)
-                            : "Set"
-                    }
-                </button>
-            `;
-
-            wordList.appendChild(row);
-        }
-    );
-
-    attachTimingInputs();
-}
-
-
-/*
-   Replace renderer.
-*/
-
-renderWordList =
-    renderWordListAdvanced;
-
-
-/* =========================================================
-   SAVE PROJECT TO LOCAL STORAGE
-   ========================================================= */
-
-function getProjectForStorage() {
-
-    calculateEndTimes();
+function createLyrics(text){
+
+  const arr =
+    text
+      .split(/\r?\n/)
+      .map(x=>x.trim())
+      .filter(Boolean);
+
+  const total =
+    getDuration() ||
+    Math.max(arr.length * 4,10);
+
+  const defaultLength =
+    total / arr.length;
+
+  state.lines = arr.map((text,index)=>{
+
+    const start =
+      index * defaultLength;
+
+    const end =
+      Math.min(
+        total,
+        start + defaultLength
+      );
 
     return {
-        version: 1,
 
-        name:
-            project.name || "Untitled",
+      id:uid("line"),
 
-        audioName:
-            project.audioName || "",
+      text,
 
-        lyrics:
-            project.lyrics || "",
+      start,
 
-        lines:
-            project.lines || [],
+      end,
 
-        words:
-            project.words || [],
+      keyframes:[
+        {
+          id:uid("key"),
+          time:end,
+          progress:100
+        }
+      ]
 
-        duration:
-            project.duration ||
-            audio.duration ||
+    };
+
+  });
+
+  state.selectedLineId =
+    state.lines[0]?.id || null;
+
+  state.selectedKeyId = null;
+
+  renderTimeline();
+
+}
+
+
+/* ============================================================
+   RENDER TIMELINE
+   ============================================================ */
+
+function renderTimeline(){
+
+  renderRuler();
+
+  renderLyrics();
+
+  updateTimelineWidth();
+
+  updatePlayhead();
+
+  updatePreview();
+
+  updateKeyPanel();
+
+  drawWaveform();
+
+}
+
+
+function updateTimelineWidth(){
+
+  const duration =
+    Math.max(
+      getDuration(),
+      state.lines.length
+        ? Math.max(...state.lines.map(l=>l.end))
+        : 10,
+      10
+    );
+
+  timeline.style.width =
+    Math.max(
+      duration * state.zoom + 100,
+      editorScroll.clientWidth
+    ) + "px";
+
+  rulerInner.style.width =
+    duration * state.zoom + "px";
+
+  waveCanvas.width =
+    Math.max(
+      1,
+      Math.floor(duration * state.zoom)
+    );
+
+  waveCanvas.style.width =
+    duration * state.zoom + "px";
+}
+
+
+function renderRuler(){
+
+  rulerInner.innerHTML = "";
+
+  const duration =
+    Math.max(getDuration(),10);
+
+  const step =
+    state.zoom >= 120 ? 1 :
+    state.zoom >= 70 ? 2 :
+    state.zoom >= 35 ? 5 :
+    10;
+
+  for(
+    let t=0;
+    t<=duration;
+    t+=step
+  ){
+
+    const tick =
+      document.createElement("div");
+
+    tick.className =
+      "tick" +
+      (t % (step*5) === 0
+        ? " major"
+        : "");
+
+    tick.style.left =
+      timeToX(t) + "px";
+
+    tick.textContent =
+      formatShortTime(t);
+
+    rulerInner.appendChild(tick);
+
+  }
+
+}
+
+
+/* ============================================================
+   RENDER LYRIC CLIPS
+   ============================================================ */
+
+function renderLyrics(){
+
+  lyricTrack
+    .querySelectorAll(".lyric-clip")
+    .forEach(el=>el.remove());
+
+  if(!state.lines.length){
+
+    const empty =
+      document.createElement("div");
+
+    empty.className = "empty";
+    empty.textContent =
+      "Load audio and add lyrics.";
+
+    lyricTrack.appendChild(empty);
+
+    return;
+  }
+
+  state.lines.forEach(line=>{
+
+    const clip =
+      document.createElement("div");
+
+    clip.className =
+      "lyric-clip" +
+      (
+        line.id === state.selectedLineId
+          ? " selected"
+          : ""
+      );
+
+    clip.dataset.id = line.id;
+
+    clip.style.left =
+      timeToX(line.start) + "px";
+
+    clip.style.width =
+      Math.max(
+        20,
+        timeToX(line.end-line.start)
+      ) + "px";
+
+
+    /* BODY */
+
+    const body =
+      document.createElement("div");
+
+    body.className =
+      "clip-body";
+
+    const highlight =
+      document.createElement("div");
+
+    highlight.className =
+      "clip-highlight";
+
+    const text =
+      document.createElement("div");
+
+    text.className =
+      "clip-text";
+
+    text.textContent =
+      line.text;
+
+    const highlightText =
+      document.createElement("div");
+
+    highlightText.className =
+      "clip-highlight-text";
+
+    highlightText.textContent =
+      line.text;
+
+    body.appendChild(highlight);
+    body.appendChild(text);
+    body.appendChild(highlightText);
+
+    clip.appendChild(body);
+
+
+    /* LEFT RESIZE */
+
+    const left =
+      document.createElement("div");
+
+    left.className =
+      "clip-left";
+
+    clip.appendChild(left);
+
+
+    /* RIGHT RESIZE */
+
+    const right =
+      document.createElement("div");
+
+    right.className =
+      "clip-right";
+
+    clip.appendChild(right);
+
+
+    /* INFO */
+
+    const info =
+      document.createElement("div");
+
+    info.className =
+      "clip-info";
+
+    info.textContent =
+      `${formatShortTime(line.start)} – ${formatShortTime(line.end)}`;
+
+    clip.appendChild(info);
+
+
+    /* KEYFRAMES */
+
+    line.keyframes
+      .sort((a,b)=>a.time-b.time)
+      .forEach(k=>{
+
+        const key =
+          document.createElement("div");
+
+        key.className =
+          "keyframe" +
+          (
+            k.id === state.selectedKeyId
+              ? " selected"
+              : ""
+          );
+
+        key.dataset.keyId = k.id;
+
+        const relative =
+          clamp(
+            (k.time-line.start) /
+            Math.max(.001,line.end-line.start),
             0,
+            1
+          );
 
-        created:
-            project.created ||
-            new Date().toISOString(),
+        key.style.left =
+          (relative * 100) + "%";
 
-        modified:
-            new Date().toISOString()
-    };
+        key.title =
+          `${formatTime(k.time)} • ${k.progress}%`;
+
+        key.addEventListener(
+          "pointerdown",
+          ev=>{
+
+            ev.stopPropagation();
+
+            selectLine(line.id);
+
+            state.selectedKeyId =
+              k.id;
+
+            updateKeyPanel();
+
+            renderLyrics();
+
+          }
+        );
+
+        clip.appendChild(key);
+
+      });
+
+
+    /* SELECT LINE */
+
+    body.addEventListener(
+      "pointerdown",
+      ev=>{
+
+        if(ev.target.classList.contains("keyframe"))
+          return;
+
+        selectLine(line.id);
+
+        startClipDrag(
+          ev,
+          line,
+          clip
+        );
+
+      }
+    );
+
+
+    left.addEventListener(
+      "pointerdown",
+      ev=>{
+
+        ev.stopPropagation();
+
+        selectLine(line.id);
+
+        startResize(
+          ev,
+          line,
+          clip,
+          "left"
+        );
+
+      }
+    );
+
+
+    right.addEventListener(
+      "pointerdown",
+      ev=>{
+
+        ev.stopPropagation();
+
+        selectLine(line.id);
+
+        startResize(
+          ev,
+          line,
+          clip,
+          "right"
+        );
+
+      }
+    );
+
+
+    lyricTrack.appendChild(clip);
+
+  });
+
 }
 
 
-document
-    .getElementById("saveProjectBtn")
-    .addEventListener(
-        "click",
-        saveProject
-    );
+/* ============================================================
+   SELECT LINE
+   ============================================================ */
+function selectLine(id){
 
+  state.selectedLineId = id;
 
-function saveProject() {
+  state.selectedKeyId = null;
 
-    if (
-        !project.words.length &&
-        !project.lyrics
-    ) {
+  renderLyrics();
 
-        showToast(
-            "Nothing to save"
-        );
+  updateKeyPanel();
 
-        return;
-    }
+  updatePreview();
 
-    project.modified =
-        new Date().toISOString();
-
-    if (!project.created) {
-        project.created =
-            project.modified;
-    }
-
-    const data =
-        getProjectForStorage();
-
-    try {
-
-        localStorage.setItem(
-            "karaoke_editor_project_v1",
-            JSON.stringify(data)
-        );
-
-        showToast(
-            "Project saved on this device"
-        );
-
-    } catch (error) {
-
-        console.error(error);
-
-        showToast(
-            "Unable to save project"
-        );
-    }
 }
 
 
-/* =========================================================
-   LOAD PROJECT FROM LOCAL STORAGE
-   ========================================================= */
+/* ============================================================
+   DRAG WHOLE LYRIC CLIP
+   ============================================================ */
 
-document
-    .getElementById("loadProjectBtn")
-    .addEventListener(
-        "click",
-        loadProject
+function startClipDrag(ev,line,clip){
+
+  if(ev.button !== undefined && ev.button !== 0)
+    return;
+
+  const startX =
+    ev.clientX;
+
+  const originalStart =
+    line.start;
+
+  const originalEnd =
+    line.end;
+
+  const width =
+    originalEnd-originalStart;
+
+  const move = e=>{
+
+    const dx =
+      e.clientX-startX;
+
+    const dt =
+      dx/state.zoom;
+
+    const max =
+      Math.max(
+        0,
+        getDuration() - width
+      );
+
+    line.start =
+      clamp(
+        originalStart + dt,
+        0,
+        max
+      );
+
+    line.end =
+      line.start + width;
+
+    /* move keyframes together */
+
+    const delta =
+      line.start-originalStart;
+
+    line.keyframes.forEach(k=>{
+
+      k.time =
+        clamp(
+          k.time+delta,
+          line.start,
+          line.end
+        );
+
+    });
+
+    renderLyrics();
+
+    updatePreview();
+
+  };
+
+  const up = ()=>{
+
+    window.removeEventListener(
+      "pointermove",
+      move
     );
 
+    window.removeEventListener(
+      "pointerup",
+      up
+    );
 
-function loadProject() {
+  };
 
-    const raw =
-        localStorage.getItem(
-            "karaoke_editor_project_v1"
-        );
+  window.addEventListener(
+    "pointermove",
+    move
+  );
 
-    if (!raw) {
+  window.addEventListener(
+    "pointerup",
+    up
+  );
 
-        showToast(
-            "No saved project found"
-        );
-
-        return;
-    }
-
-    try {
-
-        const saved =
-            JSON.parse(raw);
-
-        applyProject(saved);
-
-        showToast(
-            "Project loaded"
-        );
-
-    } catch (error) {
-
-        console.error(error);
-
-        showToast(
-            "Saved project is invalid"
-        );
-    }
 }
 
 
-/* =========================================================
-   APPLY PROJECT
-   ========================================================= */
+/* ============================================================
+   RESIZE LYRIC CLIP
+   ============================================================ */
 
-function applyProject(data) {
+function startResize(ev,line,clip,side){
 
-    project = {
-        version:
-            data.version || 1,
+  const startX =
+    ev.clientX;
 
-        name:
-            data.name || "",
+  const originalStart =
+    line.start;
 
-        audioName:
-            data.audioName || "",
+  const originalEnd =
+    line.end;
 
-        lyrics:
-            data.lyrics || "",
+  const minLength =
+    .15;
 
-        lines:
-            Array.isArray(data.lines)
-                ? data.lines
-                : [],
+  const move = e=>{
 
-        words:
-            Array.isArray(data.words)
-                ? data.words
-                : [],
+    const dx =
+      e.clientX-startX;
 
-        duration:
-            Number(data.duration) || 0,
+    const dt =
+      dx/state.zoom;
 
-        created:
-            data.created || null,
+    if(side === "left"){
 
-        modified:
-            data.modified || null
-    };
+      const newStart =
+        clamp(
+          originalStart+dt,
+          0,
+          originalEnd-minLength
+        );
 
-    lyricsInput.value =
-        project.lyrics;
+      line.start =
+        newStart;
 
-    if (
-        project.audioName
-    ) {
+      line.keyframes.forEach(k=>{
 
-        songName.textContent =
-            project.audioName;
+        k.time =
+          clamp(
+            k.time,
+            line.start,
+            line.end
+          );
 
-        nowPlaying.textContent =
-            project.audioName;
+      });
+
+    }else{
+
+      const newEnd =
+        clamp(
+          originalEnd+dt,
+          line.start+minLength,
+          getDuration() || originalEnd+dt
+        );
+
+      line.end =
+        newEnd;
+
+      line.keyframes.forEach(k=>{
+
+        k.time =
+          clamp(
+            k.time,
+            line.start,
+            line.end
+          );
+
+      });
+
     }
 
-    timingIndex =
-        findFirstUntimed();
+    renderLyrics();
 
-    lastTimedIndex =
-        timingIndex - 1;
+    updatePreview();
 
-    renderKaraoke();
-    renderWordList();
-    updateStats();
-    buildTimeline();
+  };
+
+  const up = ()=>{
+
+    window.removeEventListener(
+      "pointermove",
+      move
+    );
+
+    window.removeEventListener(
+      "pointerup",
+      up
+    );
+
+  };
+
+  window.addEventListener(
+    "pointermove",
+    move
+  );
+
+  window.addEventListener(
+    "pointerup",
+    up
+  );
+
 }
 
 
-/* =========================================================
-   EXPORT JSON
-   ========================================================= */
+/* ============================================================
+   PLAYHEAD
+   ============================================================ */
 
-document
-    .getElementById("exportBtn")
-    .addEventListener(
-        "click",
-        exportProject
-    );
+function updatePlayhead(){
 
+  playhead.style.left =
+    timeToX(state.currentTime) + "px";
 
-function exportProject() {
+}
 
-    if (
-        !project.words.length &&
-        !project.lyrics
-    ) {
+function updatePlaybackUI(){
 
-        showToast(
-            "Nothing to export"
-        );
+  currentTimeEl.textContent =
+    formatTime(state.currentTime);
 
-        return;
-    }
+  previewTime.textContent =
+    formatTime(state.currentTime);
 
-    const data =
-        getProjectForStorage();
+  audioSeek.value =
+    state.currentTime;
 
-    const json =
-        JSON.stringify(
-            data,
-            null,
-            2
-        );
+  updatePlayhead();
 
-    const blob =
-        new Blob(
-            [json],
-            {
-                type:
-                    "application/json"
-            }
-        );
+  updatePreview();
 
-    const url =
-        URL.createObjectURL(blob);
+  updateClipHighlights();
 
-    const a =
-        document.createElement("a");
-
-    const safeName =
-        (
-            project.name ||
-            "karaoke-project"
-        )
-        .replace(
-            /[^a-z0-9_\-]+/gi,
-            "_"
-        );
-
-    a.href = url;
-
-    a.download =
-        safeName +
-        ".karaoke.json";
-
-    document.body.appendChild(a);
-
-    a.click();
-
-    a.remove();
-
-    URL.revokeObjectURL(url);
-
-    showToast(
-        "JSON exported"
-    );
 }
 
 
-/* =========================================================
-   IMPORT JSON
-   ========================================================= */
+/* ============================================================
+   FIND ACTIVE LINE
+   ============================================================ */
 
-const projectFile =
-    document.getElementById(
-        "projectFile"
-    );
+function activeLineAt(time){
 
+  return state.lines.find(
+    l =>
+      time >= l.start &&
+      time <= l.end
+  ) || null;
 
-document
-    .getElementById("importBtn")
-    .addEventListener(
-        "click",
-        function() {
-
-            projectFile.click();
-
-        }
-    );
-
-
-projectFile.addEventListener(
-    "change",
-    function(event) {
-
-        const file =
-            event.target.files[0];
-
-        if (!file) {
-            return;
-        }
-
-        const reader =
-            new FileReader();
-
-        reader.onload =
-            function() {
-
-                try {
-
-                    const data =
-                        JSON.parse(
-                            reader.result
-                        );
-
-                    if (
-                        !data ||
-                        !Array.isArray(
-                            data.words
-                        )
-                    ) {
-
-                        throw new Error(
-                            "Invalid project"
-                        );
-                    }
-
-                    applyProject(data);
-
-                    showToast(
-                        "Project imported"
-                    );
-
-                } catch (error) {
-
-                    console.error(error);
-
-                    showToast(
-                        "Invalid JSON project"
-                    );
-                }
-
-                projectFile.value = "";
-            };
-
-        reader.readAsText(file);
-    }
-);
-
-
-/* =========================================================
-   IMPORT PROJECT AUDIO
-   ========================================================= */
-
-function audioNameMatchesProject(
-    file
-) {
-
-    if (!project.audioName) {
-        return true;
-    }
-
-    return (
-        file.name ===
-        project.audioName
-    );
 }
 
 
-audioFile.addEventListener(
-    "change",
-    function() {
+/* ============================================================
+   KEYFRAME INTERPOLATION
+   ============================================================ */
 
-        const file =
-            audioFile.files[0];
+function getProgressAt(line,time){
 
-        if (!file) {
-            return;
-        }
+  if(!line || !line.keyframes.length)
+    return 0;
 
-        if (
-            project.audioName &&
-            file.name !==
-            project.audioName
-        ) {
+  const keys =
+    [...line.keyframes]
+      .sort((a,b)=>a.time-b.time);
 
-            /*
-               Do not block it.
-               Just inform the user.
-            */
+  if(time <= keys[0].time)
+    return keys[0].progress;
 
-            showToast(
-                "Audio loaded — filename differs from project"
-            );
-        }
+  if(time >= keys[keys.length-1].time)
+    return keys[keys.length-1].progress;
+
+  for(let i=0;i<keys.length-1;i++){
+
+    const a = keys[i];
+    const b = keys[i+1];
+
+    if(
+      time >= a.time &&
+      time <= b.time
+    ){
+
+      const span =
+        b.time-a.time;
+
+      const p =
+        span <= 0
+          ? 1
+          : (time-a.time)/span;
+
+      return (
+        a.progress +
+        (b.progress-a.progress)*p
+      );
+
     }
-);
+
+  }
+
+  return 0;
+
+}
 
 
-/* =========================================================
-   CLICK TIMELINE TO SEEK
-   ========================================================= */
+/* ============================================================
+   CLIP HIGHLIGHT
+   ============================================================ */
 
-timeline.addEventListener(
-    "click",
-    function(event) {
+function updateClipHighlights(){
 
-        if (!audio.duration) {
-            return;
-        }
+  state.lines.forEach(line=>{
 
-        const rect =
-            timelineInner.getBoundingClientRect();
+    const clip =
+      lyricTrack.querySelector(
+        `[data-id="${line.id}"]`
+      );
 
-        const x =
-            event.clientX -
-            rect.left;
+    if(!clip) return;
+
+    const highlight =
+      clip.querySelector(
+        ".clip-highlight"
+      );
+
+    const htext =
+      clip.querySelector(
+        ".clip-highlight-text"
+      );
+
+    const p =
+      getProgressAt(
+        line,
+        state.currentTime
+      );
+
+    const active =
+      state.currentTime >= line.start &&
+      state.currentTime <= line.end;
+
+    const width =
+      active
+        ? p
+        : (
+            state.currentTime > line.end
+              ? getProgressAt(line,line.end)
+              : 0
+          );
+
+    highlight.style.width =
+      width + "%";
+
+    htext.style.clipPath =
+      `inset(0 ${100-width}% 0 0)`;
+
+  });
+
+}
+
+
+/* ============================================================
+   PREVIEW
+   ============================================================ */
+
+function updatePreview(){
+
+  const line =
+    activeLineAt(
+      state.currentTime
+    );
+
+  if(!line){
+
+    previewBase.textContent = "";
+    previewHighlight.textContent = "";
+
+    return;
+  }
+
+  previewBase.textContent =
+    line.text;
+
+  previewHighlight.textContent =
+    line.text;
+
+  const p =
+    getProgressAt(
+      line,
+      state.currentTime
+    );
+
+  previewHighlight.style.width =
+    p + "%";
+
+}
+
+
+/* ============================================================
+   ZOOM
+   ============================================================ */
+
+zoomIn.addEventListener("click",()=>{
+
+  state.zoom =
+    clamp(
+      state.zoom + 20,
+      20,
+      300
+    );
+
+  zoomValue.textContent =
+    state.zoom + "px/s";
+
+  renderTimeline();
+
+});
+
+zoomOut.addEventListener("click",()=>{
+
+  state.zoom =
+    clamp(
+      state.zoom - 20,
+      20,
+      300
+    );
+
+  zoomValue.textContent =
+    state.zoom + "px/s";
+
+  renderTimeline();
+
+});
+
+
+/* ============================================================
+   WAVEFORM
+   ============================================================ */
+
+function drawWaveform(){
+
+  const ctx =
+    waveCanvas.getContext("2d");
+
+  const duration =
+    getDuration();
+
+  const width =
+    Math.max(
+      1,
+      Math.floor(duration * state.zoom)
+    );
+
+  const height = 76;
+
+  waveCanvas.width = width;
+  waveCanvas.height = height;
+
+  ctx.clearRect(
+    0,0,width,height
+  );
+
+  if(!audioBuffer){
+
+    /* fallback grid */
+
+    ctx.strokeStyle =
+      "#243244";
+
+    ctx.lineWidth = 1;
+
+    for(let x=0;x<width;x+=state.zoom){
+
+      ctx.beginPath();
+
+      ctx.moveTo(x,0);
+      ctx.lineTo(x,height);
+
+      ctx.stroke();
+
+    }
+
+    return;
+  }
+
+  const data =
+    audioBuffer.getChannelData(0);
+
+  const samplesPerPixel =
+    Math.max(
+      1,
+      Math.floor(
+        data.length/width
+      )
+    );
+
+  ctx.strokeStyle =
+    "#3b82f6";
+
+  ctx.globalAlpha = .75;
+
+  ctx.beginPath();
+
+  for(let x=0;x<width;x++){
+
+    const start =
+      x*samplesPerPixel;
+
+    const end =
+      Math.min(
+        data.length,
+        start+samplesPerPixel
+      );
+
+    let min = 1;
+    let max = -1;
+
+    for(
+      let i=start;
+      i<end;
+      i++
+    ){
+
+      const v=data[i];
+
+      if(v<min) min=v;
+      if(v>max) max=v;
+
+    }
+
+    const y1 =
+      (1+min)*height/2;
+
+    const y2 =
+      (1+max)*height/2;
+
+    ctx.moveTo(x,y1);
+    ctx.lineTo(x,y2);
+
+  }
+
+  ctx.stroke();
+
+  ctx.globalAlpha = 1;
+
+}
+
+
+/* ============================================================
+   CONTINUE IN PART 2
+   ============================================================ */
+    /* ============================================================
+   KARAOKE FX EDITOR
+   PART 2
+   ============================================================ */
+
+
+/* ============================================================
+   KEYFRAME PANEL
+   ============================================================ */
+
+function updateKeyPanel(){
+
+  const line =
+    selectedLine();
+
+  const key =
+    selectedKey();
+
+  if(!line){
+
+    selectedKeyInfo.textContent =
+      "Select a lyric";
+
+    progressRange.disabled = true;
+
+    progressNumber.textContent =
+      "0%";
+
+    return;
+  }
+
+  if(!key){
+
+    selectedKeyInfo.textContent =
+      "Tap ♦ or +";
+
+    progressRange.disabled = true;
+
+    progressNumber.textContent =
+      "—";
+
+    return;
+  }
+
+  progressRange.disabled = false;
+
+  progressRange.value =
+    key.progress;
+
+  progressNumber.textContent =
+    Math.round(key.progress) + "%";
+
+  selectedKeyInfo.textContent =
+    formatTime(key.time);
+
+}
+
+
+/* ============================================================
+   ADD KEYFRAME
+   ============================================================ */
+
+plusKey.addEventListener("click",()=>{
+
+  const line =
+    selectedLine();
+
+  if(!line){
+
+    alert("Select a lyric line first.");
+
+    return;
+  }
+
+  const time =
+    clamp(
+      state.currentTime,
+      line.start,
+      line.end
+    );
+
+  /* If there is already a keyframe very close,
+     select it instead of creating another one. */
+
+  const existing =
+    line.keyframes.find(
+      k =>
+        Math.abs(k.time-time) < .04
+    );
+
+  if(existing){
+
+    state.selectedKeyId =
+      existing.id;
+
+    updateKeyPanel();
+
+    renderLyrics();
+
+    return;
+  }
+
+  let progress = 0;
+
+  const keys =
+    [...line.keyframes]
+      .sort((a,b)=>a.time-b.time);
+
+  if(keys.length === 0){
+
+    progress = 0;
+
+  }else if(
+    time <= keys[0].time
+  ){
+
+    progress =
+      keys[0].progress;
+
+  }else if(
+    time >= keys[keys.length-1].time
+  ){
+
+    progress =
+      keys[keys.length-1].progress;
+
+  }else{
+
+    for(let i=0;i<keys.length-1;i++){
+
+      const a=keys[i];
+      const b=keys[i+1];
+
+      if(
+        time>=a.time &&
+        time<=b.time
+      ){
 
         const ratio =
-            x / rect.width;
+          (time-a.time) /
+          Math.max(
+            .0001,
+            b.time-a.time
+          );
 
-        audio.currentTime =
-            Math.max(
-                0,
-                Math.min(
-                    1,
-                    ratio
-                )
-            ) * audio.duration;
-    }
-);
+        progress =
+          a.progress +
+          (b.progress-a.progress)*ratio;
 
+        break;
 
-/* =========================================================
-   DOUBLE CLICK WORD = SET START
-   ========================================================= */
+      }
 
-wordList.addEventListener(
-    "dblclick",
-    function(event) {
-
-        const row =
-            event.target.closest(
-                ".word-row"
-            );
-
-        if (!row) {
-            return;
-        }
-
-        const input =
-            row.querySelector(
-                "[data-start]"
-            );
-
-        if (!input) {
-            return;
-        }
-
-        const index =
-            Number(
-                input.dataset.start
-            );
-
-        saveTimingHistory();
-
-        project.words[index].start =
-            audio.currentTime;
-
-        /*
-           Maintain chronological order.
-        */
-
-        if (
-            index > 0 &&
-            project.words[index - 1].start !== null
-        ) {
-
-            project.words[index - 1].end =
-                audio.currentTime;
-        }
-
-        project.modified =
-            new Date().toISOString();
-
-        renderWordList();
-        renderKaraoke();
-        updateStats();
-
-        showToast(
-            "Timing set: " +
-            project.words[index].text
-        );
-    }
-);
-
-
-/* =========================================================
-   AUTO-SAVE
-   ========================================================= */
-
-setInterval(
-    function() {
-
-        if (
-            project.words.length ||
-            project.lyrics
-        ) {
-
-            try {
-
-                const data =
-                    getProjectForStorage();
-
-                localStorage.setItem(
-                    "karaoke_editor_autosave_v1",
-                    JSON.stringify(data)
-                );
-
-            } catch (error) {
-                console.warn(
-                    "Autosave failed",
-                    error
-                );
-            }
-        }
-
-    },
-    30000
-);
-
-
-/* =========================================================
-   RECOVER AUTO-SAVE
-   ========================================================= */
-
-function checkAutoSave() {
-
-    const raw =
-        localStorage.getItem(
-            "karaoke_editor_autosave_v1"
-        );
-
-    if (!raw) {
-        return;
     }
 
-    try {
+  }
 
-        const saved =
-            JSON.parse(raw);
+  const newKey = {
 
-        if (
-            !saved ||
-            !saved.lyrics
-        ) {
-            return;
-        }
+    id:uid("key"),
 
-        const shouldRestore =
-            confirm(
-                "A previous unsaved Karaoke Editor project was found.\n\nRestore it?"
-            );
+    time,
 
-        if (shouldRestore) {
-            applyProject(saved);
-        }
+    progress
 
-    } catch (error) {
+  };
 
-        console.warn(
-            "Autosave recovery failed",
-            error
-        );
-    }
-}
+  line.keyframes.push(newKey);
 
+  line.keyframes.sort(
+    (a,b)=>a.time-b.time
+  );
 
-/* =========================================================
-   BEFORE UNLOAD
-   ========================================================= */
+  state.selectedKeyId =
+    newKey.id;
 
-window.addEventListener(
-    "beforeunload",
-    function() {
+  renderLyrics();
 
-        if (
-            project.words.length ||
-            project.lyrics
-        ) {
+  updateKeyPanel();
 
-            try {
+  updatePreview();
 
-                localStorage.setItem(
-                    "karaoke_editor_autosave_v1",
-                    JSON.stringify(
-                        getProjectForStorage()
-                    )
-                );
+});
 
-            } catch (error) {}
-        }
-    }
-);
 
+/* ============================================================
+   DELETE KEYFRAME
+   ============================================================ */
 
-/* =========================================================
-   RE-CALCULATE TIMING
-   ========================================================= */
+minusKey.addEventListener("click",()=>{
 
-function normalizeTiming() {
+  const line =
+    selectedLine();
 
-    let previous =
-        -Infinity;
+  if(!line) return;
 
-    project.words.forEach(
-        word => {
+  const key =
+    selectedKey();
 
-            if (
-                word.start === null ||
-                !Number.isFinite(
-                    word.start
-                )
-            ) {
+  if(!key){
 
-                word.start = null;
-                word.end = null;
+    /* If no key is selected,
+       find the nearest keyframe */
 
-                return;
-            }
+    if(!line.keyframes.length)
+      return;
 
-            if (
-                word.start < previous
-            ) {
-
-                word.start =
-                    previous;
-            }
-
-            previous =
-                word.start;
-        }
-    );
-
-    calculateEndTimes();
-}
-
-
-/* =========================================================
-   SPACE TAP SUPPORT FOR MOBILE
-   ========================================================= */
-
-let touchTimingLock = false;
-
-karaokeDisplay.addEventListener(
-    "touchend",
-    function(event) {
-
-        if (!timingMode) {
-            return;
-        }
-
-        event.preventDefault();
-
-        if (touchTimingLock) {
-            return;
-        }
-
-        touchTimingLock = true;
-
-        timestampNextWordAdvanced();
-
-        setTimeout(
-            function() {
-                touchTimingLock = false;
-            },
-            120
-        );
-    },
-    {
-        passive: false
-    }
-);
-
-
-/* =========================================================
-   KEYBOARD SPACE
-   ========================================================= */
-
-document.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (
-            event.code !== "Space"
-        ) {
-            return;
-        }
-
-        const tag =
-            document.activeElement
-                ?.tagName;
-
-        if (
-            tag === "INPUT" ||
-            tag === "TEXTAREA" ||
-            tag === "SELECT"
-        ) {
-            return;
-        }
-
-        event.preventDefault();
-
-        if (timingMode) {
-
-            timestampNextWordAdvanced();
-
-        } else {
-
-            togglePlay();
-        }
-    }
-);
-
-
-/* =========================================================
-   LIVE CURRENT WORD STATUS
-   ========================================================= */
-
-function getCurrentWordIndex() {
-
-    if (!project.words.length) {
-        return -1;
-    }
-
-    const current =
-        audio.currentTime;
-
-    let result = -1;
-
-    for (
-        let i = 0;
-        i < project.words.length;
-        i++
-    ) {
-
-        const word =
-            project.words[i];
-
-        if (
-            word.start !== null &&
-            current >= word.start
-        ) {
-
-            result = i;
-
-        } else {
-
-            break;
-        }
-    }
-
-    return result;
-}
-
-
-function updateTimingStatus() {
-
-    if (timingMode) {
-
-        if (
-            timingIndex <
-            project.words.length
-        ) {
-
-            timingStatus.textContent =
-                "TIMING ON — next: " +
-                project.words[
-                    timingIndex
-                ].text;
-        }
-
-        return;
-    }
+    const nearest =
+      [...line.keyframes]
+        .sort(
+          (a,b)=>
+            Math.abs(a.time-state.currentTime) -
+            Math.abs(b.time-state.currentTime)
+        )[0];
 
     const index =
-        getCurrentWordIndex();
+      line.keyframes.indexOf(nearest);
 
-    if (
-        index >= 0 &&
-        project.words[index]
-    ) {
+    if(index !== -1){
 
-        timingStatus.textContent =
-            "Current word: " +
-            project.words[index].text;
-    }
-}
+      line.keyframes.splice(index,1);
 
-
-/* =========================================================
-   ENHANCED KARAOKE UPDATE
-   ========================================================= */
-
-function updateKaraokeAdvanced() {
-
-    if (!project.words.length) {
-        return;
     }
 
-    const current =
-        audio.currentTime;
+  }else{
 
-    project.words.forEach(
-        word => {
+    const index =
+      line.keyframes.indexOf(key);
 
-            const el =
-                document.querySelector(
-                    `.karaoke-word[data-index="${word.index}"]`
-                );
+    if(index !== -1){
 
-            if (!el) {
-                return;
-            }
+      line.keyframes.splice(index,1);
 
-            el.classList.remove(
-                "active",
-                "done"
-            );
+    }
 
-            if (
-                word.start !== null &&
-                current >= word.start
-            ) {
+    state.selectedKeyId = null;
 
-                if (
-                    word.end === null ||
-                    current < word.end
-                ) {
+  }
 
-                    el.classList.add(
-                        "active"
-                    );
+  /* Keep at least one keyframe */
 
-                } else {
+  if(line.keyframes.length === 0){
 
-                    el.classList.add(
-                        "done"
-                    );
-                }
-            }
-        }
+    line.keyframes.push({
+      id:uid("key"),
+      time:line.start,
+      progress:0
+    });
+
+  }
+
+  renderLyrics();
+
+  updateKeyPanel();
+
+  updatePreview();
+
+});
+
+
+/* ============================================================
+   CHANGE KEYFRAME SHADING
+   ============================================================ */
+
+progressRange.addEventListener("input",()=>{
+
+  const key =
+    selectedKey();
+
+  if(!key) return;
+
+  key.progress =
+    Number(progressRange.value);
+
+  progressNumber.textContent =
+    Math.round(key.progress) + "%";
+
+  renderLyrics();
+
+  updatePreview();
+
+  updateClipHighlights();
+
+});
+
+
+/* ============================================================
+   AUTO 0 → 100
+   ============================================================ */
+
+autoKeysBtn.addEventListener("click",()=>{
+
+  const line =
+    selectedLine();
+
+  if(!line){
+
+    alert("Select a lyric line first.");
+
+    return;
+  }
+
+  line.keyframes = [
+
+    {
+      id:uid("key"),
+      time:line.start,
+      progress:0
+    },
+
+    {
+      id:uid("key"),
+      time:line.end,
+      progress:100
+    }
+
+  ];
+
+  state.selectedKeyId =
+    null;
+
+  renderTimeline();
+
+});
+
+
+/* ============================================================
+   RESET KEYS
+   ============================================================ */
+
+resetKeysBtn.addEventListener("click",()=>{
+
+  const line =
+    selectedLine();
+
+  if(!line) return;
+
+  line.keyframes = [
+
+    {
+      id:uid("key"),
+      time:line.start,
+      progress:0
+    },
+
+    {
+      id:uid("key"),
+      time:line.end,
+      progress:100
+    }
+
+  ];
+
+  state.selectedKeyId = null;
+
+  renderTimeline();
+
+});
+
+
+/* ============================================================
+   SPLIT LYRIC AT PLAYHEAD
+   ============================================================ */
+
+splitBtn.addEventListener("click",()=>{
+
+  const line =
+    selectedLine();
+
+  if(!line){
+
+    alert("Select a lyric line first.");
+
+    return;
+  }
+
+  const t =
+    state.currentTime;
+
+  if(
+    t <= line.start+.1 ||
+    t >= line.end-.1
+  ){
+
+    alert(
+      "Move the playhead inside the lyric line."
     );
 
-    updateTimingStatus();
-}
+    return;
+  }
+
+  const leftText =
+    line.text;
+
+  const words =
+    leftText.split(/\s+/);
+
+  let firstText =
+    leftText;
+
+  let secondText =
+    leftText;
+
+  if(words.length > 1){
+
+    const mid =
+      Math.ceil(words.length/2);
+
+    firstText =
+      words.slice(0,mid).join(" ");
+
+    secondText =
+      words.slice(mid).join(" ");
+
+  }
+
+  const leftLine = {
+
+    id:uid("line"),
+
+    text:firstText,
+
+    start:line.start,
+
+    end:t,
+
+    keyframes:[
+
+      {
+        id:uid("key"),
+        time:line.start,
+        progress:0
+      },
+
+      {
+        id:uid("key"),
+        time:t,
+        progress:100
+      }
+
+    ]
+
+  };
+
+  const rightLine = {
+
+    id:uid("line"),
+
+    text:secondText,
+
+    start:t,
+
+    end:line.end,
+
+    keyframes:[
+
+      {
+        id:uid("key"),
+        time:t,
+        progress:0
+      },
+
+      {
+        id:uid("key"),
+        time:line.end,
+        progress:100
+      }
+
+    ]
+
+  };
+
+  const index =
+    state.lines.indexOf(line);
+
+  state.lines.splice(
+    index,
+    1,
+    leftLine,
+    rightLine
+  );
+
+  state.selectedLineId =
+    rightLine.id;
+
+  state.selectedKeyId = null;
+
+  renderTimeline();
+
+});
 
 
-/*
-   Replace karaoke updater.
-*/
+/* ============================================================
+   DUPLICATE LYRIC
+   ============================================================ */
 
-updateKaraoke =
-    updateKaraokeAdvanced;
+duplicateBtn.addEventListener("click",()=>{
+
+  const line =
+    selectedLine();
+
+  if(!line){
+
+    alert("Select a lyric line first.");
+
+    return;
+  }
+
+  const length =
+    line.end-line.start;
+
+  const newStart =
+    Math.min(
+      line.end+.2,
+      Math.max(
+        0,
+        getDuration()-length
+      )
+    );
+
+  const newLine = {
+
+    id:uid("line"),
+
+    text:line.text,
+
+    start:newStart,
+
+    end:newStart+length,
+
+    keyframes:
+      line.keyframes.map(k=>({
+
+        id:uid("key"),
+
+        time:
+          newStart+
+          (k.time-line.start),
+
+        progress:k.progress
+
+      }))
+
+  };
+
+  const index =
+    state.lines.indexOf(line);
+
+  state.lines.splice(
+    index+1,
+    0,
+    newLine
+  );
+
+  state.selectedLineId =
+    newLine.id;
+
+  state.selectedKeyId = null;
+
+  renderTimeline();
+
+});
 
 
-/* =========================================================
-   DOUBLE CLICK PLAYBACK WORD
-   ========================================================= */
+/* ============================================================
+   DELETE LYRIC
+   ============================================================ */
 
-karaokeDisplay.addEventListener(
-    "dblclick",
-    function(event) {
+deleteLineBtn.addEventListener("click",()=>{
 
-        const target =
-            event.target.closest(
-                ".karaoke-word"
-            );
+  const line =
+    selectedLine();
 
-        if (!target) {
-            return;
-        }
+  if(!line) return;
 
-        const index =
-            Number(
-                target.dataset.index
-            );
+  if(
+    !confirm(
+      "Delete this lyric line?"
+    )
+  ) return;
 
-        if (
-            !project.words[index]
-        ) {
-            return;
-        }
+  const index =
+    state.lines.indexOf(line);
 
-        const word =
-            project.words[index];
+  state.lines.splice(
+    index,
+    1
+  );
 
-        if (
-            word.start !== null
-        ) {
+  state.selectedLineId =
+    state.lines[index]?.id ||
+    state.lines[index-1]?.id ||
+    null;
 
-            audio.currentTime =
-                word.start;
+  state.selectedKeyId = null;
 
-            audio.play().catch(
-                () => {}
-            );
-        }
+  renderTimeline();
+
+});
+
+
+/* ============================================================
+   CLICK EMPTY TIMELINE = MOVE PLAYHEAD
+   ============================================================ */
+
+lyricTrack.addEventListener(
+  "pointerdown",
+  ev=>{
+
+    if(
+      ev.target.closest(".lyric-clip")
+    ){
+      return;
     }
+
+    const rect =
+      lyricTrack.getBoundingClientRect();
+
+    const x =
+      ev.clientX -
+      rect.left;
+
+    const time =
+      clamp(
+        x/state.zoom,
+        0,
+        getDuration()
+      );
+
+    audio.currentTime =
+      time;
+
+    state.currentTime =
+      time;
+
+    updatePlaybackUI();
+
+  }
 );
 
 
-/* =========================================================
-   SONG TITLE UPDATE
-   ========================================================= */
+/* ============================================================
+   PLAYHEAD DRAG
+   ============================================================ */
 
-function updateProjectTitle() {
+let playheadDragging = false;
 
-    if (
-        project.name
-    ) {
+editorScroll.addEventListener(
+  "pointerdown",
+  ev=>{
 
-        document.title =
-            project.name +
-            " — Karaoke Editor";
-    } else {
+    /* Ignore controls and clips */
 
-        document.title =
-            "Karaoke Editor V1";
+    if(
+      ev.target.closest(".lyric-clip") ||
+      ev.target.closest("button") ||
+      ev.target.closest("input")
+    ){
+      return;
     }
-}
 
+    const rect =
+      timeline.getBoundingClientRect();
 
-/* =========================================================
-   PREPARE LYRICS OVERRIDE
-   ========================================================= */
+    const x =
+      ev.clientX -
+      rect.left;
 
-const originalPrepareLyrics =
-    prepareLyrics;
+    const time =
+      clamp(
+        x/state.zoom,
+        0,
+        getDuration()
+      );
 
+    audio.currentTime =
+      time;
 
-prepareLyrics = function() {
+    state.currentTime =
+      time;
 
-    originalPrepareLyrics();
+    updatePlaybackUI();
 
-    project.name =
-        project.name ||
-        "Untitled Karaoke";
-
-    project.created =
-        project.created ||
-        new Date().toISOString();
-
-    project.modified =
-        new Date().toISOString();
-
-    updateProjectTitle();
-
-    renderWordList();
-    renderKaraoke();
-    updateStats();
-};
-
-
-/* =========================================================
-   AUDIO METADATA
-   ========================================================= */
-
-audio.addEventListener(
-    "loadedmetadata",
-    function() {
-
-        project.duration =
-            audio.duration || 0;
-
-        durationEl.textContent =
-            formatTime(
-                audio.duration
-            );
-
-        buildTimeline();
-
-        calculateEndTimes();
-
-        renderWordList();
-
-        updateStats();
-    }
+  }
 );
 
 
-/* =========================================================
-   RESPONSIVE TIMELINE
-   ========================================================= */
+/* ============================================================
+   SAVE TO LOCAL STORAGE
+   ============================================================ */
+
+saveBtn.addEventListener("click",()=>{
+
+  const data =
+    JSON.stringify(
+      state,
+      null,
+      2
+    );
+
+  localStorage.setItem(
+    "karaoke_fx_project",
+    data
+  );
+
+  alert("Project saved.");
+
+});
+
+
+/* ============================================================
+   LOAD FROM LOCAL STORAGE
+   ============================================================ */
+
+loadBtn.addEventListener("click",()=>{
+
+  const raw =
+    localStorage.getItem(
+      "karaoke_fx_project"
+    );
+
+  if(!raw){
+
+    alert("No saved project.");
+
+    return;
+  }
+
+  try{
+
+    const data =
+      JSON.parse(raw);
+
+    state = {
+
+      ...state,
+
+      ...data
+
+    };
+
+    zoomValue.textContent =
+      state.zoom + "px/s";
+
+    if(
+      state.audioDuration
+    ){
+
+      audioSeek.max =
+        state.audioDuration;
+
+    }
+
+    renderTimeline();
+
+    alert("Project loaded.");
+
+  }catch(err){
+
+    alert(
+      "Could not load project."
+    );
+
+  }
+
+});
+
+
+/* ============================================================
+   EXPORT JSON
+   ============================================================ */
+
+exportBtn.addEventListener("click",()=>{
+
+  const data =
+    JSON.stringify(
+      state,
+      null,
+      2
+    );
+
+  const blob =
+    new Blob(
+      [data],
+      {
+        type:"application/json"
+      }
+    );
+
+  const url =
+    URL.createObjectURL(blob);
+
+  const a =
+    document.createElement("a");
+
+  a.href=url;
+
+  a.download =
+    "karaoke-project.json";
+
+  a.click();
+
+  URL.revokeObjectURL(url);
+
+});
+
+
+/* ============================================================
+   IMPORT JSON
+   ============================================================ */
+
+importBtn.addEventListener("click",()=>{
+
+  projectFile.click();
+
+});
+
+projectFile.addEventListener(
+  "change",
+  async e=>{
+
+    const file =
+      e.target.files[0];
+
+    if(!file) return;
+
+    try{
+
+      const text =
+        await file.text();
+
+      const data =
+        JSON.parse(text);
+
+      state = {
+
+        ...state,
+
+        ...data
+
+      };
+
+      zoomValue.textContent =
+        state.zoom + "px/s";
+
+      renderTimeline();
+
+      alert(
+        "Project imported.\n\n" +
+        "Load the same audio file to continue editing."
+      );
+
+    }catch(err){
+
+      alert(
+        "Invalid project file."
+      );
+
+    }
+
+  }
+);
+
+
+/* ============================================================
+   KEYBOARD SHORTCUTS
+   ============================================================ */
+
+document.addEventListener(
+  "keydown",
+  e=>{
+
+    /* Don't interfere with typing */
+
+    if(
+      e.target.tagName === "INPUT" ||
+      e.target.tagName === "TEXTAREA"
+    ){
+      return;
+    }
+
+    if(e.code === "Space"){
+
+      e.preventDefault();
+
+      playBtn.click();
+
+    }
+
+    if(e.key === "+"){
+
+      plusKey.click();
+
+    }
+
+    if(e.key === "-"){
+
+      minusKey.click();
+
+    }
+
+    if(e.key === "Delete"){
+
+      const line =
+        selectedLine();
+
+      const key =
+        selectedKey();
+
+      if(key){
+
+        minusKey.click();
+
+      }else if(line){
+
+        deleteLineBtn.click();
+
+      }
+
+    }
+
+  }
+);
+
+
+/* ============================================================
+   CLICK KEYFRAME ON TIMELINE
+   ============================================================ */
+
+document.addEventListener(
+  "pointerdown",
+  ev=>{
+
+    const key =
+      ev.target.closest(
+        ".keyframe"
+      );
+
+    if(!key) return;
+
+    const clip =
+      key.closest(
+        ".lyric-clip"
+      );
+
+    if(!clip) return;
+
+    const line =
+      state.lines.find(
+        l=>l.id===clip.dataset.id
+      );
+
+    if(!line) return;
+
+    const keyId =
+      key.dataset.keyId;
+
+    const k =
+      line.keyframes.find(
+        x=>x.id===keyId
+      );
+
+    if(!k) return;
+
+    state.selectedLineId =
+      line.id;
+
+    state.selectedKeyId =
+      k.id;
+
+    updateKeyPanel();
+
+  }
+);
+
+
+/* ============================================================
+   AUTO SCROLL TO PLAYHEAD
+   ============================================================ */
+
+function keepPlayheadVisible(){
+
+  const x =
+    timeToX(
+      state.currentTime
+    );
+
+  const left =
+    editorScroll.scrollLeft;
+
+  const right =
+    left +
+    editorScroll.clientWidth;
+
+  if(x < left+80){
+
+    editorScroll.scrollLeft =
+      Math.max(
+        0,
+        x-120
+      );
+
+  }else if(x > right-80){
+
+    editorScroll.scrollLeft =
+      x-
+      editorScroll.clientWidth+
+      120;
+
+  }
+
+}
+
+
+/* ============================================================
+   UPDATE LOOP
+   ============================================================ */
+
+function animationLoop(){
+
+  if(!audio.paused){
+
+    state.currentTime =
+      audio.currentTime;
+
+    updatePlaybackUI();
+
+  }
+
+  requestAnimationFrame(
+    animationLoop
+  );
+
+}
+
+requestAnimationFrame(
+  animationLoop
+);
+
+
+/* ============================================================
+   INITIAL STATE
+   ============================================================ */
+
+zoomValue.textContent =
+  state.zoom + "px/s";
+
+audioSeek.value = 0;
+
+renderTimeline();
+
+updateKeyPanel();
+
+
+/* ============================================================
+   PREVENT CONTEXT MENU ON TIMELINE
+   ============================================================ */
+
+editorScroll.addEventListener(
+  "contextmenu",
+  e=>e.preventDefault()
+);
+
+
+/* ============================================================
+   FINAL INITIALIZATION
+   ============================================================ */
 
 window.addEventListener(
-    "resize",
-    function() {
+  "resize",
+  ()=>{
 
-        if (audio.duration) {
-            buildTimeline();
-        }
-    }
+    updateTimelineWidth();
+
+    drawWaveform();
+
+  }
 );
-
-
-/* =========================================================
-   PROJECT NAME FROM AUDIO
-   ========================================================= */
-
-audioFile.addEventListener(
-    "change",
-    function() {
-
-        const file =
-            audioFile.files[0];
-
-        if (!file) {
-            return;
-        }
-
-        project.audioName =
-            file.name;
-
-        project.name =
-            file.name
-                .replace(
-                    /\.[^/.]+$/,
-                    ""
-                );
-
-        updateProjectTitle();
-    }
-);
-
-
-/* =========================================================
-   CLEAR AUTO SAVE
-   ========================================================= */
-
-function clearAutoSave() {
-
-    localStorage.removeItem(
-        "karaoke_editor_autosave_v1"
-    );
-}
-
-
-/* =========================================================
-   PROJECT VALIDATION
-   ========================================================= */
-
-function validateProject() {
-
-    if (
-        !project ||
-        typeof project !== "object"
-    ) {
-        return false;
-    }
-
-    if (
-        !Array.isArray(
-            project.words
-        )
-    ) {
-        return false;
-    }
-
-    return true;
-}
-
-
-/* =========================================================
-   FINAL INITIALIZATION
-   ========================================================= */
-
-if (!validateProject()) {
-
-    project = {
-        version: 1,
-        name: "",
-        audioName: "",
-        lyrics: "",
-        lines: [],
-        words: [],
-        duration: 0,
-        created: null,
-        modified: null
-    };
-}
-
-renderKaraoke();
-renderWordList();
-updateStats();
-updateProjectTitle();
-
-
-/*
-   Auto-save recovery is intentionally delayed
-   so the page can finish loading first.
-*/
-
-setTimeout(
-    checkAutoSave,
-    500
-);
-
-
-/* =========================================================
-   SERVICE WORKER
-   ========================================================= */
-
-if (
-    "serviceWorker" in navigator
-) {
-
-    window.addEventListener(
-        "load",
-        function() {
-
-            /*
-               A service worker file can be added later
-               when the project is deployed as a PWA.
-
-               This V1 intentionally does not register
-               a missing sw.js file.
-            */
-
-        }
-    );
-}
 
 </script>
 
