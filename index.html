@@ -3,197 +3,153 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Spidey Chord Karaoke</title>
+  <title>Complete Karaoke Editor & Sync Player</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { font-family: monospace; background-color: #090d16; color: #f8fafc; touch-action: manipulation; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0b0f19; color: #f8fafc; }
     .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #ef4444; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
     
-    #spidey-sprite {
-      position: absolute;
-      width: 48px;
-      height: 60px;
-      z-index: 50;
-      transition: left 0.35s cubic-bezier(0.25, 1, 0.5, 1), top 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-      pointer-events: none;
-      filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.8));
-    }
-
-    .spidey-idle { animation: spideyDance 0.6s infinite alternate ease-in-out; }
-    @keyframes spideyDance {
-      0% { transform: translateY(0) scaleY(1); }
-      50% { transform: translateY(-6px) scaleY(1.05) rotate(-3deg); }
-      100% { transform: translateY(-2px) scaleY(0.95) rotate(3deg); }
-    }
-
-    .spidey-jumping { animation: spideyArcJump 0.35s ease-in-out; }
-    @keyframes spideyArcJump {
-      0% { transform: scale(1) rotate(0deg); }
-      50% { transform: translateY(-25px) scale(1.2) rotate(180deg); }
-      100% { transform: scale(1) rotate(360deg); }
-    }
-
-    #web-line {
-      position: absolute;
-      stroke: #ffffff;
-      stroke-width: 3;
-      stroke-dasharray: 4;
-      pointer-events: none;
-      z-index: 40;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .word-token { display: inline-flex; margin-right: 0.6rem; margin-top: 2.5rem; position: relative; }
-    .line-row { display: flex; flex-wrap: wrap; align-items: flex-end; min-height: 3.8rem; margin-bottom: 1.2rem; }
-    
-    .chord-box {
-      position: absolute;
-      bottom: 120%;
-      left: 0;
-      font-weight: 900;
-      font-size: 0.85rem;
-      padding: 3px 6px;
+    /* KARAOKE WORD ANIMATION STYLES */
+    .word-item {
+      display: inline-block;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #64748b; /* Inactive lyric color */
+      margin: 0 0.25rem;
+      padding: 0.1rem 0.3rem;
       border-radius: 6px;
-      white-space: nowrap;
-      background: #1e293b;
-      color: #38bdf8;
-      border: 1px solid #0284c7;
-      box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
-      transition: all 0.3s;
+      transition: color 0.15s ease, transform 0.15s ease, text-shadow 0.15s ease;
       cursor: pointer;
     }
 
-    .chord-box.active-target {
-      background: #ef4444;
-      color: #ffffff;
-      border-color: #fca5a5;
-      box-shadow: 0 0 18px rgba(239, 68, 68, 1);
-      transform: scale(1.15);
+    /* Active Highlight / Color Change Animation */
+    .word-item.active {
+      color: #38bdf8; /* Glowing Cyan/Blue */
+      transform: scale(1.18);
+      text-shadow: 0 0 15px rgba(56, 189, 248, 0.9), 0 0 25px rgba(56, 189, 248, 0.5);
+    }
+
+    .word-item.passed {
+      color: #e2e8f0; /* White/Bright Gray for sung words */
+    }
+
+    .lyric-line {
+      margin-bottom: 1.5rem;
+      line-height: 2.2;
+      transition: opacity 0.3s ease;
+    }
+
+    .lyric-line.active-line {
+      opacity: 1;
+    }
+    
+    .lyric-line.inactive-line {
+      opacity: 0.4;
     }
   </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden select-none">
-  <!-- Header -->
-  <header class="bg-slate-900 border-b border-red-600/40 px-4 py-2 flex items-center justify-between shrink-0 z-30">
+  <!-- HEADER TOOLBAR -->
+  <header class="bg-slate-900 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between shrink-0 z-30">
     <div class="flex items-center gap-2">
-      <div class="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white font-black text-lg border border-red-400">
-        <i class="fa-solid fa-spider"></i>
+      <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black text-base shadow-lg shadow-blue-600/30">
+        <i class="fa-solid fa-microphone-lines"></i>
       </div>
       <div>
-        <h1 class="font-black text-sm text-red-500 uppercase">Spidey Chords</h1>
-        <p class="text-[10px] text-slate-400">Karaoke & Player Edition</p>
+        <h1 class="font-black text-sm text-blue-400 uppercase tracking-wide">Karaoke Studio Pro</h1>
+        <p class="text-[10px] text-slate-400">Sync, Edit & Sing Along</p>
       </div>
     </div>
 
+    <!-- MODE SWITCHER -->
     <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800">
-      <button id="btn-mode-setup" onclick="setMode('setup')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400">Setup</button>
-      <button id="btn-mode-play" onclick="setMode('play')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-600 text-white">Play</button>
+      <button id="tab-edit" onclick="switchTab('edit')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400">Editor</button>
+      <button id="tab-record" onclick="switchTab('record')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400">Sync Rec</button>
+      <button id="tab-play" onclick="switchTab('play')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow-md">Sing Play</button>
     </div>
   </header>
 
-  <!-- PLAYER TOOLBAR -->
-  <div id="play-toolbar" class="bg-slate-900 border-b border-slate-800 p-2.5 flex flex-col gap-2 shrink-0 z-20">
+  <!-- CONTROL PANEL -->
+  <div class="bg-slate-900 border-b border-slate-800 p-3 flex flex-col gap-2 shrink-0 z-20">
     <div class="flex items-center justify-between gap-2">
-      <label class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-red-400 border border-red-500/30 rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1.5">
-        <i class="fa-solid fa-file-audio"></i> <span>Load MP3</span>
-        <input type="file" id="audio-file-input" accept="audio/*" class="hidden" onchange="loadAudioFile(event)">
+      <!-- LOAD MP3 BUTTON -->
+      <label class="px-3 py-1.5 bg-blue-950 hover:bg-blue-900 text-blue-400 border border-blue-500/40 rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1.5">
+        <i class="fa-solid fa-file-audio"></i> <span>Load MP3 Song</span>
+        <input type="file" id="audio-input" accept="audio/*" class="hidden" onchange="handleAudioUpload(event)">
       </label>
-      <span id="audio-name" class="text-[11px] text-slate-400 truncate max-w-[120px]">No MP3 loaded</span>
 
-      <button onclick="nextChord()" class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white active:scale-95 rounded-lg text-xs font-bold shadow-lg shadow-red-600/30">
-        <i class="fa-solid fa-bolt"></i> TAP JUMP
+      <span id="song-title" class="text-[11px] text-slate-400 truncate max-w-[150px]">Pumili ng MP3 file...</span>
+
+      <!-- SYNC TAP BUTTON (FOR RECORD MODE) -->
+      <button id="btn-sync-tap" onclick="registerWordTap()" class="px-4 py-1.5 bg-emerald-600 active:scale-95 text-white font-black rounded-lg text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-600/30">
+        <i class="fa-solid fa-hand-pointer"></i> <span>SYNC WORD</span>
       </button>
     </div>
 
-    <!-- AUDIO CONTROLS -->
-    <div class="flex items-center gap-2">
-      <button id="btn-play-audio" onclick="toggleAudio()" class="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-xs shrink-0">
+    <!-- AUDIO PLAYER CONTROLS -->
+    <div class="flex items-center gap-3">
+      <button id="btn-play" onclick="toggleAudio()" class="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm shrink-0 active:scale-95">
         <i class="fa-solid fa-play" id="play-icon"></i>
       </button>
-      <input type="range" id="audio-seekbar" value="0" min="0" max="100" class="w-full accent-red-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer" oninput="seekAudio(event)">
-      <span id="audio-time" class="text-[10px] text-slate-400 font-mono shrink-0">0:00</span>
+
+      <input type="range" id="audio-seeker" value="0" min="0" max="100" class="w-full accent-blue-500 h-2 bg-slate-800 rounded-lg cursor-pointer" oninput="seekAudio(event)">
+
+      <span id="time-display" class="text-xs text-slate-300 font-mono shrink-0 font-bold">00:00</span>
     </div>
 
-    <audio id="main-audio-player"></audio>
+    <audio id="audio-player"></audio>
   </div>
 
-  <!-- MAIN VIEWPORT -->
+  <!-- MAIN WORKSPACE -->
   <main class="flex-1 relative overflow-hidden bg-slate-950">
-    <!-- SETUP VIEW -->
-    <div id="view-setup" class="absolute inset-0 p-4 flex flex-col gap-2 hidden">
+    <!-- 1. TEXT EDITOR VIEW -->
+    <div id="view-edit" class="absolute inset-0 p-4 flex flex-col gap-2 hidden">
       <div class="flex justify-between items-center">
-        <label class="text-xs font-bold text-red-400 uppercase">Input Lyrics & Chords:</label>
-        <span class="text-[10px] text-slate-500">Supports [00:04]C Timestamps!</span>
+        <label class="text-xs font-bold text-blue-400 uppercase">Paste Lyrics Below (1 line per verse):</label>
+        <button onclick="exportLRC()" class="text-[10px] bg-slate-800 text-slate-300 px-2.5 py-1 rounded border border-slate-700 hover:bg-slate-700"><i class="fa-solid fa-download"></i> Export Synced Text</button>
       </div>
-      <textarea id="raw-input" class="flex-1 w-full bg-slate-900 border border-slate-800 rounded-xl p-4 text-xs text-slate-200 focus:outline-none focus:border-red-500 resize-none font-mono" placeholder="I-paste ang lyrics..."></textarea>
-      <button onclick="saveSetup()" class="w-full py-3 bg-red-600 text-white font-bold rounded-xl text-sm shadow-lg shadow-red-600/30"><i class="fa-solid fa-play"></i> Launch Player</button>
+      <textarea id="lyrics-editor" class="flex-1 w-full bg-slate-900 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 focus:outline-none focus:border-blue-500 resize-none font-mono" placeholder="I-paste ang raw lyrics dito..."></textarea>
+      <button onclick="saveEditorText()" class="w-full py-3 bg-blue-600 text-white font-bold rounded-xl text-sm shadow-lg shadow-blue-600/30"><i class="fa-solid fa-check"></i> Save Lyrics & Start</button>
     </div>
 
-    <!-- PLAY VIEW -->
-    <div id="view-play" class="absolute inset-0 overflow-y-auto custom-scrollbar p-6">
-      <svg id="svg-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-40">
-        <line id="web-line" x1="0" y1="0" x2="0" y2="0" />
-      </svg>
-
-      <!-- SPIDER-MAN SPRITE -->
-      <div id="spidey-sprite" class="spidey-idle">
-        <svg viewBox="0 0 100 130" class="w-full h-full">
-          <circle cx="50" cy="22" r="16" fill="#ef4444" stroke="#ffffff" stroke-width="2"/>
-          <path d="M 40 18 Q 48 12 50 26 Q 42 26 40 18 Z" fill="#ffffff" stroke="#000000" stroke-width="2"/>
-          <path d="M 60 18 Q 52 12 50 26 Q 58 26 60 18 Z" fill="#ffffff" stroke="#000000" stroke-width="2"/>
-          <path d="M 38 38 L 62 38 L 58 70 L 42 70 Z" fill="#ef4444" stroke="#000000" stroke-width="2"/>
-          <path d="M 38 45 L 44 45 L 43 65 L 39 65 Z" fill="#0284c7"/>
-          <path d="M 62 45 L 56 45 L 57 65 L 61 65 Z" fill="#0284c7"/>
-          <path d="M 50 48 L 47 54 L 53 54 Z" fill="#000000"/>
-          <path d="M 38 40 L 22 55 L 28 60 L 40 48 Z" fill="#ef4444" stroke="#000000" stroke-width="1.5"/>
-          <path d="M 62 40 L 78 55 L 72 60 L 60 48 Z" fill="#ef4444" stroke="#000000" stroke-width="1.5"/>
-          <path d="M 42 70 L 32 110 L 42 112 L 48 70 Z" fill="#0284c7" stroke="#000000" stroke-width="1.5"/>
-          <path d="M 58 70 L 68 110 L 58 112 L 52 70 Z" fill="#0284c7" stroke="#000000" stroke-width="1.5"/>
-          <path d="M 32 100 L 26 112 L 42 112 Z" fill="#ef4444"/>
-          <path d="M 68 100 L 74 112 L 58 112 Z" fill="#ef4444"/>
-        </svg>
+    <!-- 2. KARAOKE DISPLAY VIEW (PLAY / RECORD) -->
+    <div id="view-play" class="absolute inset-0 overflow-y-auto custom-scrollbar p-6 text-center">
+      <div id="karaoke-screen" class="max-w-2xl mx-auto pt-10 pb-32">
+        <p class="text-slate-600 italic text-sm">Pumili ng MP3 at pindutin ang Play para magsimula...</p>
       </div>
-
-      <div id="song-area" class="max-w-2xl mx-auto pt-8 pb-32"></div>
     </div>
   </main>
   <script>
-    let rawText = "[00:01]C          [00:04]G             [00:08]C\nAkoy nananabik Sa'Yong pagbabalik\n[00:12]C          [00:15]G      [00:18]C\nLahat ng luha ay mapapawi";
+    // DEFAULT LYRICS DEMO
+    let rawLyrics = "Ako'y nananabik sa iyong pagbabalik\nLahat ng luha ay kusa nang mapapawi\nSama-sama tayong aawit sa ligaya";
     
-    let chordsList = [];
-    let currentChordIndex = -1;
+    let wordsData = []; // Array storing: { word: "Ako'y", time: 1.25, lineIdx: 0, wordIdx: 0, el: DOM }
+    let activeWordIndex = -1;
+    let syncRecordIndex = 0;
 
-    const audio = document.getElementById('main-audio-player');
+    const audio = document.getElementById('audio-player');
 
     window.onload = () => {
-      document.getElementById('raw-input').value = rawText;
-      parseAndRender();
-      setupAudioListeners();
+      document.getElementById('lyrics-editor').value = rawLyrics;
+      buildKaraokeDisplay();
+      setupAudioEngine();
+      setupKeyboardControls();
     };
 
-    function loadAudioFile(event) {
-      const file = event.target.files[0];
+    function handleAudioUpload(e) {
+      const file = e.target.files[0];
       if (file) {
-        document.getElementById('audio-name').innerText = file.name;
+        document.getElementById('song-title').innerText = file.name;
         audio.src = URL.createObjectURL(file);
         audio.load();
       }
     }
 
-    function parseTimestamp(timeStr) {
-      const parts = timeStr.split(':');
-      if (parts.length === 2) {
-        return parseFloat(parts[0]) * 60 + parseFloat(parts[1]);
-      }
-      return -1;
-    }
-
     function toggleAudio() {
       if (!audio.src) {
-        alert("Pumili muna ng MP3 file!");
+        alert("Mag-load muna ng MP3 song!");
         return;
       }
       if (audio.paused) {
@@ -210,178 +166,163 @@
       audio.currentTime = (e.target.value / 100) * audio.duration;
     }
 
-    function setupAudioListeners() {
+    function setupAudioEngine() {
       audio.ontimeupdate = () => {
         if (!audio.duration) return;
-        const currentTime = audio.currentTime;
 
-        const progress = (currentTime / audio.duration) * 100;
-        document.getElementById('audio-seekbar').value = progress;
+        // Update Seeker Progress
+        const progress = (audio.currentTime / audio.duration) * 100;
+        document.getElementById('audio-seeker').value = progress;
 
-        const mins = Math.floor(currentTime / 60);
-        const secs = Math.floor(currentTime % 60);
-        document.getElementById('audio-time').innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        // Format Time Display
+        const mins = Math.floor(audio.currentTime / 60);
+        const secs = Math.floor(audio.currentTime % 60);
+        document.getElementById('time-display').innerText = `${mins < 10 ? '0':''}${mins}:${secs < 10 ? '0':''}${secs}`;
 
-        // AUTO-JUMP SPIDEY BASED ON AUDIO TIMESTAMP
-        for (let i = chordsList.length - 1; i >= 0; i--) {
-          if (chordsList[i].timestampSeconds >= 0 && currentTime >= chordsList[i].timestampSeconds) {
-            if (currentChordIndex !== i) {
-              jumpToChordIndex(i);
-            }
-            break;
-          }
-        }
+        // PLAYBACK KARAOKE ANIMATION
+        updateKaraokeHighlight(audio.currentTime);
       };
 
       audio.onended = () => document.getElementById('play-icon').className = "fa-solid fa-play";
     }
 
-    function setMode(mode) {
-      document.getElementById('view-setup').classList.toggle('hidden', mode !== 'setup');
-      document.getElementById('view-play').classList.toggle('hidden', mode !== 'play');
-      if (mode === 'play') parseAndRender();
-    }
-
-    function saveSetup() {
-      rawText = document.getElementById('raw-input').value;
-      setMode('play');
-    }
-
-    function isChordLine(line) {
-      const tokens = line.trim().split(/\s+/);
-      let matches = 0;
-      tokens.forEach(t => { 
-        const cleaned = t.replace(/\[.*?\]/g, '');
-        if (/^[A-G][#b]?(m|maj|dim|aug|sus\d?|add\d?|\d)*(\/[A-G][#b]?)?$/.test(cleaned)) matches++; 
-      });
-      return tokens.length > 0 && (matches / tokens.length) >= 0.4;
-    }
-
-    function parseAndRender() {
-      const container = document.getElementById('song-area');
-      container.innerHTML = '';
-      chordsList = [];
-      currentChordIndex = -1;
-
-      const lines = rawText.split('\n');
-      for (let i = 0; i < lines.length; i++) {
-        if (isChordLine(lines[i])) {
-          renderLineWithChords(lines[i + 1] || '', lines[i], container);
-          i++;
-        } else {
-          renderLineWithChords(lines[i], null, container);
-        }
-      }
-
-      if (chordsList.length > 0) setTimeout(() => jumpToChordIndex(0), 300);
-    }
-
-    function renderLineWithChords(lyricStr, chordStr, container) {
-      const lineEl = document.createElement('div');
-      lineEl.className = 'line-row';
-
-      const chars = lyricStr.split('').map(c => ({ char: c }));
-      const chordNodes = [];
-
-      if (chordStr) {
-        // Matches both plain chords (e.g. C) or timestamped chords (e.g. [00:04]G)
-        const regex = /(?:\[(\d{2}:\d{2}(?:\.\d+)?)\]\s*)?([A-G][#b]?(?:m|maj|dim|aug|sus\d?|add\d?|\d)*(?:\/[A-G][#b]?)?)/g;
-        let match;
-        while ((match = regex.exec(chordStr)) !== null) {
-          chordNodes.push({
-            timeSec: match[1] ? parseTimestamp(match[1]) : -1,
-            chord: match[2],
-            charIndex: match.index
-          });
-        }
-      }
-
-      const totalChars = Math.max(chars.length, 1);
-      for (let idx = 0; idx < totalChars; idx++) {
-        const wordEl = document.createElement('div');
-        wordEl.className = 'word-token';
+    // RECORD MODE: PRESS SPACEBAR OR CLICK TO SYNC TIME
+    function registerWordTap() {
+      if (syncRecordIndex < wordsData.length && audio.currentTime > 0) {
+        wordsData[syncRecordIndex].time = audio.currentTime;
         
-        const charEl = document.createElement('span');
-        charEl.innerText = chars[idx] ? (chars[idx].char === ' ' ? '\u00A0' : chars[idx].char) : '\u00A0';
-        wordEl.appendChild(charEl);
-
-        const matchedChord = chordNodes.find(c => c.charIndex === idx || (idx >= chars.length && c.charIndex >= chars.length));
-        if (matchedChord) {
-          const chordBadge = document.createElement('div');
-          chordBadge.className = 'chord-box';
-          chordBadge.innerText = matchedChord.chord;
-          
-          const chordIndexInList = chordsList.length;
-          chordBadge.onclick = () => jumpToChordIndex(chordIndexInList);
-          
-          wordEl.appendChild(chordBadge);
-
-          chordsList.push({ 
-            element: chordBadge, 
-            chord: matchedChord.chord,
-            timestampSeconds: matchedChord.timeSec 
-          });
+        // Visual indicator that word was recorded
+        wordsData[syncRecordIndex].el.classList.add('passed');
+        
+        syncRecordIndex++;
+        if (syncRecordIndex < wordsData.length) {
+          wordsData[syncRecordIndex].el.classList.add('active');
         }
-
-        lineEl.appendChild(wordEl);
       }
-
-      container.appendChild(lineEl);
     }
 
-    function nextChord() {
-      if (chordsList.length === 0) return;
-      const nextIdx = (currentChordIndex + 1) % chordsList.length;
-      jumpToChordIndex(nextIdx);
+    function setupKeyboardControls() {
+      document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' && document.activeElement.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+          const recordTab = document.getElementById('tab-record');
+          if (recordTab.classList.contains('bg-blue-600')) {
+            registerWordTap();
+          } else {
+            toggleAudio();
+          }
+        }
+      });
     }
 
-    function jumpToChordIndex(index) {
-      if (currentChordIndex >= 0 && currentChordIndex < chordsList.length) {
-        chordsList[currentChordIndex].element.classList.remove('active-target');
+    function updateKaraokeHighlight(currentTime) {
+      let currentActiveIdx = -1;
+
+      for (let i = wordsData.length - 1; i >= 0; i--) {
+        if (wordsData[i].time >= 0 && currentTime >= wordsData[i].time) {
+          currentActiveIdx = i;
+          break;
+        }
       }
 
-      currentChordIndex = index;
-      const targetObj = chordsList[currentChordIndex];
-      targetObj.element.classList.add('active-target');
+      if (currentActiveIdx !== activeWordIndex) {
+        activeWordIndex = currentActiveIdx;
 
-      moveSpideyToElement(targetObj.element);
+        wordsData.forEach((item, idx) => {
+          if (idx < activeWordIndex) {
+            item.el.className = "word-item passed";
+          } else if (idx === activeWordIndex) {
+            item.el.className = "word-item active";
+            item.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } else {
+            item.el.className = "word-item";
+          }
+        });
+      }
     }
 
-    function moveSpideyToElement(targetEl) {
-      const spidey = document.getElementById('spidey-sprite');
-      const webLine = document.getElementById('web-line');
-      
-      const targetRect = targetEl.getBoundingClientRect();
-      const containerRect = document.getElementById('view-play').getBoundingClientRect();
+    function buildKaraokeDisplay() {
+      const container = document.getElementById('karaoke-screen');
+      container.innerHTML = '';
+      wordsData = [];
+      activeWordIndex = -1;
 
-      const targetX = targetRect.left - containerRect.left + (targetRect.width / 2) - 24;
-      const targetY = targetRect.top - containerRect.top - 58;
+      const lines = rawLyrics.split('\n');
 
-      const currentX = parseFloat(spidey.style.left || 0);
-      const currentY = parseFloat(spidey.style.top || 0);
+      lines.forEach((lineStr, lineIdx) => {
+        if (!lineStr.trim()) return;
 
-      if (currentX !== 0) {
-        webLine.setAttribute('x1', currentX + 24);
-        webLine.setAttribute('y1', currentY + 30);
-        webLine.setAttribute('x2', targetX + 24);
-        webLine.setAttribute('y2', targetY + 30);
-        webLine.style.opacity = '1';
+        const lineEl = document.createElement('div');
+        lineEl.className = 'lyric-line';
 
-        setTimeout(() => { webLine.style.opacity = '0'; }, 300);
+        const words = lineStr.trim().split(/\s+/);
+        words.forEach((w, wordIdx) => {
+          const span = document.createElement('span');
+          span.className = 'word-item';
+          span.innerText = w;
+
+          // Click word to jump audio directly
+          span.onclick = () => {
+            const targetData = wordsData.find(item => item.el === span);
+            if (targetData && targetData.time >= 0) {
+              audio.currentTime = targetData.time;
+            }
+          };
+
+          lineEl.appendChild(span);
+
+          wordsData.push({
+            word: w,
+            time: -1, // Unsynced initially
+            lineIdx: lineIdx,
+            wordIdx: wordIdx,
+            el: span
+          });
+        });
+
+        container.appendChild(lineEl);
+      });
+    }
+
+    function switchTab(mode) {
+      document.getElementById('view-edit').classList.toggle('hidden', mode !== 'edit');
+      document.getElementById('view-play').classList.toggle('hidden', mode === 'edit');
+
+      // Style Tab Buttons
+      ['edit', 'record', 'play'].forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        if (t === mode) {
+          btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow-md";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400";
+        }
+      });
+
+      if (mode === 'record') {
+        syncRecordIndex = 0;
+        alert("RECORD SYNC MODE:\nI-play ang MP3 at i-press ang SPACEBAR o i-tap ang 'SYNC WORD' button sa bawat salitang binibigkas!");
       }
+    }
 
-      spidey.classList.remove('spidey-idle');
-      spidey.classList.add('spidey-jumping');
+    function saveEditorText() {
+      rawLyrics = document.getElementById('lyrics-editor').value;
+      buildKaraokeDisplay();
+      switchTab('play');
+    }
 
-      spidey.style.left = `${targetX}px`;
-      spidey.style.top = `${targetY}px`;
-
-      setTimeout(() => {
-        spidey.classList.remove('spidey-jumping');
-        spidey.classList.add('spidey-idle');
-      }, 350);
-
-      targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    function exportLRC() {
+      let output = "";
+      wordsData.forEach(w => {
+        if (w.time >= 0) {
+          const m = Math.floor(w.time / 60);
+          const s = (w.time % 60).toFixed(2);
+          output += `[${m < 10 ? '0':''}${m}:${s < 10 ? '0':''}${s}] ${w.word} `;
+        } else {
+          output += `${w.word} `;
+        }
+      });
+      navigator.clipboard.writeText(output);
+      alert("Naka-copy na sa clipboard ang synced text format!");
     }
   </script>
 </body>
