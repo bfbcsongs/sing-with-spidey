@@ -3,593 +3,527 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-
-<title>Karaoke Keyframe Editor</title>
+<meta name="theme-color" content="#0b1020">
+<title>Karaoke FX Editor</title>
 
 <style>
 *{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
+ box-sizing:border-box;
+ -webkit-tap-highlight-color:transparent;
 }
 
 html,body{
-  margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:#0b1020;
-  color:#fff;
-  font-family:Arial,Helvetica,sans-serif;
+ margin:0;
+ width:100%;
+ height:100%;
+ overflow:hidden;
+ background:#080c16;
+ color:#fff;
+ font-family:Arial,sans-serif;
 }
 
 button,input,textarea{
-  font:inherit;
+ font:inherit;
 }
 
 button{
-  border:0;
-  color:white;
-  background:#1f2937;
-  border-radius:8px;
-  padding:10px 13px;
-  cursor:pointer;
+ border:0;
+ border-radius:8px;
+ background:#263244;
+ color:#fff;
+ padding:10px 13px;
 }
 
 button:active{
-  transform:scale(.97);
+ transform:scale(.96);
 }
 
 .app{
-  height:100vh;
-  display:flex;
-  flex-direction:column;
+ width:100%;
+ height:100%;
+ display:flex;
+ flex-direction:column;
 }
 
-/* TOP BAR */
+/* TOP */
 
-.topbar{
-  height:58px;
-  min-height:58px;
-  display:flex;
-  align-items:center;
-  gap:7px;
-  padding:7px;
-  background:#111827;
-  border-bottom:1px solid #374151;
-  overflow-x:auto;
+.top{
+ height:56px;
+ min-height:56px;
+ display:flex;
+ align-items:center;
+ gap:6px;
+ padding:6px;
+ background:#111827;
+ border-bottom:1px solid #374151;
+ overflow-x:auto;
 }
 
 .logo{
-  font-weight:bold;
-  font-size:15px;
-  margin-right:5px;
-  white-space:nowrap;
+ font-size:14px;
+ font-weight:bold;
+ white-space:nowrap;
+ margin-right:3px;
 }
 
-.topbtn{
-  white-space:nowrap;
-  font-size:13px;
-  background:#1f2937;
+.top button{
+ white-space:nowrap;
+ font-size:12px;
 }
 
-.topbtn.primary{
-  background:#2563eb;
+.mp3{
+ background:#2563eb;
 }
 
 /* PREVIEW */
 
 .preview{
-  height:145px;
-  min-height:145px;
-  background:#050812;
-  border-bottom:1px solid #374151;
-  display:flex;
-  flex-direction:column;
+ height:130px;
+ min-height:130px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ background:#02050b;
+ border-bottom:1px solid #374151;
 }
 
-.preview-screen{
-  flex:1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:12px;
-  overflow:hidden;
+.previewText{
+ position:relative;
+ max-width:95%;
+ font-size:28px;
+ font-weight:bold;
+ text-align:center;
+ line-height:1.2;
+ text-shadow:0 2px 5px #000;
 }
 
-.preview-text{
-  position:relative;
-  max-width:95%;
-  text-align:center;
-  font-weight:bold;
-  font-size:30px;
-  line-height:1.2;
-  color:#fff;
-  text-shadow:
-    0 2px 4px #000,
-    0 0 8px #000;
+.previewBase{
+ white-space:pre-wrap;
 }
 
-.preview-base{
-  white-space:pre-wrap;
+.previewHi{
+ position:absolute;
+ left:0;
+ top:0;
+ height:100%;
+ width:0%;
+ overflow:hidden;
+ color:#ffe600;
+ white-space:pre-wrap;
 }
 
-.preview-highlight{
-  position:absolute;
-  left:0;
-  top:0;
-  width:0%;
-  height:100%;
-  overflow:hidden;
-  color:#ffe600;
-  white-space:pre-wrap;
-  pointer-events:none;
+/* AUDIO */
+
+.audio{
+ height:54px;
+ min-height:54px;
+ display:flex;
+ align-items:center;
+ gap:7px;
+ padding:6px;
+ background:#111827;
+ border-bottom:1px solid #374151;
 }
 
-/* AUDIO BAR */
-
-.audio-bar{
-  height:55px;
-  min-height:55px;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  padding:7px;
-  background:#111827;
-  border-bottom:1px solid #374151;
-}
-
-.playbtn{
-  width:42px;
-  height:40px;
-  padding:0;
-  font-size:19px;
-  background:#2563eb;
+.play{
+ width:42px;
+ height:40px;
+ padding:0;
+ background:#2563eb;
+ font-size:18px;
 }
 
 .time{
-  width:100px;
-  font-size:12px;
-  color:#d1d5db;
-  text-align:center;
+ width:92px;
+ text-align:center;
+ font-size:11px;
+ color:#d1d5db;
 }
 
 .seek{
-  flex:1;
+ flex:1;
 }
 
-.zoom-box{
-  display:flex;
-  gap:4px;
+.zoom{
+ display:flex;
+ gap:4px;
 }
 
-.zoom-box button{
-  padding:7px 10px;
+.zoom button{
+ padding:7px 10px;
 }
 
 /* TOOLBAR */
 
 .toolbar{
-  height:48px;
-  min-height:48px;
-  display:flex;
-  align-items:center;
-  gap:6px;
-  padding:5px 7px;
-  background:#151b2b;
-  border-bottom:1px solid #374151;
-  overflow-x:auto;
+ height:46px;
+ min-height:46px;
+ display:flex;
+ align-items:center;
+ gap:5px;
+ padding:5px;
+ background:#151c2c;
+ border-bottom:1px solid #374151;
+ overflow-x:auto;
 }
 
 .toolbar button{
-  font-size:12px;
-  white-space:nowrap;
+ font-size:11px;
+ white-space:nowrap;
 }
 
-/* EDITOR */
+/* TIMELINE */
 
 .editor{
-  flex:1;
-  min-height:0;
-  position:relative;
-  overflow:hidden;
+ flex:1;
+ min-height:0;
+ overflow:hidden;
 }
 
-.timeline-scroll{
-  width:100%;
-  height:100%;
-  overflow:auto;
-  position:relative;
-  background:#080d18;
+.scroll{
+ width:100%;
+ height:100%;
+ overflow:auto;
+ position:relative;
+ background:#080d18;
 }
 
 .timeline{
-  position:relative;
-  min-height:100%;
+ position:relative;
+ min-height:100%;
 }
 
 /* RULER */
 
 .ruler{
-  height:35px;
-  position:relative;
-  background:#111827;
-  border-bottom:1px solid #374151;
-  overflow:hidden;
+ height:32px;
+ position:relative;
+ background:#111827;
+ border-bottom:1px solid #374151;
 }
 
-.ruler-mark{
-  position:absolute;
-  top:0;
-  height:100%;
-  border-left:1px solid #4b5563;
-  color:#9ca3af;
-  font-size:10px;
-  padding-left:3px;
-  pointer-events:none;
-}
-
-.ruler-mark.small{
-  border-left:1px solid #293244;
+.tick{
+ position:absolute;
+ top:0;
+ height:100%;
+ border-left:1px solid #4b5563;
+ color:#9ca3af;
+ font-size:9px;
+ padding-left:3px;
 }
 
 /* WAVEFORM */
 
-.wave-wrap{
-  height:80px;
-  position:relative;
-  background:#0c1424;
-  border-bottom:1px solid #273244;
+.wave{
+ height:70px;
+ position:relative;
+ background:#0d1525;
+ border-bottom:1px solid #263244;
 }
 
-#waveform{
-  position:absolute;
-  left:0;
-  top:0;
-  height:100%;
+#waveCanvas{
+ position:absolute;
+ left:0;
+ top:0;
+ height:70px;
 }
 
 /* TRACK */
 
 .track{
-  position:relative;
-  min-height:360px;
-  padding-top:10px;
+ position:relative;
+ min-height:500px;
 }
 
-.track-grid{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
+.grid{
+ position:absolute;
+ inset:0;
+ pointer-events:none;
 }
 
-.grid-line{
-  position:absolute;
-  top:0;
-  bottom:0;
-  border-left:1px solid rgba(148,163,184,.08);
+.gridLine{
+ position:absolute;
+ top:0;
+ bottom:0;
+ border-left:1px solid rgba(148,163,184,.08);
 }
 
-/* LYRIC CLIP */
+/* LYRIC */
 
-.lyric-clip{
-  position:absolute;
-  height:62px;
-  border:1px solid #475569;
-  background:#172033;
-  border-radius:8px;
-  overflow:visible;
-  touch-action:none;
-  user-select:none;
+.clip{
+ position:absolute;
+ height:62px;
+ background:#172033;
+ border:1px solid #475569;
+ border-radius:8px;
+ touch-action:none;
+ user-select:none;
 }
 
-.lyric-clip.selected{
-  border:2px solid #38bdf8;
-  box-shadow:0 0 0 2px rgba(56,189,248,.12);
+.clip.selected{
+ border:2px solid #38bdf8;
 }
 
-.clip-body{
-  position:absolute;
-  left:5px;
-  right:5px;
-  top:5px;
-  bottom:5px;
-  border-radius:5px;
-  overflow:hidden;
-  background:#202b3f;
+.clipBody{
+ position:absolute;
+ left:5px;
+ right:5px;
+ top:5px;
+ bottom:5px;
+ overflow:hidden;
+ border-radius:5px;
+ background:#202b3e;
 }
 
-.clip-base{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  padding:0 10px;
-  color:#dbeafe;
-  font-size:14px;
-  font-weight:bold;
-  white-space:nowrap;
-  overflow:hidden;
+.clipText{
+ position:absolute;
+ inset:0;
+ display:flex;
+ align-items:center;
+ padding:0 9px;
+ font-size:13px;
+ font-weight:bold;
+ white-space:nowrap;
+ overflow:hidden;
+ color:#dbeafe;
 }
 
-.clip-highlight{
-  position:absolute;
-  left:0;
-  top:0;
-  bottom:0;
-  width:0%;
-  overflow:hidden;
-  background:rgba(250,204,21,.22);
+.clipFill{
+ position:absolute;
+ left:0;
+ top:0;
+ bottom:0;
+ width:0%;
+ overflow:hidden;
+ background:rgba(250,204,21,.25);
 }
 
-.clip-highlight-text{
-  position:absolute;
-  left:0;
-  top:0;
-  bottom:0;
-  width:100%;
-  display:flex;
-  align-items:center;
-  padding:0 10px;
-  color:#fde047;
-  font-size:14px;
-  font-weight:bold;
-  white-space:nowrap;
+.clipFillText{
+ position:absolute;
+ left:0;
+ top:0;
+ bottom:0;
+ width:100%;
+ display:flex;
+ align-items:center;
+ padding:0 9px;
+ color:#ffe600;
+ font-size:13px;
+ font-weight:bold;
+ white-space:nowrap;
 }
 
-.resize-handle{
-  position:absolute;
-  top:0;
-  bottom:0;
-  width:10px;
-  z-index:10;
-  cursor:ew-resize;
+.handle{
+ position:absolute;
+ top:0;
+ bottom:0;
+ width:12px;
+ z-index:20;
 }
 
-.resize-left{
-  left:-5px;
+.leftHandle{
+ left:-6px;
+ cursor:ew-resize;
 }
 
-.resize-right{
-  right:-5px;
+.rightHandle{
+ right:-6px;
+ cursor:ew-resize;
 }
 
-.clip-info{
-  position:absolute;
-  left:7px;
-  bottom:-18px;
-  font-size:9px;
-  color:#64748b;
-  white-space:nowrap;
-  pointer-events:none;
+.clipTime{
+ position:absolute;
+ left:5px;
+ bottom:-17px;
+ color:#64748b;
+ font-size:9px;
+ white-space:nowrap;
 }
 
-/* KEYFRAMES */
+/* KEYFRAME */
 
-.keyframe{
-  position:absolute;
-  top:-10px;
-  width:20px;
-  height:20px;
-  margin-left:-10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#facc15;
-  font-size:17px;
-  line-height:20px;
-  z-index:20;
-  cursor:pointer;
-  text-shadow:0 1px 2px #000;
+.key{
+ position:absolute;
+ top:-11px;
+ width:22px;
+ height:22px;
+ margin-left:-11px;
+ z-index:30;
+ color:#facc15;
+ font-size:17px;
+ line-height:22px;
+ text-align:center;
 }
 
-.keyframe.selected{
-  color:#38bdf8;
-  transform:scale(1.25);
+.key.selected{
+ color:#38bdf8;
+ transform:scale(1.25);
 }
 
 /* PLAYHEAD */
 
 .playhead{
-  position:absolute;
-  top:0;
-  width:2px;
-  background:#ef4444;
-  z-index:100;
-  pointer-events:none;
+ position:absolute;
+ top:0;
+ width:2px;
+ background:#ef4444;
+ z-index:100;
+ pointer-events:none;
 }
 
-.playhead-head{
-  position:absolute;
-  top:0;
-  left:-7px;
-  width:16px;
-  height:16px;
-  background:#ef4444;
-  clip-path:polygon(50% 100%,0 0,100% 0);
+.playheadHead{
+ position:absolute;
+ left:-7px;
+ top:0;
+ width:16px;
+ height:16px;
+ background:#ef4444;
+ clip-path:polygon(50% 100%,0 0,100% 0);
 }
 
 /* KEY PANEL */
 
-.key-panel{
-  height:92px;
-  min-height:92px;
-  background:#111827;
-  border-top:1px solid #374151;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:8px;
+.keys{
+ height:88px;
+ min-height:88px;
+ display:flex;
+ align-items:center;
+ gap:9px;
+ padding:7px;
+ background:#111827;
+ border-top:1px solid #374151;
 }
 
-.key-actions{
-  display:flex;
-  gap:7px;
+.keyButton{
+ width:46px;
+ height:46px;
+ padding:0;
+ font-size:25px;
+ font-weight:bold;
 }
 
-.key-btn{
-  width:48px;
-  height:48px;
-  padding:0;
-  font-size:24px;
-  font-weight:bold;
+.addKey{
+ background:#16a34a;
 }
 
-.add-key{
-  background:#16a34a;
+.delKey{
+ background:#dc2626;
 }
 
-.remove-key{
-  background:#dc2626;
+.keyInfo{
+ width:105px;
+ min-width:105px;
+ font-size:10px;
+ color:#cbd5e1;
 }
 
-.key-info{
-  min-width:120px;
-  font-size:11px;
-  color:#cbd5e1;
+.sliderBox{
+ flex:1;
 }
 
-.key-info b{
-  color:#fff;
+.sliderTitle{
+ display:flex;
+ justify-content:space-between;
+ font-size:10px;
+ margin-bottom:3px;
+ color:#cbd5e1;
 }
 
-.progress-box{
-  flex:1;
-  min-width:100px;
-}
-
-.progress-label{
-  display:flex;
-  justify-content:space-between;
-  font-size:11px;
-  color:#cbd5e1;
-  margin-bottom:4px;
-}
-
-.progress-slider{
-  width:100%;
-}
-
-/* MODAL */
-
-.modal{
-  position:fixed;
-  inset:0;
-  z-index:1000;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:rgba(0,0,0,.72);
-  padding:15px;
-}
-
-.modal.show{
-  display:flex;
-}
-
-.modal-card{
-  width:min(700px,100%);
-  max-height:90vh;
-  display:flex;
-  flex-direction:column;
-  background:#111827;
-  border:1px solid #374151;
-  border-radius:12px;
-  overflow:hidden;
-}
-
-.modal-header{
-  padding:13px;
-  font-weight:bold;
-  border-bottom:1px solid #374151;
-}
-
-.modal-body{
-  padding:12px;
-  overflow:auto;
-}
-
-#lyricsInput{
-  width:100%;
-  min-height:320px;
-  resize:none;
-  padding:12px;
-  color:#fff;
-  background:#080d18;
-  border:1px solid #475569;
-  border-radius:8px;
-  outline:none;
-}
-
-.modal-footer{
-  display:flex;
-  justify-content:flex-end;
-  gap:7px;
-  padding:10px;
-  border-top:1px solid #374151;
-}
-
-.modal-footer button{
-  min-width:90px;
+.slider{
+ width:100%;
 }
 
 /* EMPTY */
 
 .empty{
-  position:absolute;
-  left:50%;
-  top:180px;
-  transform:translateX(-50%);
-  color:#64748b;
-  text-align:center;
-  width:300px;
-  pointer-events:none;
+ position:absolute;
+ top:170px;
+ left:50%;
+ transform:translateX(-50%);
+ color:#64748b;
+ text-align:center;
+ width:280px;
 }
 
-/* MOBILE */
+/* MODAL */
+
+.modal{
+ position:fixed;
+ inset:0;
+ display:none;
+ align-items:center;
+ justify-content:center;
+ background:rgba(0,0,0,.75);
+ z-index:1000;
+ padding:12px;
+}
+
+.modal.show{
+ display:flex;
+}
+
+.modalBox{
+ width:min(700px,100%);
+ background:#111827;
+ border:1px solid #374151;
+ border-radius:12px;
+ overflow:hidden;
+}
+
+.modalTitle{
+ padding:12px;
+ font-weight:bold;
+ border-bottom:1px solid #374151;
+}
+
+.modalBody{
+ padding:10px;
+}
+
+#lyrics{
+ width:100%;
+ height:320px;
+ resize:none;
+ background:#070b13;
+ color:#fff;
+ border:1px solid #475569;
+ border-radius:8px;
+ padding:12px;
+ outline:none;
+}
+
+.modalButtons{
+ display:flex;
+ justify-content:flex-end;
+ gap:7px;
+ padding:10px;
+ border-top:1px solid #374151;
+}
+
+.modalButtons button{
+ min-width:90px;
+}
 
 @media(max-width:600px){
 
-  .logo{
-    font-size:13px;
-  }
+ .logo{
+  font-size:12px;
+ }
 
-  .topbar{
-    height:54px;
-    min-height:54px;
-  }
+ .preview{
+  height:115px;
+  min-height:115px;
+ }
 
-  .preview{
-    height:125px;
-    min-height:125px;
-  }
+ .previewText{
+  font-size:22px;
+ }
 
-  .preview-text{
-    font-size:23px;
-  }
+ .keyInfo{
+  width:85px;
+  min-width:85px;
+ }
 
-  .audio-bar{
-    height:52px;
-    min-height:52px;
-  }
-
-  .time{
-    width:80px;
-  }
-
-  .toolbar{
-    height:46px;
-    min-height:46px;
-  }
-
-  .key-panel{
-    height:88px;
-    min-height:88px;
-  }
-
-  .key-info{
-    min-width:95px;
-  }
 }
 </style>
 </head>
@@ -598,292 +532,267 @@ button:active{
 
 <div class="app">
 
-  <!-- TOP BAR -->
-
-  <div class="topbar">
-
-    <div class="logo">
-      🎤 KARAOKE FX
-    </div>
-
-    <button class="topbtn primary" id="audioBtn">
-      🎵 MP3
-    </button>
-
-    <button class="topbtn" id="lyricsBtn">
-      📝 Lyrics
-    </button>
-
-    <button class="topbtn" id="saveBtn">
-      💾 Save
-    </button>
-
-    <button class="topbtn" id="loadBtn">
-      📂 Load
-    </button>
-
-    <button class="topbtn" id="exportBtn">
-      ⬇ Export
-    </button>
-
-    <button class="topbtn" id="importBtn">
-      ⬆ Import
-    </button>
-
-    <input
-      type="file"
-      id="audioInput"
-      accept="audio/*,.mp3,.wav,.m4a,.ogg"
-      hidden
-    >
-
-    <input
-      type="file"
-      id="projectInput"
-      accept=".json,application/json"
-      hidden
-    >
-
-  </div>
-
-
-  <!-- PREVIEW -->
-
-  <div class="preview">
-
-    <div class="preview-screen">
-
-      <div class="preview-text">
-
-        <div
-          class="preview-base"
-          id="previewBase"
-        ></div>
-
-        <div
-          class="preview-highlight"
-          id="previewHighlight"
-        ></div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- AUDIO BAR -->
-
-  <div class="audio-bar">
-
-    <button
-      class="playbtn"
-      id="playBtn"
-    >
-      ▶
-    </button>
-
-    <div
-      class="time"
-      id="timeLabel"
-    >
-      00:00 / 00:00
-    </div>
-
-    <input
-      class="seek"
-      id="seek"
-      type="range"
-      min="0"
-      max="0"
-      step="0.01"
-      value="0"
-    >
-
-    <div class="zoom-box">
-
-      <button id="zoomOut">
-        −
-      </button>
-
-      <button id="zoomIn">
-        +
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- TOOLBAR -->
-
-  <div class="toolbar">
-
-    <button id="splitBtn">
-      ✂ Split
-    </button>
-
-    <button id="duplicateBtn">
-      Duplicate
-    </button>
-
-    <button id="deleteLineBtn">
-      Delete Line
-    </button>
-
-    <button id="autoKeysBtn">
-      0→100
-    </button>
-
-    <button id="resetKeysBtn">
-      Reset Keys
-    </button>
-
-  </div>
-
-
-  <!-- TIMELINE -->
-
-  <div class="editor">
-
-    <div
-      class="timeline-scroll"
-      id="timelineScroll"
-    >
-
-      <div
-        class="timeline"
-        id="timeline"
-      >
-
-        <div
-          class="ruler"
-          id="ruler"
-        ></div>
-
-        <div
-          class="wave-wrap"
-          id="waveWrap"
-        >
-
-          <canvas
-            id="waveform"
-          ></canvas>
-
-        </div>
-
-        <div
-          class="track"
-          id="track"
-        >
-
-          <div
-            class="track-grid"
-            id="trackGrid"
-          ></div>
-
-          <div
-            class="empty"
-            id="emptyMessage"
-          >
-            Load an MP3 and add lyrics
-          </div>
-
-        </div>
-
-        <div
-          class="playhead"
-          id="playhead"
-        >
-
-          <div class="playhead-head"></div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- KEYFRAME PANEL -->
-
-  <div class="key-panel">
-
-    <div class="key-actions">
-
-      <button
-        class="key-btn remove-key"
-        id="minusKey"
-      >
-        −
-      </button>
-
-      <button
-        class="key-btn add-key"
-        id="plusKey"
-      >
-        +
-      </button>
-
-    </div>
-
-    <div
-      class="key-info"
-      id="keyInfo"
-    >
-      No keyframe selected
-    </div>
-
-    <div class="progress-box">
-
-      <div class="progress-label">
-
-        <span>
-          Shading
-        </span>
-
-        <b id="progressValue">
-          0%
-        </b>
-
-      </div>
-
-      <input
-        class="progress-slider"
-        id="progressSlider"
-        type="range"
-        min="0"
-        max="100"
-        value="0"
-      >
-
-    </div>
-
-  </div>
+<div class="top">
+
+<div class="logo">
+🎤 KARAOKE FX
+</div>
+
+<button class="mp3" id="mp3Btn">
+🎵 MP3
+</button>
+
+<button id="lyricsBtn">
+📝 Lyrics
+</button>
+
+<button id="saveBtn">
+💾 Save
+</button>
+
+<button id="loadBtn">
+📂 Load
+</button>
+
+<button id="exportBtn">
+⬇ Export
+</button>
+
+<button id="importBtn">
+⬆ Import
+</button>
+
+<input
+ id="mp3Input"
+ type="file"
+ accept="audio/*,.mp3,.wav,.m4a,.ogg"
+ hidden
+>
+
+<input
+ id="jsonInput"
+ type="file"
+ accept=".json,application/json"
+ hidden
+>
 
 </div>
 
 
-<!-- LYRICS MODAL -->
+<div class="preview">
+
+<div class="previewText">
 
 <div
-  class="modal"
-  id="lyricsModal"
+ id="previewBase"
+ class="previewBase"
+></div>
+
+<div
+ id="previewHi"
+ class="previewHi"
+></div>
+
+</div>
+
+</div>
+
+
+<div class="audio">
+
+<button
+ id="playBtn"
+ class="play"
+>
+▶
+</button>
+
+<div
+ id="time"
+ class="time"
+>
+00:00 / 00:00
+</div>
+
+<input
+ id="seek"
+ class="seek"
+ type="range"
+ min="0"
+ max="0"
+ step="0.01"
+ value="0"
 >
 
-  <div class="modal-card">
+<div class="zoom">
 
-    <div class="modal-header">
-      📝 Paste Lyrics
-    </div>
+<button id="zoomMinus">
+−
+</button>
 
-    <div class="modal-body">
+<button id="zoomPlus">
++
+</button>
 
-      <textarea
-        id="lyricsInput"
-        placeholder="Paste your lyrics here.
+</div>
+
+</div>
+
+
+<div class="toolbar">
+
+<button id="splitBtn">
+✂ Split
+</button>
+
+<button id="duplicateBtn">
+Duplicate
+</button>
+
+<button id="deleteBtn">
+Delete
+</button>
+
+<button id="autoBtn">
+0 → 100
+</button>
+
+<button id="resetBtn">
+Reset Keys
+</button>
+
+</div>
+
+
+<div class="editor">
+
+<div
+ id="scroll"
+ class="scroll"
+>
+
+<div
+ id="timeline"
+ class="timeline"
+>
+
+<div
+ id="ruler"
+ class="ruler"
+></div>
+
+<div class="wave">
+
+<canvas
+ id="waveCanvas"
+></canvas>
+
+</div>
+
+<div
+ id="track"
+ class="track"
+>
+
+<div
+ id="grid"
+ class="grid"
+></div>
+
+<div
+ id="empty"
+ class="empty"
+>
+Load an MP3, then add lyrics.
+</div>
+
+</div>
+
+<div
+ id="playhead"
+ class="playhead"
+>
+
+<div class="playheadHead"></div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="keys">
+
+<button
+ id="minusKey"
+ class="keyButton delKey"
+>
+−
+</button>
+
+<button
+ id="plusKey"
+ class="keyButton addKey"
+>
++
+</button>
+
+<div
+ id="keyInfo"
+ class="keyInfo"
+>
+No key selected
+</div>
+
+<div class="sliderBox">
+
+<div class="sliderTitle">
+
+<span>
+Shading
+</span>
+
+<b id="sliderValue">
+0%
+</b>
+
+</div>
+
+<input
+ id="progress"
+ class="slider"
+ type="range"
+ min="0"
+ max="100"
+ value="0"
+>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div
+ id="lyricsModal"
+ class="modal"
+>
+
+<div class="modalBox">
+
+<div class="modalTitle">
+📝 Paste Lyrics
+</div>
+
+<div class="modalBody">
+
+<textarea
+ id="lyrics"
+ placeholder="Paste lyrics here.
 
 One line per row.
 
@@ -893,180 +802,174 @@ Amazing grace how sweet the sound
 That saved a wretch like me
 I once was lost but now am found
 Was blind but now I see"
-      ></textarea>
+></textarea>
 
-    </div>
+</div>
 
-    <div class="modal-footer">
+<div class="modalButtons">
 
-      <button id="cancelLyrics">
-        Cancel
-      </button>
+<button id="cancelLyrics">
+Cancel
+</button>
 
-      <button
-        id="applyLyrics"
-        style="background:#2563eb"
-      >
-        Apply Lyrics
-      </button>
+<button
+ id="applyLyrics"
+ style="background:#2563eb"
+>
+Apply Lyrics
+</button>
 
-    </div>
+</div>
 
-  </div>
+</div>
 
 </div>
 
 
 <audio
-  id="audio"
-  preload="metadata"
+ id="audio"
+ preload="metadata"
 ></audio>
 
 
 <script>
-
-/* =========================================================
-   KARAOKE FX EDITOR
-   PART 1
-   ========================================================= */
+  /* =====================================================
+   PART 2 — BASIC FUNCTIONS + MP3 + LYRICS
+   ===================================================== */
 
 const audio =
-  document.getElementById("audio");
+document.getElementById("audio");
 
-const audioInput =
-  document.getElementById("audioInput");
+const mp3Btn =
+document.getElementById("mp3Btn");
 
-const projectInput =
-  document.getElementById("projectInput");
-
-const audioBtn =
-  document.getElementById("audioBtn");
+const mp3Input =
+document.getElementById("mp3Input");
 
 const lyricsBtn =
-  document.getElementById("lyricsBtn");
+document.getElementById("lyricsBtn");
 
 const lyricsModal =
-  document.getElementById("lyricsModal");
+document.getElementById("lyricsModal");
 
-const lyricsInput =
-  document.getElementById("lyricsInput");
+const lyrics =
+document.getElementById("lyrics");
 
 const applyLyrics =
-  document.getElementById("applyLyrics");
+document.getElementById("applyLyrics");
 
 const cancelLyrics =
-  document.getElementById("cancelLyrics");
+document.getElementById("cancelLyrics");
 
 const playBtn =
-  document.getElementById("playBtn");
+document.getElementById("playBtn");
 
 const seek =
-  document.getElementById("seek");
+document.getElementById("seek");
 
-const timeLabel =
-  document.getElementById("timeLabel");
-
-const timelineScroll =
-  document.getElementById("timelineScroll");
+const time =
+document.getElementById("time");
 
 const timeline =
-  document.getElementById("timeline");
+document.getElementById("timeline");
+
+const scroll =
+document.getElementById("scroll");
 
 const ruler =
-  document.getElementById("ruler");
+document.getElementById("ruler");
 
 const track =
-  document.getElementById("track");
+document.getElementById("track");
 
-const trackGrid =
-  document.getElementById("trackGrid");
-
-const waveWrap =
-  document.getElementById("waveWrap");
-
-const waveform =
-  document.getElementById("waveform");
+const grid =
+document.getElementById("grid");
 
 const playhead =
-  document.getElementById("playhead");
-
-const emptyMessage =
-  document.getElementById("emptyMessage");
+document.getElementById("playhead");
 
 const previewBase =
-  document.getElementById("previewBase");
+document.getElementById("previewBase");
 
-const previewHighlight =
-  document.getElementById("previewHighlight");
+const previewHi =
+document.getElementById("previewHi");
 
-const plusKey =
-  document.getElementById("plusKey");
+const empty =
+document.getElementById("empty");
 
-const minusKey =
-  document.getElementById("minusKey");
+const progress =
+document.getElementById("progress");
+
+const sliderValue =
+document.getElementById("sliderValue");
 
 const keyInfo =
-  document.getElementById("keyInfo");
+document.getElementById("keyInfo");
 
-const progressSlider =
-  document.getElementById("progressSlider");
+const zoomPlus =
+document.getElementById("zoomPlus");
 
-const progressValue =
-  document.getElementById("progressValue");
+const zoomMinus =
+document.getElementById("zoomMinus");
 
-const zoomIn =
-  document.getElementById("zoomIn");
+const plusKey =
+document.getElementById("plusKey");
 
-const zoomOut =
-  document.getElementById("zoomOut");
+const minusKey =
+document.getElementById("minusKey");
 
 const splitBtn =
-  document.getElementById("splitBtn");
+document.getElementById("splitBtn");
 
 const duplicateBtn =
-  document.getElementById("duplicateBtn");
+document.getElementById("duplicateBtn");
 
-const deleteLineBtn =
-  document.getElementById("deleteLineBtn");
+const deleteBtn =
+document.getElementById("deleteBtn");
 
-const autoKeysBtn =
-  document.getElementById("autoKeysBtn");
+const autoBtn =
+document.getElementById("autoBtn");
 
-const resetKeysBtn =
-  document.getElementById("resetKeysBtn");
+const resetBtn =
+document.getElementById("resetBtn");
 
 const saveBtn =
-  document.getElementById("saveBtn");
+document.getElementById("saveBtn");
 
 const loadBtn =
-  document.getElementById("loadBtn");
+document.getElementById("loadBtn");
 
 const exportBtn =
-  document.getElementById("exportBtn");
+document.getElementById("exportBtn");
 
 const importBtn =
-  document.getElementById("importBtn");
+document.getElementById("importBtn");
+
+const jsonInput =
+document.getElementById("jsonInput");
+
+const waveCanvas =
+document.getElementById("waveCanvas");
 
 
-/* =========================================================
+/* =========================
    STATE
-   ========================================================= */
+   ========================= */
 
 let state = {
 
-  audioName: "",
+ audioName:"",
+ duration:0,
 
-  audioDuration: 0,
+ zoom:80,
 
-  zoom: 80,
+ currentTime:0,
 
-  lines: [],
+ lines:[],
 
-  selectedLineId: null,
+ selectedLine:null,
 
-  selectedKeyId: null,
-
-  currentTime: 0
+ selectedKey:null
 
 };
 
@@ -1078,3053 +981,2648 @@ let audioBuffer = null;
 let audioContext = null;
 
 
-/* =========================================================
+/* =========================
    HELPERS
-   ========================================================= */
+   ========================= */
 
 function uid(){
 
-  return Math.random()
-    .toString(36)
-    .slice(2) +
-    Date.now().toString(36);
+ return Date.now().toString(36)
+ + Math.random()
+   .toString(36)
+   .slice(2);
 
 }
 
 
-function clamp(value,min,max){
+function clamp(v,min,max){
 
-  return Math.max(
-    min,
-    Math.min(max,value)
-  );
-
-}
-
-
-function formatTime(seconds){
-
-  if(!isFinite(seconds)){
-    return "00:00";
-  }
-
-  seconds = Math.max(0,seconds);
-
-  const m =
-    Math.floor(seconds / 60)
-      .toString()
-      .padStart(2,"0");
-
-  const s =
-    Math.floor(seconds % 60)
-      .toString()
-      .padStart(2,"0");
-
-  return m + ":" + s;
+ return Math.max(
+  min,
+  Math.min(max,v)
+ );
 
 }
 
 
-function formatLongTime(seconds){
+function fmt(sec){
 
-  if(!isFinite(seconds)){
-    return "0.00";
-  }
+ if(!isFinite(sec))
+  sec=0;
 
-  return Number(seconds)
-    .toFixed(2);
+ sec=Math.max(0,sec);
 
-}
+ const m=
+ Math.floor(sec/60)
+ .toString()
+ .padStart(2,"0");
 
+ const s=
+ Math.floor(sec%60)
+ .toString()
+ .padStart(2,"0");
 
-function getDuration(){
-
-  return Number(
-    state.audioDuration || 0
-  );
-
-}
-
-
-function timeToX(time){
-
-  return time * state.zoom;
+ return m+":"+s;
 
 }
 
 
-function xToTime(x){
+function xFromTime(t){
 
-  return x / state.zoom;
-
-}
-
-
-function getSelectedLine(){
-
-  return state.lines.find(
-    line =>
-      line.id === state.selectedLineId
-  ) || null;
+ return t*state.zoom;
 
 }
 
 
-function getSelectedKey(){
+function timeFromX(x){
 
-  const line =
-    getSelectedLine();
-
-  if(!line){
-    return null;
-  }
-
-  return line.keyframes.find(
-    key =>
-      key.id === state.selectedKeyId
-  ) || null;
+ return x/state.zoom;
 
 }
 
 
-/* =========================================================
-   AUDIO FILE
-   ========================================================= */
+function selectedLine(){
 
-audioBtn.addEventListener(
-  "click",
-  () => {
+ return state.lines.find(
+  l=>l.id===state.selectedLine
+ ) || null;
 
-    audioInput.click();
-
-  }
-);
+}
 
 
-audioInput.addEventListener(
-  "change",
-  async event => {
+function selectedKey(){
 
-    const file =
-      event.target.files[0];
+ const line=selectedLine();
 
-    if(!file){
-      return;
-    }
+ if(!line)
+  return null;
 
-    if(audioURL){
-      URL.revokeObjectURL(audioURL);
-    }
+ return line.keyframes.find(
+  k=>k.id===state.selectedKey
+ ) || null;
 
-    audioURL =
-      URL.createObjectURL(file);
-
-    audio.src =
-      audioURL;
-
-    audio.load();
-
-    state.audioName =
-      file.name;
-
-    state.audioDuration = 0;
-
-    state.currentTime = 0;
-
-    audio.onloadedmetadata =
-      async () => {
-
-        state.audioDuration =
-          audio.duration || 0;
-
-        seek.max =
-          state.audioDuration;
-
-        seek.value = 0;
-
-        timeLabel.textContent =
-          "00:00 / " +
-          formatTime(
-            state.audioDuration
-          );
-
-        if(
-          state.lines.length === 0
-        ){
-
-          emptyMessage.style.display =
-            "block";
-
-        }
-
-        renderAll();
-
-        await decodeAudio(file);
-
-      };
-
-  }
-);
+}
 
 
-/* =========================================================
+/* =========================
+   MP3 BUTTON
+   ========================= */
+
+mp3Btn.onclick=function(){
+
+ mp3Input.click();
+
+};
+
+
+mp3Input.onchange=function(e){
+
+ const file=e.target.files[0];
+
+ if(!file)
+  return;
+
+ if(audioURL)
+  URL.revokeObjectURL(audioURL);
+
+ audioURL=
+ URL.createObjectURL(file);
+
+ audio.src=audioURL;
+
+ state.audioName=file.name;
+
+ audio.load();
+
+};
+
+
+/* =========================
+   MP3 LOADED
+   ========================= */
+
+audio.onloadedmetadata=function(){
+
+ state.duration=
+ audio.duration || 0;
+
+ state.currentTime=0;
+
+ seek.max=state.duration;
+
+ seek.value=0;
+
+ time.textContent=
+ "00:00 / "+fmt(state.duration);
+
+ render();
+
+ decodeWave();
+
+};
+
+
+/* =========================
    DECODE WAVEFORM
-   ========================================================= */
+   ========================= */
 
-async function decodeAudio(file){
+async function decodeWave(){
 
-  try{
+ try{
 
-    if(!audioContext){
+  if(!audioURL)
+   return;
 
-      audioContext =
-        new (
-          window.AudioContext ||
-          window.webkitAudioContext
-        )();
+  if(!audioContext){
 
-    }
-
-    const arrayBuffer =
-      await file.arrayBuffer();
-
-    audioBuffer =
-      await audioContext.decodeAudioData(
-        arrayBuffer
-      );
-
-    drawWaveform();
-
-  }catch(error){
-
-    console.log(
-      "Waveform error:",
-      error
-    );
+   audioContext=
+   new (
+    window.AudioContext ||
+    window.webkitAudioContext
+   )();
 
   }
+
+  const response=
+  await fetch(audioURL);
+
+  const buffer=
+  await response.arrayBuffer();
+
+  audioBuffer=
+  await audioContext.decodeAudioData(
+   buffer
+  );
+
+  drawWave();
+
+ }catch(err){
+
+  console.log(
+   "Waveform unavailable",
+   err
+  );
+
+ }
 
 }
 
 
-/* =========================================================
-   PLAY / PAUSE
-   ========================================================= */
+/* =========================
+   PLAY
+   ========================= */
 
-playBtn.addEventListener(
-  "click",
-  () => {
+playBtn.onclick=function(){
 
-    if(!audio.src){
+ if(!audio.src){
 
-      audioBtn.click();
+  mp3Btn.click();
 
-      return;
+  return;
 
-    }
+ }
 
-    if(audio.paused){
+ if(audio.paused){
 
-      audio.play();
+  audio.play();
 
-    }else{
+ }else{
 
-      audio.pause();
+  audio.pause();
 
-    }
+ }
 
-  }
-);
+};
 
 
-audio.addEventListener(
-  "play",
-  () => {
+audio.onplay=function(){
 
-    playBtn.textContent =
-      "⏸";
+ playBtn.textContent="⏸";
 
-  }
-);
+};
 
 
-audio.addEventListener(
-  "pause",
-  () => {
+audio.onpause=function(){
 
-    playBtn.textContent =
-      "▶";
+ playBtn.textContent="▶";
 
-  }
-);
+};
 
 
-audio.addEventListener(
-  "ended",
-  () => {
+audio.onended=function(){
 
-    playBtn.textContent =
-      "▶";
+ playBtn.textContent="▶";
 
-  }
-);
+};
 
 
-/* =========================================================
-   AUDIO TIME
-   ========================================================= */
+/* =========================
+   TIME UPDATE
+   ========================= */
 
-audio.addEventListener(
-  "timeupdate",
-  () => {
+audio.ontimeupdate=function(){
 
-    state.currentTime =
-      audio.currentTime;
+ state.currentTime=
+ audio.currentTime;
 
-    seek.value =
-      audio.currentTime;
+ seek.value=
+ audio.currentTime;
 
-    timeLabel.textContent =
-      formatTime(
-        audio.currentTime
-      ) +
-      " / " +
-      formatTime(
-        getDuration()
-      );
+ time.textContent=
+ fmt(audio.currentTime)
+ +" / "
+ +fmt(state.duration);
 
-    updatePlayhead();
+ updatePlayhead();
 
-    updatePreview();
+ updatePreview();
 
-    updateClipHighlights();
+ updateHighlights();
 
-    updateKeyPanel();
-
-  }
-);
+};
 
 
-seek.addEventListener(
-  "input",
-  () => {
+seek.oninput=function(){
 
-    const t =
-      Number(seek.value);
+ const t=
+ Number(seek.value);
 
-    audio.currentTime =
-      t;
+ audio.currentTime=t;
 
-    state.currentTime =
-      t;
+ state.currentTime=t;
 
-    updatePlayhead();
+ updatePlayhead();
 
-    updatePreview();
+ updatePreview();
 
-  }
-);
+};
 
 
-/* =========================================================
+/* =========================
    LYRICS MODAL
-   ========================================================= */
+   ========================= */
 
-lyricsBtn.addEventListener(
-  "click",
-  () => {
+lyricsBtn.onclick=function(){
 
-    lyricsModal.classList.add(
-      "show"
-    );
+ lyricsModal.classList.add("show");
 
-    lyricsInput.focus();
+ lyrics.focus();
+
+};
+
+
+cancelLyrics.onclick=function(){
+
+ lyricsModal.classList.remove("show");
+
+};
+
+
+lyricsModal.onclick=function(e){
+
+ if(e.target===lyricsModal){
+
+  lyricsModal.classList.remove(
+   "show"
+  );
+
+ }
+
+};
+
+
+/* =========================
+   APPLY LYRICS
+   ========================= */
+
+applyLyrics.onclick=function(){
+
+ const raw=
+ lyrics.value.trim();
+
+ if(!raw){
+
+  alert(
+   "Paste your lyrics first."
+  );
+
+  return;
+
+ }
+
+ if(state.duration<=0){
+
+  alert(
+   "Please load the MP3 first."
+  );
+
+  return;
+
+ }
+
+
+ const arr=
+ raw.split(/\r?\n/)
+ .map(x=>x.trim())
+ .filter(Boolean);
+
+
+ state.lines=[];
+
+
+ const gap=
+ state.duration/arr.length;
+
+
+ arr.forEach(
+ (text,index)=>{
+
+  const start=
+  index*gap;
+
+  const end=
+  index===arr.length-1
+   ?state.duration
+   :(index+1)*gap;
+
+
+  state.lines.push({
+
+   id:uid(),
+
+   text:text,
+
+   start:start,
+
+   end:end,
+
+   keyframes:[
+
+    {
+     id:uid(),
+     time:start,
+     progress:0
+    },
+
+    {
+     id:uid(),
+     time:end,
+     progress:100
+    }
+
+   ]
+
+  });
+
+ }
+ );
+
+
+ if(state.lines.length){
+
+  state.selectedLine=
+  state.lines[0].id;
+
+  state.selectedKey=
+  state.lines[0]
+  .keyframes[0].id;
+
+ }
+
+
+ lyricsModal.classList.remove(
+  "show"
+ );
+
+ render();
+
+};
+
+
+/* =========================
+   ZOOM
+   ========================= */
+
+zoomPlus.onclick=function(){
+
+ state.zoom=
+ clamp(
+  state.zoom+20,
+  30,
+  220
+ );
+
+ render();
+
+};
+
+
+zoomMinus.onclick=function(){
+
+ state.zoom=
+ clamp(
+  state.zoom-20,
+  30,
+  220
+ );
+
+ render();
+
+};
+
+
+/* =========================
+   TIMELINE SIZE
+   ========================= */
+
+function timelineWidth(){
+
+ const duration=
+ Math.max(
+  state.duration,
+  30
+ );
+
+ return Math.max(
+  duration*state.zoom,
+  scroll.clientWidth
+ );
+
+}
+
+
+function updateTimelineSize(){
+
+ timeline.style.width=
+ timelineWidth()+"px";
+
+}
+
+
+/* =========================
+   RULER
+   ========================= */
+
+function drawRuler(){
+
+ ruler.innerHTML="";
+
+ const duration=
+ Math.max(
+  state.duration,
+  30
+ );
+
+ const step=
+ state.zoom>=100
+ ?1
+ :state.zoom>=60
+ ?2
+ :5;
+
+
+ for(
+  let t=0;
+  t<=duration;
+  t+=step
+ ){
+
+  const el=
+  document.createElement("div");
+
+  el.className="tick";
+
+  el.style.left=
+  xFromTime(t)+"px";
+
+  el.textContent=fmt(t);
+
+  ruler.appendChild(el);
+
+ }
+
+}
+
+
+/* =========================
+   GRID
+   ========================= */
+
+function drawGrid(){
+
+ grid.innerHTML="";
+
+ const duration=
+ Math.max(
+  state.duration,
+  30
+ );
+
+ const step=
+ state.zoom>=100
+ ?1
+ :state.zoom>=60
+ ?2
+ :5;
+
+
+ for(
+  let t=0;
+  t<=duration;
+  t+=step
+ ){
+
+  const line=
+  document.createElement("div");
+
+  line.className="gridLine";
+
+  line.style.left=
+  xFromTime(t)+"px";
+
+  grid.appendChild(line);
+
+ }
+
+}
+
+
+/* =========================
+   WAVEFORM
+   ========================= */
+
+function drawWave(){
+
+ const width=
+ Math.max(
+  1,
+  timelineWidth()
+ );
+
+ const canvasWidth=
+ Math.min(
+  width,
+  16000
+ );
+
+ waveCanvas.width=
+ canvasWidth;
+
+ waveCanvas.height=70;
+
+ waveCanvas.style.width=
+ width+"px";
+
+ const ctx=
+ waveCanvas.getContext("2d");
+
+ ctx.clearRect(
+  0,0,
+  canvasWidth,
+  70
+ );
+
+
+ if(!audioBuffer)
+  return;
+
+
+ const data=
+ audioBuffer.getChannelData(0);
+
+ const step=
+ data.length/canvasWidth;
+
+
+ ctx.beginPath();
+
+ for(
+  let x=0;
+  x<canvasWidth;
+  x++
+ ){
+
+  const a=
+  Math.floor(x*step);
+
+  const b=
+  Math.min(
+   data.length,
+   Math.floor((x+1)*step)
+  );
+
+  let min=1;
+
+  let max=-1;
+
+  for(
+   let i=a;
+   i<b;
+   i++
+  ){
+
+   if(data[i]<min)
+    min=data[i];
+
+   if(data[i]>max)
+    max=data[i];
 
   }
-);
+
+  ctx.moveTo(
+   x,
+   35+min*30
+  );
+
+  ctx.lineTo(
+   x,
+   35+max*30
+  );
+
+ }
+
+ ctx.strokeStyle=
+ "rgba(96,165,250,.65)";
+
+ ctx.stroke();
+
+}
 
 
-cancelLyrics.addEventListener(
-  "click",
-  () => {
+/* =========================
+   CONTINUE PART 3
+   ========================= */
+  /* =====================================================
+   PART 3 — LYRIC TIMELINE + KEYFRAMES
+   ===================================================== */
 
-    lyricsModal.classList.remove(
-      "show"
-    );
+
+/* =========================
+   RENDER
+   ========================= */
+
+function render(){
+
+ updateTimelineSize();
+
+ drawRuler();
+
+ drawGrid();
+
+ drawLyrics();
+
+ updatePlayhead();
+
+ updatePreview();
+
+ updateKeyPanel();
+
+ drawWave();
+
+}
+
+
+/* =========================
+   DRAW LYRIC CLIPS
+   ========================= */
+
+function drawLyrics(){
+
+ document
+ .querySelectorAll(".clip")
+ .forEach(
+  el=>el.remove()
+ );
+
+
+ if(state.lines.length){
+
+  empty.style.display="none";
+
+ }else{
+
+  empty.style.display="block";
+
+ }
+
+
+ state.lines.forEach(
+ (line,index)=>{
+
+  const clip=
+  document.createElement("div");
+
+  clip.className="clip";
+
+  if(
+   line.id===state.selectedLine
+  ){
+
+   clip.classList.add("selected");
 
   }
-);
 
 
-lyricsModal.addEventListener(
-  "click",
-  event => {
+  clip.dataset.id=
+  line.id;
 
-    if(
-      event.target ===
-      lyricsModal
-    ){
 
-      lyricsModal.classList.remove(
-        "show"
-      );
+  clip.style.left=
+  xFromTime(line.start)+"px";
+
+
+  clip.style.width=
+  Math.max(
+   45,
+   xFromTime(
+    line.end-line.start
+   )
+  )+"px";
+
+
+  clip.style.top=
+  (index*82+10)+"px";
+
+
+  /* BODY */
+
+  const body=
+  document.createElement("div");
+
+  body.className="clipBody";
+
+
+  /* BASE TEXT */
+
+  const text=
+  document.createElement("div");
+
+  text.className="clipText";
+
+  text.textContent=
+  line.text;
+
+
+  /* HIGHLIGHT */
+
+  const fill=
+  document.createElement("div");
+
+  fill.className="clipFill";
+
+
+  const fillText=
+  document.createElement("div");
+
+  fillText.className="clipFillText";
+
+  fillText.textContent=
+  line.text;
+
+
+  fill.appendChild(
+   fillText
+  );
+
+  body.appendChild(
+   text
+  );
+
+  body.appendChild(
+   fill
+  );
+
+  clip.appendChild(
+   body
+  );
+
+
+  /* LEFT HANDLE */
+
+  const left=
+  document.createElement("div");
+
+  left.className=
+  "handle leftHandle";
+
+  clip.appendChild(left);
+
+
+  /* RIGHT HANDLE */
+
+  const right=
+  document.createElement("div");
+
+  right.className=
+  "handle rightHandle";
+
+  clip.appendChild(right);
+
+
+  /* TIME */
+
+  const info=
+  document.createElement("div");
+
+  info.className=
+  "clipTime";
+
+  info.textContent=
+  fmt(line.start)
+  +" → "
+  +fmt(line.end);
+
+  clip.appendChild(info);
+
+
+  /* KEYFRAMES */
+
+  line.keyframes
+  .sort(
+   (a,b)=>a.time-b.time
+  )
+  .forEach(
+  key=>{
+
+   const k=
+   document.createElement("div");
+
+   k.className="key";
+
+   k.textContent="♦";
+
+   if(
+    key.id===state.selectedKey
+   ){
+
+    k.classList.add(
+     "selected"
+    );
+
+   }
+
+
+   const duration=
+   line.end-line.start;
+
+   let percent=0;
+
+   if(duration>0){
+
+    percent=
+    (
+     (key.time-line.start) /
+     duration
+    )*100;
+
+   }
+
+
+   k.style.left=
+   percent+"%";
+
+
+   k.onpointerdown=function(e){
+
+    e.stopPropagation();
+
+    state.selectedLine=
+    line.id;
+
+    state.selectedKey=
+    key.id;
+
+    state.currentTime=
+    key.time;
+
+    if(audio.src){
+
+     audio.currentTime=
+     key.time;
 
     }
 
+    render();
+
+   };
+
+
+   clip.appendChild(k);
+
+  });
+
+
+  /* SELECT / MOVE */
+
+  clip.onpointerdown=
+  function(e){
+
+   if(
+    e.target.classList.contains(
+     "key"
+    )
+   )
+    return;
+
+   if(
+    e.target.classList.contains(
+     "leftHandle"
+    ) ||
+    e.target.classList.contains(
+     "rightHandle"
+    )
+   )
+    return;
+
+
+   state.selectedLine=
+   line.id;
+
+   state.selectedKey=null;
+
+   moveClip(
+    e,
+    line,
+    clip
+   );
+
+  };
+
+
+  /* RESIZE */
+
+  left.onpointerdown=
+  function(e){
+
+   e.stopPropagation();
+
+   resizeClip(
+    e,
+    line,
+    "left",
+    clip
+   );
+
+  };
+
+
+  right.onpointerdown=
+  function(e){
+
+   e.stopPropagation();
+
+   resizeClip(
+    e,
+    line,
+    "right",
+    clip
+   );
+
+  };
+
+
+  track.appendChild(clip);
+
+ });
+
+}
+
+
+/* =========================
+   MOVE CLIP
+   ========================= */
+
+function moveClip(
+ event,
+ line,
+ clip
+){
+
+ const startX=
+ event.clientX;
+
+ const originalStart=
+ line.start;
+
+ const originalEnd=
+ line.end;
+
+ const deltaDuration=
+ originalEnd-
+ originalStart;
+
+
+ const keyOriginal=
+ line.keyframes.map(
+  k=>({
+   id:k.id,
+   time:k.time
+  })
+ );
+
+
+ clip.setPointerCapture(
+  event.pointerId
+ );
+
+
+ function moving(e){
+
+  const dx=
+  e.clientX-startX;
+
+  const dt=
+  dx/state.zoom;
+
+
+  let newStart=
+  originalStart+dt;
+
+  let newEnd=
+  originalEnd+dt;
+
+
+  if(newStart<0){
+
+   newEnd-=newStart;
+
+   newStart=0;
+
   }
-);
 
 
-/* =========================================================
-   CREATE LYRICS
-   ========================================================= */
+  if(
+   state.duration>0 &&
+   newEnd>state.duration
+  ){
 
-applyLyrics.addEventListener(
-  "click",
-  () => {
+   const excess=
+   newEnd-state.duration;
 
-    const text =
-      lyricsInput.value.trim();
+   newStart-=excess;
 
-    if(!text){
+   newEnd=
+   state.duration;
 
-      alert(
-        "Please paste your lyrics first."
-      );
+  }
 
-      return;
 
-    }
+  newStart=
+  Math.max(0,newStart);
 
-    const lines =
-      text
-        .split(/\r?\n/)
-        .map(
-          line => line.trim()
-        )
-        .filter(Boolean);
 
-    if(!lines.length){
-      return;
-    }
+  line.start=
+  newStart;
 
-    const duration =
-      getDuration();
+  line.end=
+  newEnd;
 
-    if(duration <= 0){
 
-      alert(
-        "Please load the MP3 first."
-      );
+  const moveDelta=
+  newStart-
+  originalStart;
 
-      return;
 
-    }
+  line.keyframes.forEach(
+   k=>{
 
-    state.lines = [];
-
-    const gap =
-      duration / lines.length;
-
-    lines.forEach(
-      (text,index) => {
-
-        const start =
-          index * gap;
-
-        const end =
-          index === lines.length - 1
-            ? duration
-            : (index + 1) * gap;
-
-        state.lines.push({
-
-          id: uid(),
-
-          text,
-
-          start,
-
-          end,
-
-          keyframes: [
-
-            {
-              id: uid(),
-              time: start,
-              progress: 0
-            },
-
-            {
-              id: uid(),
-              time: end,
-              progress: 100
-            }
-
-          ]
-
-        });
-
-      }
+    const old=
+    keyOriginal.find(
+     x=>x.id===k.id
     );
 
-    state.selectedLineId =
-      state.lines[0].id;
+    if(old){
 
-    state.selectedKeyId =
-      state.lines[0]
-        .keyframes[0].id;
+     k.time=
+     old.time+
+     moveDelta;
 
-    lyricsModal.classList.remove(
-      "show"
-    );
+    }
 
-    renderAll();
+   }
+  );
+
+
+  clip.style.left=
+  xFromTime(newStart)+"px";
+
+  clip.style.width=
+  xFromTime(deltaDuration)+"px";
+
+ }
+
+
+ function done(){
+
+  clip.removeEventListener(
+   "pointermove",
+   moving
+  );
+
+  clip.removeEventListener(
+   "pointerup",
+   done
+  );
+
+  clip.removeEventListener(
+   "pointercancel",
+   done
+  );
+
+  render();
+
+ }
+
+
+ clip.addEventListener(
+  "pointermove",
+  moving
+ );
+
+ clip.addEventListener(
+  "pointerup",
+  done
+ );
+
+ clip.addEventListener(
+  "pointercancel",
+  done
+ );
+
+}
+
+
+/* =========================
+   RESIZE CLIP
+   ========================= */
+
+function resizeClip(
+ event,
+ line,
+ side,
+ clip
+){
+
+ const startX=
+ event.clientX;
+
+ const oldStart=
+ line.start;
+
+ const oldEnd=
+ line.end;
+
+
+ clip.setPointerCapture(
+  event.pointerId
+ );
+
+
+ function resizing(e){
+
+  const dx=
+  e.clientX-startX;
+
+  const dt=
+  dx/state.zoom;
+
+
+  if(side==="left"){
+
+   line.start=
+   clamp(
+    oldStart+dt,
+    0,
+    oldEnd-0.2
+   );
+
+  }else{
+
+   line.end=
+   clamp(
+    oldEnd+dt,
+    oldStart+0.2,
+    state.duration
+   );
 
   }
-);
 
 
-/* =========================================================
-   RENDER EVERYTHING
-   ========================================================= */
+  line.keyframes.forEach(
+   k=>{
 
-function renderAll(){
+    k.time=
+    clamp(
+     k.time,
+     line.start,
+     line.end
+    );
 
-  updateTimelineWidth();
+   }
+  );
 
-  renderRuler();
 
-  renderGrid();
+  clip.style.left=
+  xFromTime(line.start)+"px";
 
-  renderLyrics();
+  clip.style.width=
+  xFromTime(
+   line.end-line.start
+  )+"px";
+
+ }
+
+
+ function done(){
+
+  clip.removeEventListener(
+   "pointermove",
+   resizing
+  );
+
+  clip.removeEventListener(
+   "pointerup",
+   done
+  );
+
+  clip.removeEventListener(
+   "pointercancel",
+   done
+  );
+
+  render();
+
+ }
+
+
+ clip.addEventListener(
+  "pointermove",
+  resizing
+ );
+
+ clip.addEventListener(
+  "pointerup",
+  done
+ );
+
+ clip.addEventListener(
+  "pointercancel",
+  done
+ );
+
+}
+
+
+/* =========================
+   PLAYHEAD
+   ========================= */
+
+function updatePlayhead(){
+
+ playhead.style.left=
+ xFromTime(
+  state.currentTime
+ )+"px";
+
+
+ playhead.style.height=
+ (
+  ruler.offsetHeight+
+  document.querySelector(".wave").offsetHeight+
+  track.offsetHeight
+ )+"px";
+
+}
+
+
+/* =========================
+   ACTIVE LINE
+   ========================= */
+
+function activeLine(){
+
+ return state.lines.find(
+  line=>
+   state.currentTime>=line.start &&
+   state.currentTime<=line.end
+ ) || null;
+
+}
+
+
+/* =========================
+   INTERPOLATE KEYFRAMES
+   ========================= */
+
+function progressAt(
+ line,
+ t
+){
+
+ const keys=
+ [...line.keyframes]
+ .sort(
+  (a,b)=>a.time-b.time
+ );
+
+
+ if(!keys.length)
+  return 0;
+
+
+ if(
+  t<=keys[0].time
+ )
+  return keys[0].progress;
+
+
+ const last=
+ keys[keys.length-1];
+
+
+ if(
+  t>=last.time
+ )
+  return last.progress;
+
+
+ for(
+  let i=0;
+  i<keys.length-1;
+  i++
+ ){
+
+  const a=keys[i];
+
+  const b=keys[i+1];
+
+
+  if(
+   t>=a.time &&
+   t<=b.time
+  ){
+
+   const span=
+   b.time-a.time;
+
+
+   if(span<=0)
+    return b.progress;
+
+
+   const ratio=
+   (t-a.time)/span;
+
+
+   return a.progress+
+   (
+    b.progress-a.progress
+   )*ratio;
+
+  }
+
+ }
+
+
+ return 0;
+
+}
+
+
+/* =========================
+   HIGHLIGHTS
+   ========================= */
+
+function updateHighlights(){
+
+ state.lines.forEach(
+ line=>{
+
+  const clip=
+  track.querySelector(
+   '.clip[data-id="'+
+   line.id+
+   '"]'
+  );
+
+  if(!clip)
+   return;
+
+
+  const fill=
+  clip.querySelector(
+   ".clipFill"
+  );
+
+  if(!fill)
+   return;
+
+
+  if(
+   state.currentTime<
+   line.start ||
+   state.currentTime>
+   line.end
+  ){
+
+   fill.style.width="0%";
+
+  }else{
+
+   fill.style.width=
+   clamp(
+    progressAt(
+     line,
+     state.currentTime
+    ),
+    0,
+    100
+   )+"%";
+
+  }
+
+ });
+
+}
+
+
+/* =========================
+   PREVIEW
+   ========================= */
+
+function updatePreview(){
+
+ const line=
+ activeLine();
+
+
+ if(!line){
+
+  previewBase.textContent="";
+
+  previewHi.textContent="";
+
+  previewHi.style.width="0%";
+
+  return;
+
+ }
+
+
+ previewBase.textContent=
+ line.text;
+
+ previewHi.textContent=
+ line.text;
+
+
+ const p=
+ progressAt(
+  line,
+  state.currentTime
+ );
+
+
+ previewHi.style.width=
+ clamp(
+  p,
+  0,
+  100
+ )+"%";
+
+}
+
+
+/* =========================
+   CONTINUE PART 4
+   ========================= */
+  /* =====================================================
+   PART 4 — KEYFRAME CONTROLS + SAVE/LOAD + FINISH
+   ===================================================== */
+
+
+/* =========================
+   KEY PANEL
+   ========================= */
+
+function updateKeyPanel(){
+
+ const line=
+ selectedLine();
+
+ const key=
+ selectedKey();
+
+
+ if(!line){
+
+  keyInfo.textContent=
+  "No lyric selected";
+
+  progress.disabled=true;
+
+  sliderValue.textContent=
+  "0%";
+
+  progress.value=0;
+
+  return;
+
+ }
+
+
+ if(!key){
+
+  keyInfo.textContent=
+  "Line selected";
+
+  progress.disabled=true;
+
+  sliderValue.textContent=
+  "0%";
+
+  progress.value=0;
+
+  return;
+
+ }
+
+
+ progress.disabled=false;
+
+ progress.value=
+ key.progress;
+
+ sliderValue.textContent=
+ Math.round(
+  key.progress
+ )+"%";
+
+
+ keyInfo.innerHTML=
+ "KEY<br>"+
+ fmt(key.time)+
+ "<br>"+
+ Math.round(key.progress)+
+ "%";
+
+}
+
+
+/* =========================
+   ADD KEYFRAME
+   ========================= */
+
+plusKey.onclick=function(){
+
+ const line=
+ selectedLine();
+
+
+ if(!line){
+
+  alert(
+   "Select a lyric line first."
+  );
+
+  return;
+
+ }
+
+
+ const t=
+ clamp(
+  state.currentTime,
+  line.start,
+  line.end
+ );
+
+
+ /* Find existing keyframe */
+
+ const existing=
+ line.keyframes.find(
+  k=>
+   Math.abs(
+    k.time-t
+   )<0.05
+ );
+
+
+ if(existing){
+
+  state.selectedKey=
+  existing.id;
+
+  render();
+
+  return;
+
+ }
+
+
+ /* Automatically calculate
+    progress from surrounding keys */
+
+ const p=
+ progressAt(
+  line,
+  t
+ );
+
+
+ const key={
+
+  id:uid(),
+
+  time:t,
+
+  progress:p
+
+ };
+
+
+ line.keyframes.push(key);
+
+ line.keyframes.sort(
+  (a,b)=>a.time-b.time
+ );
+
+
+ state.selectedKey=
+ key.id;
+
+
+ render();
+
+};
+
+
+/* =========================
+   DELETE KEYFRAME
+   ========================= */
+
+minusKey.onclick=function(){
+
+ const line=
+ selectedLine();
+
+
+ if(!line){
+
+  alert(
+   "Select a lyric line first."
+  );
+
+  return;
+
+ }
+
+
+ if(
+  line.keyframes.length<=1
+ ){
+
+  alert(
+   "At least one keyframe must remain."
+  );
+
+  return;
+
+ }
+
+
+ let index=-1;
+
+
+ if(state.selectedKey){
+
+  index=
+  line.keyframes.findIndex(
+   k=>
+    k.id===
+    state.selectedKey
+  );
+
+ }
+
+
+ /* If none selected,
+    delete nearest */
+
+ if(index<0){
+
+  let nearest=Infinity;
+
+  line.keyframes.forEach(
+   (k,i)=>{
+
+    const d=
+    Math.abs(
+     k.time-
+     state.currentTime
+    );
+
+    if(d<nearest){
+
+     nearest=d;
+
+     index=i;
+
+    }
+
+   }
+  );
+
+ }
+
+
+ if(index>=0){
+
+  line.keyframes.splice(
+   index,
+   1
+  );
+
+ }
+
+
+ line.keyframes.sort(
+  (a,b)=>a.time-b.time
+ );
+
+
+ if(line.keyframes.length){
+
+  const newIndex=
+  clamp(
+   index,
+   0,
+   line.keyframes.length-1
+  );
+
+  state.selectedKey=
+  line.keyframes[
+   newIndex
+  ].id;
+
+ }else{
+
+  state.selectedKey=null;
+
+ }
+
+
+ render();
+
+};
+
+
+/* =========================
+   SHADING SLIDER
+   ========================= */
+
+progress.oninput=function(){
+
+ const key=
+ selectedKey();
+
+
+ if(!key)
+  return;
+
+
+ key.progress=
+ Number(
+  progress.value
+ );
+
+
+ sliderValue.textContent=
+ Math.round(
+  key.progress
+ )+"%";
+
+
+ updatePreview();
+
+ updateHighlights();
+
+};
+
+
+/* =========================
+   AUTO 0 → 100
+   ========================= */
+
+function autoKeys(){
+
+ const line=
+ selectedLine();
+
+
+ if(!line){
+
+  alert(
+   "Select a lyric line first."
+  );
+
+  return;
+
+ }
+
+
+ line.keyframes=[
+
+  {
+   id:uid(),
+   time:line.start,
+   progress:0
+  },
+
+  {
+   id:uid(),
+   time:line.end,
+   progress:100
+  }
+
+ ];
+
+
+ state.selectedKey=
+ line.keyframes[0].id;
+
+
+ render();
+
+}
+
+
+autoBtn.onclick=
+autoKeys;
+
+resetBtn.onclick=
+autoKeys;
+
+
+/* =========================
+   SPLIT
+   ========================= */
+
+splitBtn.onclick=function(){
+
+ const line=
+ selectedLine();
+
+
+ if(!line){
+
+  alert(
+   "Select a lyric line first."
+  );
+
+  return;
+
+ }
+
+
+ const t=
+ state.currentTime;
+
+
+ if(
+  t<=line.start+0.1 ||
+  t>=line.end-0.1
+ ){
+
+  alert(
+   "Put the playhead inside the lyric line."
+  );
+
+  return;
+
+ }
+
+
+ const words=
+ line.text
+ .split(/\s+/)
+ .filter(Boolean);
+
+
+ let leftText=
+ line.text;
+
+ let rightText=
+ "";
+
+
+ if(words.length>1){
+
+  const mid=
+  Math.ceil(
+   words.length/2
+  );
+
+  leftText=
+  words
+  .slice(0,mid)
+  .join(" ");
+
+  rightText=
+  words
+  .slice(mid)
+  .join(" ");
+
+ }
+
+
+ const left={
+
+  id:uid(),
+
+  text:leftText,
+
+  start:line.start,
+
+  end:t,
+
+  keyframes:[
+
+   {
+    id:uid(),
+    time:line.start,
+    progress:0
+   },
+
+   {
+    id:uid(),
+    time:t,
+    progress:100
+   }
+
+  ]
+
+ };
+
+
+ const right={
+
+  id:uid(),
+
+  text:rightText || line.text,
+
+  start:t,
+
+  end:line.end,
+
+  keyframes:[
+
+   {
+    id:uid(),
+    time:t,
+    progress:0
+   },
+
+   {
+    id:uid(),
+    time:line.end,
+    progress:100
+   }
+
+  ]
+
+ };
+
+
+ const index=
+ state.lines.findIndex(
+  x=>x.id===line.id
+ );
+
+
+ state.lines.splice(
+  index,
+  1,
+  left,
+  right
+ );
+
+
+ state.selectedLine=
+ right.id;
+
+ state.selectedKey=
+ right.keyframes[0].id;
+
+
+ render();
+
+};
+
+
+/* =========================
+   DUPLICATE
+   ========================= */
+
+duplicateBtn.onclick=function(){
+
+ const line=
+ selectedLine();
+
+
+ if(!line){
+
+  alert(
+   "Select a lyric line first."
+  );
+
+  return;
+
+ }
+
+
+ const duration=
+ line.end-line.start;
+
+
+ let start=
+ line.end+0.2;
+
+
+ let end=
+ start+duration;
+
+
+ if(end>state.duration){
+
+  end=
+  state.duration;
+
+  start=
+  Math.max(
+   0,
+   end-duration
+  );
+
+ }
+
+
+ const copy={
+
+  id:uid(),
+
+  text:line.text,
+
+  start:start,
+
+  end:end,
+
+  keyframes:
+  line.keyframes.map(
+   k=>({
+
+    id:uid(),
+
+    time:
+    start+
+    (
+     k.time-
+     line.start
+    ),
+
+    progress:
+    k.progress
+
+   })
+  )
+
+ };
+
+
+ state.lines.push(copy);
+
+
+ state.lines.sort(
+  (a,b)=>
+   a.start-b.start
+ );
+
+
+ state.selectedLine=
+ copy.id;
+
+ state.selectedKey=
+ copy.keyframes[0]?.id ||
+ null;
+
+
+ render();
+
+};
+
+
+/* =========================
+   DELETE LINE
+   ========================= */
+
+deleteBtn.onclick=function(){
+
+ const line=
+ selectedLine();
+
+
+ if(!line){
+
+  alert(
+   "Select a lyric line first."
+  );
+
+  return;
+
+ }
+
+
+ if(
+  !confirm(
+   "Delete this lyric line?"
+  )
+ )
+  return;
+
+
+ state.lines=
+ state.lines.filter(
+  x=>x.id!==line.id
+ );
+
+
+ state.selectedLine=
+ state.lines[0]?.id ||
+ null;
+
+ state.selectedKey=
+ state.lines[0]
+ ?.keyframes[0]
+ ?.id ||
+ null;
+
+
+ render();
+
+};
+
+
+/* =========================
+   SAVE LOCAL
+   ========================= */
+
+saveBtn.onclick=function(){
+
+ try{
+
+  localStorage.setItem(
+   "karaoke_fx_project",
+   JSON.stringify(state)
+  );
+
+  alert(
+   "Project saved on this device."
+  );
+
+ }catch(e){
+
+  alert(
+   "Save failed."
+  );
+
+ }
+
+};
+
+
+/* =========================
+   LOAD LOCAL
+   ========================= */
+
+loadBtn.onclick=function(){
+
+ try{
+
+  const saved=
+  localStorage.getItem(
+   "karaoke_fx_project"
+  );
+
+
+  if(!saved){
+
+   alert(
+    "No saved project."
+   );
+
+   return;
+
+  }
+
+
+  const data=
+  JSON.parse(saved);
+
+
+  state={
+
+   audioName:
+   data.audioName || "",
+
+   duration:
+   Number(
+    data.duration || 0
+   ),
+
+   zoom:
+   Number(
+    data.zoom || 80
+   ),
+
+   currentTime:
+   Number(
+    data.currentTime || 0
+   ),
+
+   lines:
+   Array.isArray(data.lines)
+   ?data.lines
+   :[],
+
+   selectedLine:
+   data.selectedLine ||
+   null,
+
+   selectedKey:
+   data.selectedKey ||
+   null
+
+  };
+
+
+  seek.max=
+  state.duration;
+
+  seek.value=
+  state.currentTime;
+
+
+  render();
+
+
+  alert(
+   "Project loaded.\n\nLoad the MP3 again if necessary."
+  );
+
+
+ }catch(e){
+
+  console.error(e);
+
+  alert(
+   "Could not load project."
+  );
+
+ }
+
+};
+
+
+/* =========================
+   EXPORT
+   ========================= */
+
+exportBtn.onclick=function(){
+
+ const data=
+ JSON.stringify(
+  state,
+  null,
+  2
+ );
+
+
+ const blob=
+ new Blob(
+  [data],
+  {
+   type:
+   "application/json"
+  }
+ );
+
+
+ const url=
+ URL.createObjectURL(blob);
+
+
+ const a=
+ document.createElement("a");
+
+ a.href=url;
+
+ a.download=
+ "karaoke-project.json";
+
+ document.body.appendChild(a);
+
+ a.click();
+
+ a.remove();
+
+ URL.revokeObjectURL(url);
+
+};
+
+
+/* =========================
+   IMPORT
+   ========================= */
+
+importBtn.onclick=function(){
+
+ jsonInput.click();
+
+};
+
+
+jsonInput.onchange=
+async function(e){
+
+ const file=
+ e.target.files[0];
+
+ if(!file)
+  return;
+
+
+ try{
+
+  const data=
+  JSON.parse(
+   await file.text()
+  );
+
+
+  state={
+
+   audioName:
+   data.audioName || "",
+
+   duration:
+   Number(
+    data.duration || 0
+   ),
+
+   zoom:
+   Number(
+    data.zoom || 80
+   ),
+
+   currentTime:
+   Number(
+    data.currentTime || 0
+   ),
+
+   lines:
+   Array.isArray(data.lines)
+   ?data.lines
+   :[],
+
+   selectedLine:
+   data.selectedLine ||
+   null,
+
+   selectedKey:
+   data.selectedKey ||
+   null
+
+  };
+
+
+  seek.max=
+  state.duration;
+
+  seek.value=
+  state.currentTime;
+
+
+  render();
+
+
+  alert(
+   "Project imported."
+  );
+
+
+ }catch(err){
+
+  alert(
+   "Invalid project file."
+  );
+
+ }
+
+
+ jsonInput.value="";
+
+};
+
+
+/* =========================
+   CLICK EMPTY TIMELINE
+   ========================= */
+
+timeline.onpointerdown=
+function(e){
+
+ if(
+  e.target.closest(".clip")
+ )
+  return;
+
+
+ const rect=
+ timeline.getBoundingClientRect();
+
+
+ const x=
+ e.clientX-
+ rect.left;
+
+
+ const t=
+ clamp(
+  timeFromX(x),
+  0,
+  state.duration
+ );
+
+
+ state.currentTime=t;
+
+
+ if(audio.src){
+
+  audio.currentTime=t;
+
+ }
+
+
+ updatePlayhead();
+
+ updatePreview();
+
+};
+
+
+/* =========================
+   KEYBOARD
+   ========================= */
+
+document.onkeydown=
+function(e){
+
+ const tag=
+ document.activeElement?.tagName;
+
+
+ if(
+  tag==="INPUT" ||
+  tag==="TEXTAREA"
+ )
+  return;
+
+
+ if(e.code==="Space"){
+
+  e.preventDefault();
+
+  playBtn.click();
+
+ }
+
+
+ if(e.key==="+")
+  plusKey.click();
+
+
+ if(e.key==="-")
+  minusKey.click();
+
+
+ if(e.key==="Delete"){
+
+  if(selectedKey()){
+
+   minusKey.click();
+
+  }else{
+
+   deleteBtn.click();
+
+  }
+
+ }
+
+};
+
+
+/* =========================
+   AUTO SCROLL
+   ========================= */
+
+function followPlayhead(){
+
+ const x=
+ xFromTime(
+  state.currentTime
+ );
+
+
+ const left=
+ scroll.scrollLeft;
+
+ const right=
+ left+
+ scroll.clientWidth;
+
+
+ if(x<left+40){
+
+  scroll.scrollLeft=
+  Math.max(
+   0,
+   x-100
+  );
+
+ }
+
+
+ if(x>right-40){
+
+  scroll.scrollLeft=
+  x-
+  scroll.clientWidth+
+  100;
+
+ }
+
+}
+
+
+/* =========================
+   ANIMATION
+   ========================= */
+
+function loop(){
+
+ if(!audio.paused){
+
+  state.currentTime=
+  audio.currentTime;
 
   updatePlayhead();
 
   updatePreview();
 
-  updateKeyPanel();
+  updateHighlights();
 
-  drawWaveform();
+  followPlayhead();
 
-}
+ }
 
 
-/* =========================================================
-   TIMELINE WIDTH
-   ========================================================= */
-
-function updateTimelineWidth(){
-
-  const duration =
-    Math.max(
-      getDuration(),
-      30
-    );
-
-  const width =
-    Math.max(
-      duration * state.zoom,
-      timelineScroll.clientWidth
-    );
-
-  timeline.style.width =
-    width + "px";
+ requestAnimationFrame(loop);
 
 }
 
 
-/* =========================================================
-   RULER
-   ========================================================= */
-
-function renderRuler(){
-
-  ruler.innerHTML = "";
-
-  const duration =
-    Math.max(
-      getDuration(),
-      30
-    );
-
-  const step =
-    state.zoom >= 100
-      ? 1
-      : state.zoom >= 60
-        ? 2
-        : 5;
-
-  for(
-    let t = 0;
-    t <= duration;
-    t += step
-  ){
-
-    const mark =
-      document.createElement(
-        "div"
-      );
-
-    mark.className =
-      "ruler-mark";
-
-    mark.style.left =
-      timeToX(t) + "px";
-
-    mark.textContent =
-      formatTime(t);
-
-    ruler.appendChild(mark);
-
-  }
-
-}
-
-
-/* =========================================================
-   GRID
-   ========================================================= */
-
-function renderGrid(){
-
-  trackGrid.innerHTML = "";
-
-  const duration =
-    Math.max(
-      getDuration(),
-      30
-    );
-
-  const step =
-    state.zoom >= 100
-      ? 1
-      : state.zoom >= 60
-        ? 2
-        : 5;
-
-  for(
-    let t = 0;
-    t <= duration;
-    t += step
-  ){
-
-    const line =
-      document.createElement(
-        "div"
-      );
-
-    line.className =
-      "grid-line";
-
-    line.style.left =
-      timeToX(t) + "px";
-
-    trackGrid.appendChild(line);
-
-  }
-
-}
-
-
-/* =========================================================
-   RENDER LYRIC CLIPS
-   ========================================================= */
-
-function renderLyrics(){
-
-  const oldClips =
-    track.querySelectorAll(
-      ".lyric-clip"
-    );
-
-  oldClips.forEach(
-    clip => clip.remove()
-  );
-
-  if(state.lines.length){
-
-    emptyMessage.style.display =
-      "none";
-
-  }else{
-
-    emptyMessage.style.display =
-      "block";
-
-  }
-
-  state.lines.forEach(
-    (line,index) => {
-
-      const clip =
-        document.createElement(
-          "div"
-        );
-
-      clip.className =
-        "lyric-clip";
-
-      if(
-        line.id ===
-        state.selectedLineId
-      ){
-
-        clip.classList.add(
-          "selected"
-        );
-
-      }
-
-      clip.dataset.id =
-        line.id;
-
-      clip.style.left =
-        timeToX(line.start) +
-        "px";
-
-      clip.style.width =
-        Math.max(
-          40,
-          timeToX(
-            line.end -
-            line.start
-          )
-        ) +
-        "px";
-
-      clip.style.top =
-        (index * 82 + 10) +
-        "px";
-
-
-      /* BODY */
-
-      const body =
-        document.createElement(
-          "div"
-        );
-
-      body.className =
-        "clip-body";
-
-
-      /* BASE TEXT */
-
-      const base =
-        document.createElement(
-          "div"
-        );
-
-      base.className =
-        "clip-base";
-
-      base.textContent =
-        line.text;
-
-
-      /* HIGHLIGHT */
-
-      const highlight =
-        document.createElement(
-          "div"
-        );
-
-      highlight.className =
-        "clip-highlight";
-
-
-      const highlightText =
-        document.createElement(
-          "div"
-        );
-
-      highlightText.className =
-        "clip-highlight-text";
-
-      highlightText.textContent =
-        line.text;
-
-
-      highlight.appendChild(
-        highlightText
-      );
-
-
-      body.appendChild(base);
-
-      body.appendChild(
-        highlight
-      );
-
-      clip.appendChild(
-        body
-      );
-
-
-      /* LEFT RESIZE */
-
-      const leftHandle =
-        document.createElement(
-          "div"
-        );
-
-      leftHandle.className =
-        "resize-handle resize-left";
-
-      clip.appendChild(
-        leftHandle
-      );
-
-
-      /* RIGHT RESIZE */
-
-      const rightHandle =
-        document.createElement(
-          "div"
-        );
-
-      rightHandle.className =
-        "resize-handle resize-right";
-
-      clip.appendChild(
-        rightHandle
-      );
-
-
-      /* INFO */
-
-      const info =
-        document.createElement(
-          "div"
-        );
-
-      info.className =
-        "clip-info";
-
-      info.textContent =
-        formatLongTime(
-          line.start
-        ) +
-        " → " +
-        formatLongTime(
-          line.end
-        );
-
-      clip.appendChild(info);
-
-
-      /* KEYFRAMES */
-
-      line.keyframes
-        .sort(
-          (a,b) =>
-            a.time - b.time
-        )
-        .forEach(
-          key => {
-
-            const diamond =
-              document.createElement(
-                "div"
-              );
-
-            diamond.className =
-              "keyframe";
-
-            diamond.textContent =
-              "♦";
-
-            if(
-              key.id ===
-              state.selectedKeyId
-            ){
-
-              diamond.classList.add(
-                "selected"
-              );
-
-            }
-
-            const relative =
-              key.time -
-              line.start;
-
-            const duration =
-              line.end -
-              line.start;
-
-            const percent =
-              duration > 0
-                ? (
-                    relative /
-                    duration
-                  ) * 100
-                : 0;
-
-            diamond.style.left =
-              percent + "%";
-
-
-            diamond.addEventListener(
-              "pointerdown",
-              event => {
-
-                event.stopPropagation();
-
-                state.selectedLineId =
-                  line.id;
-
-                state.selectedKeyId =
-                  key.id;
-
-                state.currentTime =
-                  key.time;
-
-                if(audio.src){
-
-                  audio.currentTime =
-                    key.time;
-
-                }
-
-                renderLyrics();
-
-                updatePreview();
-
-                updateKeyPanel();
-
-              }
-            );
-
-
-            clip.appendChild(
-              diamond
-            );
-
-          }
-        );
-
-
-      /* SELECT LINE */
-
-      clip.addEventListener(
-        "pointerdown",
-        event => {
-
-          if(
-            event.target.classList.contains(
-              "resize-left"
-            ) ||
-            event.target.classList.contains(
-              "resize-right"
-            ) ||
-            event.target.classList.contains(
-              "keyframe"
-            )
-          ){
-
-            return;
-
-          }
-
-          state.selectedLineId =
-            line.id;
-
-          state.selectedKeyId =
-            null;
-
-          beginMoveClip(
-            event,
-            line,
-            clip
-          );
-
-        }
-      );
-
-
-      /* RESIZE LEFT */
-
-      leftHandle.addEventListener(
-        "pointerdown",
-        event => {
-
-          event.stopPropagation();
-
-          beginResize(
-            event,
-            line,
-            "left"
-          );
-
-        }
-      );
-
-
-      /* RESIZE RIGHT */
-
-      rightHandle.addEventListener(
-        "pointerdown",
-        event => {
-
-          event.stopPropagation();
-
-          beginResize(
-            event,
-            line,
-            "right"
-          );
-
-        }
-      );
-
-
-      track.appendChild(
-        clip
-      );
-
-    }
-  );
-
-  updateClipHighlights();
-
-}
-
-
-/* =========================================================
-   MOVE LYRIC CLIP
-   ========================================================= */
-
-function beginMoveClip(
-  event,
-  line,
-  clip
-){
-
-  const startX =
-    event.clientX;
-
-  const originalStart =
-    line.start;
-
-  const originalEnd =
-    line.end;
-
-  const duration =
-    originalEnd -
-    originalStart;
-
-  const oldKeys =
-    line.keyframes.map(
-      key => ({
-        id:key.id,
-        time:key.time
-      })
-    );
-
-  clip.setPointerCapture(
-    event.pointerId
-  );
-
-
-  function move(e){
-
-    const dx =
-      e.clientX -
-      startX;
-
-    const dt =
-      dx / state.zoom;
-
-    let newStart =
-      originalStart + dt;
-
-    let newEnd =
-      originalEnd + dt;
-
-    if(newStart < 0){
-
-      newEnd -= newStart;
-
-      newStart = 0;
-
-    }
-
-    const total =
-      getDuration();
-
-    if(
-      total > 0 &&
-      newEnd > total
-    ){
-
-      const excess =
-        newEnd - total;
-
-      newStart -= excess;
-
-      newEnd =
-        total;
-
-      if(newStart < 0){
-        newStart = 0;
-      }
-
-    }
-
-    line.start =
-      newStart;
-
-    line.end =
-      newEnd;
-
-
-    line.keyframes.forEach(
-      key => {
-
-        const old =
-          oldKeys.find(
-            k => k.id === key.id
-          );
-
-        if(old){
-
-          key.time =
-            old.time +
-            (
-              newStart -
-              originalStart
-            );
-
-        }
-
-      }
-    );
-
-
-    clip.style.left =
-      timeToX(
-        newStart
-      ) + "px";
-
-    clip.style.width =
-      timeToX(
-        duration
-      ) + "px";
-
-  }
-
-
-  function finish(){
-
-    clip.removeEventListener(
-      "pointermove",
-      move
-    );
-
-    clip.removeEventListener(
-      "pointerup",
-      finish
-    );
-
-    clip.removeEventListener(
-      "pointercancel",
-      finish
-    );
-
-    renderAll();
-
-  }
-
-
-  clip.addEventListener(
-    "pointermove",
-    move
-  );
-
-  clip.addEventListener(
-    "pointerup",
-    finish
-  );
-
-  clip.addEventListener(
-    "pointercancel",
-    finish
-  );
-
-  renderAll();
-
-}
-
-
-/* =========================================================
-   RESIZE LYRIC
-   ========================================================= */
-
-function beginResize(
-  event,
-  line,
-  side
-){
-
-  const startX =
-    event.clientX;
-
-  const originalStart =
-    line.start;
-
-  const originalEnd =
-    line.end;
-
-  const originalKeys =
-    line.keyframes.map(
-      key => ({
-        id:key.id,
-        time:key.time
-      })
-    );
-
-  const clip =
-    event.currentTarget
-      .parentElement;
-
-  clip.setPointerCapture(
-    event.pointerId
-  );
-
-
-  function move(e){
-
-    const dx =
-      e.clientX -
-      startX;
-
-    const dt =
-      dx / state.zoom;
-
-    if(side === "left"){
-
-      const newStart =
-        clamp(
-          originalStart + dt,
-          0,
-          originalEnd - 0.2
-        );
-
-      line.start =
-        newStart;
-
-      line.keyframes
-        .forEach(
-          key => {
-
-            const old =
-              originalKeys.find(
-                k =>
-                  k.id === key.id
-              );
-
-            if(old){
-
-              key.time =
-                clamp(
-                  old.time,
-                  line.start,
-                  line.end
-                );
-
-            }
-
-          }
-        );
-
-    }else{
-
-      const newEnd =
-        clamp(
-          originalEnd + dt,
-          originalStart + 0.2,
-          getDuration()
-        );
-
-      line.end =
-        newEnd;
-
-      line.keyframes
-        .forEach(
-          key => {
-
-            const old =
-              originalKeys.find(
-                k =>
-                  k.id === key.id
-              );
-
-            if(old){
-
-              key.time =
-                clamp(
-                  old.time,
-                  line.start,
-                  line.end
-                );
-
-            }
-
-          }
-        );
-
-    }
-
-
-    clip.style.left =
-      timeToX(
-        line.start
-      ) + "px";
-
-    clip.style.width =
-      Math.max(
-        40,
-        timeToX(
-          line.end -
-          line.start
-        )
-      ) + "px";
-
-  }
-
-
-  function finish(){
-
-    clip.removeEventListener(
-      "pointermove",
-      move
-    );
-
-    clip.removeEventListener(
-      "pointerup",
-      finish
-    );
-
-    clip.removeEventListener(
-      "pointercancel",
-      finish
-    );
-
-    renderAll();
-
-  }
-
-
-  clip.addEventListener(
-    "pointermove",
-    move
-  );
-
-  clip.addEventListener(
-    "pointerup",
-    finish
-  );
-
-  clip.addEventListener(
-    "pointercancel",
-    finish
-  );
-
-}
-
-
-/* =========================================================
-   PLAYHEAD
-   ========================================================= */
-
-function updatePlayhead(){
-
-  const x =
-    timeToX(
-      state.currentTime
-    );
-
-  playhead.style.left =
-    x + "px";
-
-  playhead.style.height =
-    (
-      ruler.offsetHeight +
-      waveWrap.offsetHeight +
-      track.offsetHeight
-    ) + "px";
-
-}
-
-
-/* =========================================================
-   ACTIVE LINE
-   ========================================================= */
-
-function getActiveLine(){
-
-  const t =
-    state.currentTime;
-
-  return state.lines.find(
-    line =>
-      t >= line.start &&
-      t <= line.end
-  ) || null;
-
-}
-
-
-/* =========================================================
-   KEYFRAME INTERPOLATION
-   ========================================================= */
-
-function getProgressAt(
-  line,
-  time
-){
-
-  const keys =
-    [...line.keyframes]
-      .sort(
-        (a,b) =>
-          a.time - b.time
-      );
-
-  if(!keys.length){
-    return 0;
-  }
-
-  if(
-    time <= keys[0].time
-  ){
-
-    return keys[0].progress;
-
-  }
-
-  const last =
-    keys[keys.length - 1];
-
-  if(
-    time >= last.time
-  ){
-
-    return last.progress;
-
-  }
-
-
-  for(
-    let i = 0;
-    i < keys.length - 1;
-    i++
-  ){
-
-    const a =
-      keys[i];
-
-    const b =
-      keys[i+1];
-
-    if(
-      time >= a.time &&
-      time <= b.time
-    ){
-
-      const span =
-        b.time -
-        a.time;
-
-      if(span <= 0){
-
-        return b.progress;
-
-      }
-
-      const ratio =
-        (
-          time -
-          a.time
-        ) / span;
-
-      return (
-        a.progress +
-        (
-          b.progress -
-          a.progress
-        ) * ratio
-      );
-
-    }
-
-  }
-
-  return 0;
-
-}
-
-
-/* =========================================================
-   UPDATE CLIP HIGHLIGHT
-   ========================================================= */
-
-function updateClipHighlights(){
-
-  state.lines.forEach(
-    line => {
-
-      const clip =
-        track.querySelector(
-          '.lyric-clip[data-id="' +
-          line.id +
-          '"]'
-        );
-
-      if(!clip){
-        return;
-      }
-
-      const highlight =
-        clip.querySelector(
-          ".clip-highlight"
-        );
-
-      if(!highlight){
-        return;
-      }
-
-      const progress =
-        getProgressAt(
-          line,
-          state.currentTime
-        );
-
-      if(
-        state.currentTime <
-        line.start ||
-        state.currentTime >
-        line.end
-      ){
-
-        highlight.style.width =
-          "0%";
-
-      }else{
-
-        highlight.style.width =
-          clamp(
-            progress,
-            0,
-            100
-          ) + "%";
-
-      }
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   PREVIEW
-   ========================================================= */
-
-function updatePreview(){
-
-  const line =
-    getActiveLine();
-
-  if(!line){
-
-    previewBase.textContent =
-      "";
-
-    previewHighlight.textContent =
-      "";
-
-    previewHighlight.style.width =
-      "0%";
-
-    return;
-
-  }
-
-  previewBase.textContent =
-    line.text;
-
-  previewHighlight.textContent =
-    line.text;
-
-  const progress =
-    getProgressAt(
-      line,
-      state.currentTime
-    );
-
-  previewHighlight.style.width =
-    clamp(
-      progress,
-      0,
-      100
-    ) + "%";
-
-}
-
-
-/* =========================================================
-   WAVEFORM
-   ========================================================= */
-
-function drawWaveform(){
-
-  if(!audioBuffer){
-
-    waveform.width =
-      Math.max(
-        1,
-        timeline.clientWidth
-      );
-
-    waveform.height =
-      80;
-
-    const ctx =
-      waveform.getContext(
-        "2d"
-      );
-
-    ctx.clearRect(
-      0,
-      0,
-      waveform.width,
-      waveform.height
-    );
-
-    return;
-
-  }
-
-  const cssWidth =
-    Math.max(
-      1,
-      timeline.clientWidth
-    );
-
-  const canvasWidth =
-    Math.min(
-      cssWidth,
-      16000
-    );
-
-  waveform.width =
-    canvasWidth;
-
-  waveform.height =
-    80;
-
-  waveform.style.width =
-    cssWidth + "px";
-
-  waveform.style.height =
-    "80px";
-
-  const ctx =
-    waveform.getContext(
-      "2d"
-    );
-
-  ctx.clearRect(
-    0,
-    0,
-    canvasWidth,
-    80
-  );
-
-
-  const data =
-    audioBuffer
-      .getChannelData(0);
-
-  const samplesPerPixel =
-    data.length /
-    canvasWidth;
-
-
-  ctx.beginPath();
-
-  for(
-    let x = 0;
-    x < canvasWidth;
-    x++
-  ){
-
-    const start =
-      Math.floor(
-        x *
-        samplesPerPixel
-      );
-
-    const end =
-      Math.min(
-        data.length,
-        Math.floor(
-          (x + 1) *
-          samplesPerPixel
-        )
-      );
-
-    let min = 1;
-
-    let max = -1;
-
-    for(
-      let i = start;
-      i < end;
-      i++
-    ){
-
-      const value =
-        data[i];
-
-      if(value < min){
-        min = value;
-      }
-
-      if(value > max){
-        max = value;
-      }
-
-    }
-
-    const y1 =
-      40 + min * 35;
-
-    const y2 =
-      40 + max * 35;
-
-    ctx.moveTo(
-      x,
-      y1
-    );
-
-    ctx.lineTo(
-      x,
-      y2
-    );
-
-  }
-
-  ctx.strokeStyle =
-    "rgba(96,165,250,.65)";
-
-  ctx.lineWidth = 1;
-
-  ctx.stroke();
-
-}
-
-
-/* =========================================================
-   ZOOM
-   ========================================================= */
-
-zoomIn.addEventListener(
-  "click",
-  () => {
-
-    state.zoom =
-      clamp(
-        state.zoom + 20,
-        30,
-        220
-      );
-
-    renderAll();
-
-  }
-);
-
-
-zoomOut.addEventListener(
-  "click",
-  () => {
-
-    state.zoom =
-      clamp(
-        state.zoom - 20,
-        30,
-        220
-      );
-
-    renderAll();
-
-  }
-);
-
-
-/* =========================================================
-   CLICK EMPTY TIMELINE = MOVE PLAYHEAD
-   ========================================================= */
-
-timeline.addEventListener(
-  "pointerdown",
-  event => {
-
-    if(
-      event.target.closest(
-        ".lyric-clip"
-      )
-    ){
-
-      return;
-
-    }
-
-    const rect =
-      timeline.getBoundingClientRect();
-
-    const x =
-      event.clientX -
-      rect.left;
-
-    const t =
-      clamp(
-        xToTime(x),
-        0,
-        getDuration()
-      );
-
-    state.currentTime =
-      t;
-
-    if(audio.src){
-
-      audio.currentTime =
-        t;
-
-    }
-
-    updatePlayhead();
-
-    updatePreview();
-
-  }
-);
-
-
-/* =========================================================
-   CONTINUE IN PART 2
-   ========================================================= */
-  <script>
-
-/* =========================================================
-   KARAOKE FX EDITOR
-   PART 2
-   ========================================================= */
-
-
-/* =========================================================
-   KEYFRAME PANEL
-   ========================================================= */
-
-function updateKeyPanel(){
-
-  const line =
-    getSelectedLine();
-
-  const key =
-    getSelectedKey();
-
-  if(!line){
-
-    keyInfo.innerHTML =
-      "No lyric selected";
-
-    progressSlider.disabled =
-      true;
-
-    progressValue.textContent =
-      "0%";
-
-    progressSlider.value =
-      0;
-
-    return;
-
-  }
-
-
-  if(!key){
-
-    keyInfo.innerHTML =
-      "<b>Line:</b> " +
-      escapeHTML(line.text) +
-      "<br>No keyframe selected";
-
-    progressSlider.disabled =
-      true;
-
-    progressValue.textContent =
-      "0%";
-
-    return;
-
-  }
-
-
-  progressSlider.disabled =
-    false;
-
-  progressSlider.value =
-    key.progress;
-
-  progressValue.textContent =
-    Math.round(
-      key.progress
-    ) + "%";
-
-
-  keyInfo.innerHTML =
-    "<b>Keyframe</b><br>" +
-    formatLongTime(key.time) +
-    " sec<br>" +
-    Math.round(key.progress) +
-    "%";
-
-}
-
-
-/* =========================================================
-   ESCAPE HTML
-   ========================================================= */
-
-function escapeHTML(text){
-
-  return String(text)
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-    .replace(
-      /</g,
-      "&lt;"
-    )
-    .replace(
-      />/g,
-      "&gt;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
-
-
-/* =========================================================
-   ADD KEYFRAME
-   ========================================================= */
-
-plusKey.addEventListener(
-  "click",
-  () => {
-
-    const line =
-      getSelectedLine();
-
-    if(!line){
-
-      alert(
-        "Select a lyric line first."
-      );
-
-      return;
-
-    }
-
-    const t =
-      clamp(
-        state.currentTime,
-        line.start,
-        line.end
-      );
-
-
-    /* If already very close to a keyframe,
-       select it instead of making duplicate */
-
-    const existing =
-      line.keyframes.find(
-        key =>
-          Math.abs(
-            key.time - t
-          ) < 0.05
-      );
-
-
-    if(existing){
-
-      state.selectedKeyId =
-        existing.id;
-
-      updateKeyPanel();
-
-      renderLyrics();
-
-      return;
-
-    }
-
-
-    /* Calculate progress automatically
-       from neighboring keyframes */
-
-    const progress =
-      getProgressAt(
-        line,
-        t
-      );
-
-
-    const key = {
-
-      id: uid(),
-
-      time: t,
-
-      progress
-
-    };
-
-
-    line.keyframes.push(
-      key
-    );
-
-    line.keyframes.sort(
-      (a,b) =>
-        a.time - b.time
-    );
-
-
-    state.selectedKeyId =
-      key.id;
-
-
-    renderLyrics();
-
-    updateKeyPanel();
-
-  }
-);
-
-
-/* =========================================================
-   DELETE KEYFRAME
-   ========================================================= */
-
-minusKey.addEventListener(
-  "click",
-  () => {
-
-    const line =
-      getSelectedLine();
-
-    if(!line){
-
-      alert(
-        "Select a lyric line first."
-      );
-
-      return;
-
-    }
-
-
-    if(
-      line.keyframes.length <= 1
-    ){
-
-      alert(
-        "At least one keyframe must remain."
-      );
-
-      return;
-
-    }
-
-
-    let index = -1;
-
-
-    if(state.selectedKeyId){
-
-      index =
-        line.keyframes.findIndex(
-          key =>
-            key.id ===
-            state.selectedKeyId
-        );
-
-    }
-
-
-    /* If no selected keyframe,
-       remove nearest to playhead */
-
-    if(index < 0){
-
-      let nearest =
-        Infinity;
-
-      line.keyframes.forEach(
-        (key,i) => {
-
-          const distance =
-            Math.abs(
-              key.time -
-              state.currentTime
-            );
-
-          if(distance < nearest){
-
-            nearest =
-              distance;
-
-            index = i;
-
-          }
-
-        }
-      );
-
-    }
-
-
-    if(index >= 0){
-
-      line.keyframes.splice(
-        index,
-        1
-      );
-
-    }
-
-
-    line.keyframes.sort(
-      (a,b) =>
-        a.time - b.time
-    );
-
-
-    if(line.keyframes.length){
-
-      state.selectedKeyId =
-        line.keyframes[
-          Math.max(
-            0,
-            Math.min(
-              index,
-              line.keyframes.length - 1
-            )
-          )
-        ].id;
-
-    }else{
-
-      state.selectedKeyId =
-        null;
-
-    }
-
-
-    renderAll();
-
-  }
-);
-
-
-/* =========================================================
-   SHADING SLIDER
-   ========================================================= */
-
-progressSlider.addEventListener(
-  "input",
-  () => {
-
-    const key =
-      getSelectedKey();
-
-    if(!key){
-      return;
-    }
-
-    key.progress =
-      Number(
-        progressSlider.value
-      );
-
-    progressValue.textContent =
-      Math.round(
-        key.progress
-      ) + "%";
-
-    updatePreview();
-
-    updateClipHighlights();
-
-    updateKeyPanel();
-
-  }
-);
-
-
-/* =========================================================
-   AUTO 0 → 100
-   ========================================================= */
-
-function setAutoKeys(){
-
-  const line =
-    getSelectedLine();
-
-  if(!line){
-
-    alert(
-      "Select a lyric line first."
-    );
-
-    return;
-
-  }
-
-
-  line.keyframes = [
-
-    {
-      id: uid(),
-      time: line.start,
-      progress: 0
-    },
-
-    {
-      id: uid(),
-      time: line.end,
-      progress: 100
-    }
-
-  ];
-
-
-  state.selectedKeyId =
-    line.keyframes[0].id;
-
-
-  renderAll();
-
-}
-
-
-autoKeysBtn.addEventListener(
-  "click",
-  setAutoKeys
-);
-
-
-resetKeysBtn.addEventListener(
-  "click",
-  setAutoKeys
-);
-
-
-/* =========================================================
-   SPLIT LINE
-   ========================================================= */
-
-splitBtn.addEventListener(
-  "click",
-  () => {
-
-    const line =
-      getSelectedLine();
-
-    if(!line){
-
-      alert(
-        "Select a lyric line first."
-      );
-
-      return;
-
-    }
-
-
-    const t =
-      state.currentTime;
-
-
-    if(
-      t <= line.start + 0.1 ||
-      t >= line.end - 0.1
-    ){
-
-      alert(
-        "Move the playhead inside the lyric line first."
-      );
-
-      return;
-
-    }
-
-
-    const words =
-      line.text
-        .split(/\s+/)
-        .filter(Boolean);
-
-
-    let leftText =
-      line.text;
-
-    let rightText =
-      "";
-
-
-    if(words.length > 1){
-
-      const middle =
-        Math.ceil(
-          words.length / 2
-        );
-
-      leftText =
-        words
-          .slice(0,middle)
-          .join(" ");
-
-      rightText =
-        words
-          .slice(middle)
-          .join(" ");
-
-    }
-
-
-    const left = {
-
-      id: uid(),
-
-      text: leftText,
-
-      start: line.start,
-
-      end: t,
-
-      keyframes: [
-
-        {
-          id: uid(),
-          time: line.start,
-          progress: 0
-        },
-
-        {
-          id: uid(),
-          time: t,
-          progress: 100
-        }
-
-      ]
-
-    };
-
-
-    const right = {
-
-      id: uid(),
-
-      text:
-        rightText ||
-        line.text,
-
-      start: t,
-
-      end: line.end,
-
-      keyframes: [
-
-        {
-          id: uid(),
-          time: t,
-          progress: 0
-        },
-
-        {
-          id: uid(),
-          time: line.end,
-          progress: 100
-        }
-
-      ]
-
-    };
-
-
-    const index =
-      state.lines.findIndex(
-        x =>
-          x.id === line.id
-      );
-
-
-    state.lines.splice(
-      index,
-      1,
-      left,
-      right
-    );
-
-
-    state.selectedLineId =
-      right.id;
-
-    state.selectedKeyId =
-      right.keyframes[0].id;
-
-
-    renderAll();
-
-  }
-);
-
-
-/* =========================================================
-   DUPLICATE LINE
-   ========================================================= */
-
-duplicateBtn.addEventListener(
-  "click",
-  () => {
-
-    const line =
-      getSelectedLine();
-
-    if(!line){
-
-      alert(
-        "Select a lyric line first."
-      );
-
-      return;
-
-    }
-
-
-    const duration =
-      line.end -
-      line.start;
-
-    let start =
-      line.end + 0.2;
-
-    let end =
-      start + duration;
-
-
-    if(
-      end > getDuration()
-    ){
-
-      end =
-        getDuration();
-
-      start =
-        Math.max(
-          0,
-          end - duration
-        );
-
-    }
-
-
-    const copy = {
-
-      id: uid(),
-
-      text: line.text,
-
-      start,
-
-      end,
-
-      keyframes:
-        line.keyframes.map(
-          key => ({
-
-            id: uid(),
-
-            time:
-              start +
-              (
-                key.time -
-                line.start
-              ),
-
-            progress:
-              key.progress
-
-          })
-        )
-
-    };
-
-
-    state.lines.push(
-      copy
-    );
-
-    state.lines.sort(
-      (a,b) =>
-        a.start - b.start
-    );
-
-
-    state.selectedLineId =
-      copy.id;
-
-    state.selectedKeyId =
-      copy.keyframes[0]?.id ||
-      null;
-
-
-    renderAll();
-
-  }
-);
-
-
-/* =========================================================
-   DELETE LINE
-   ========================================================= */
-
-deleteLineBtn.addEventListener(
-  "click",
-  () => {
-
-    const line =
-      getSelectedLine();
-
-    if(!line){
-
-      alert(
-        "Select a lyric line first."
-      );
-
-      return;
-
-    }
-
-
-    const ok =
-      confirm(
-        "Delete this lyric line?"
-      );
-
-    if(!ok){
-      return;
-    }
-
-
-    state.lines =
-      state.lines.filter(
-        x =>
-          x.id !== line.id
-      );
-
-
-    state.selectedLineId =
-      state.lines[0]?.id ||
-      null;
-
-    state.selectedKeyId =
-      state.lines[0]
-        ?.keyframes[0]
-        ?.id ||
-      null;
-
-
-    renderAll();
-
-  }
-);
-
-
-/* =========================================================
-   SAVE LOCAL
-   ========================================================= */
-
-saveBtn.addEventListener(
-  "click",
-  () => {
-
-    try{
-
-      localStorage.setItem(
-        "karaoke_fx_project",
-        JSON.stringify(state)
-      );
-
-      alert(
-        "Project saved on this device."
-      );
-
-    }catch(error){
-
-      alert(
-        "Could not save project."
-      );
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   LOAD LOCAL
-   ========================================================= */
-
-loadBtn.addEventListener(
-  "click",
-  () => {
-
-    try{
-
-      const saved =
-        localStorage.getItem(
-          "karaoke_fx_project"
-        );
-
-      if(!saved){
-
-        alert(
-          "No saved project found."
-        );
-
-        return;
-
-      }
-
-
-      const data =
-        JSON.parse(saved);
-
-
-      state = {
-
-        audioName:
-          data.audioName || "",
-
-        audioDuration:
-          Number(
-            data.audioDuration || 0
-          ),
-
-        zoom:
-          Number(
-            data.zoom || 80
-          ),
-
-        lines:
-          Array.isArray(data.lines)
-            ? data.lines
-            : [],
-
-        selectedLineId:
-          data.selectedLineId ||
-          null,
-
-        selectedKeyId:
-          data.selectedKeyId ||
-          null,
-
-        currentTime:
-          Number(
-            data.currentTime || 0
-          )
-
-      };
-
-
-      seek.max =
-        state.audioDuration;
-
-      seek.value =
-        state.currentTime;
-
-
-      renderAll();
-
-
-      alert(
-        "Project loaded.\n\nNow load the MP3 again if the audio is not already loaded."
-      );
-
-    }catch(error){
-
-      console.error(error);
-
-      alert(
-        "Could not load saved project."
-      );
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   EXPORT JSON
-   ========================================================= */
-
-exportBtn.addEventListener(
-  "click",
-  () => {
-
-    const data =
-      JSON.stringify(
-        state,
-        null,
-        2
-      );
-
-
-    const blob =
-      new Blob(
-        [data],
-        {
-          type:
-            "application/json"
-        }
-      );
-
-
-    const url =
-      URL.createObjectURL(
-        blob
-      );
-
-
-    const a =
-      document.createElement(
-        "a"
-      );
-
-    a.href =
-      url;
-
-    a.download =
-      "karaoke-project.json";
-
-    document.body.appendChild(a);
-
-    a.click();
-
-    a.remove();
-
-    URL.revokeObjectURL(
-      url
-    );
-
-  }
-);
-
-
-/* =========================================================
-   IMPORT JSON
-   ========================================================= */
-
-importBtn.addEventListener(
-  "click",
-  () => {
-
-    projectInput.click();
-
-  }
-);
-
-
-projectInput.addEventListener(
-  "change",
-  async event => {
-
-    const file =
-      event.target.files[0];
-
-    if(!file){
-      return;
-    }
-
-
-    try{
-
-      const text =
-        await file.text();
-
-      const data =
-        JSON.parse(text);
-
-
-      state = {
-
-        audioName:
-          data.audioName || "",
-
-        audioDuration:
-          Number(
-            data.audioDuration || 0
-          ),
-
-        zoom:
-          Number(
-            data.zoom || 80
-          ),
-
-        lines:
-          Array.isArray(data.lines)
-            ? data.lines
-            : [],
-
-        selectedLineId:
-          data.selectedLineId ||
-          null,
-
-        selectedKeyId:
-          data.selectedKeyId ||
-          null,
-
-        currentTime:
-          Number(
-            data.currentTime || 0
-          )
-
-      };
-
-
-      seek.max =
-        state.audioDuration;
-
-      seek.value =
-        state.currentTime;
-
-
-      renderAll();
-
-
-      alert(
-        "Project imported.\n\nLoad the matching MP3 if needed."
-      );
-
-
-    }catch(error){
-
-      console.error(error);
-
-      alert(
-        "Invalid project file."
-      );
-
-    }
-
-
-    projectInput.value =
-      "";
-
-  }
-);
-
-
-/* =========================================================
-   KEYBOARD SHORTCUTS
-   ========================================================= */
-
-document.addEventListener(
-  "keydown",
-  event => {
-
-    const tag =
-      document.activeElement?.tagName;
-
-
-    if(
-      tag === "TEXTAREA" ||
-      tag === "INPUT"
-    ){
-
-      return;
-
-    }
-
-
-    if(
-      event.code ===
-      "Space"
-    ){
-
-      event.preventDefault();
-
-      playBtn.click();
-
-    }
-
-
-    if(
-      event.key === "+"
-    ){
-
-      plusKey.click();
-
-    }
-
-
-    if(
-      event.key === "-"
-    ){
-
-      minusKey.click();
-
-    }
-
-
-    if(
-      event.key === "Delete"
-    ){
-
-      const line =
-        getSelectedLine();
-
-      const key =
-        getSelectedKey();
-
-      if(key){
-
-        minusKey.click();
-
-      }else if(line){
-
-        deleteLineBtn.click();
-
-      }
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   PLAYHEAD AUTO SCROLL
-   ========================================================= */
-
-function keepPlayheadVisible(){
-
-  const x =
-    timeToX(
-      state.currentTime
-    );
-
-  const left =
-    timelineScroll.scrollLeft;
-
-  const right =
-    left +
-    timelineScroll.clientWidth;
-
-  if(
-    x < left + 50
-  ){
-
-    timelineScroll.scrollLeft =
-      Math.max(
-        0,
-        x - 100
-      );
-
-  }else if(
-    x > right - 50
-  ){
-
-    timelineScroll.scrollLeft =
-      x -
-      timelineScroll.clientWidth +
-      100;
-
-  }
-
-}
-
-
-/* =========================================================
-   ANIMATION
-   ========================================================= */
-
-function animationLoop(){
-
-  if(!audio.paused){
-
-    state.currentTime =
-      audio.currentTime;
-
-    updatePlayhead();
-
-    updatePreview();
-
-    updateClipHighlights();
-
-    keepPlayheadVisible();
-
-  }
-
-  requestAnimationFrame(
-    animationLoop
-  );
-
-}
-
-
-/* =========================================================
+/* =========================
    RESIZE
-   ========================================================= */
+   ========================= */
 
-window.addEventListener(
-  "resize",
-  () => {
+window.onresize=
+function(){
 
-    renderAll();
+ render();
 
-  }
-);
+};
 
 
-/* =========================================================
-   INITIALIZATION
-   ========================================================= */
+/* =========================
+   START
+   ========================= */
 
-seek.max = 0;
+render();
 
-renderAll();
-
-animationLoop();
-
+loop();
 
 </script>
 
