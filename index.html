@@ -3,155 +3,165 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Complete Karaoke Editor & Sync Player</title>
+  <title>CapCut Style Karaoke Editor</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0b0f19; color: #f8fafc; }
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
+    body { font-family: system-ui, -apple-system, sans-serif; background-color: #0d1117; color: #f0f6fc; }
+    .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 4px; }
+
+    /* TIMELINE TRACKS */
+    .timeline-ruler {
+      height: 24px;
+      background: #161b22;
+      border-bottom: 1px solid #30363d;
+      position: relative;
+    }
     
-    /* KARAOKE WORD ANIMATION STYLES */
-    .word-item {
-      display: inline-block;
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: #64748b; /* Inactive lyric color */
-      margin: 0 0.25rem;
-      padding: 0.1rem 0.3rem;
+    .timeline-block {
+      position: absolute;
+      height: 36px;
+      background: linear-gradient(90deg, #1e3a8a, #0284c7);
+      border: 1px solid #38bdf8;
       border-radius: 6px;
-      transition: color 0.15s ease, transform 0.15s ease, text-shadow 0.15s ease;
-      cursor: pointer;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      user-select: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      white-space: nowrap;
+      overflow: hidden;
     }
 
-    /* Active Highlight / Color Change Animation */
-    .word-item.active {
-      color: #38bdf8; /* Glowing Cyan/Blue */
-      transform: scale(1.18);
-      text-shadow: 0 0 15px rgba(56, 189, 248, 0.9), 0 0 25px rgba(56, 189, 248, 0.5);
+    .timeline-block.selected {
+      border: 2px solid #f43f5e;
+      box-shadow: 0 0 10px rgba(244, 63, 94, 0.6);
     }
 
-    .word-item.passed {
-      color: #e2e8f0; /* White/Bright Gray for sung words */
+    /* DRAG HANDLES (CAPCUT STYLE) */
+    .drag-handle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 10px;
+      background: #ffffff;
+      cursor: ew-resize;
+      opacity: 0.8;
     }
+    .drag-handle-left { left: 0; border-radius: 4px 0 0 4px; }
+    .drag-handle-right { right: 0; border-radius: 0 4px 4px 0; }
 
-    .lyric-line {
-      margin-bottom: 1.5rem;
-      line-height: 2.2;
-      transition: opacity 0.3s ease;
+    /* KARAOKE PREVIEW GLOW */
+    .lyric-preview {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #475569;
+      transition: all 0.2s ease;
     }
-
-    .lyric-line.active-line {
-      opacity: 1;
-    }
-    
-    .lyric-line.inactive-line {
-      opacity: 0.4;
+    .lyric-preview.active {
+      color: #38bdf8;
+      transform: scale(1.1);
+      text-shadow: 0 0 20px rgba(56, 189, 248, 0.8);
     }
   </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden select-none">
-  <!-- HEADER TOOLBAR -->
-  <header class="bg-slate-900 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between shrink-0 z-30">
+  <!-- TOP HEADER -->
+  <header class="bg-slate-900 border-b border-slate-800 px-4 py-2 flex items-center justify-between shrink-0">
     <div class="flex items-center gap-2">
-      <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black text-base shadow-lg shadow-blue-600/30">
-        <i class="fa-solid fa-microphone-lines"></i>
+      <div class="w-7 h-7 bg-sky-500 rounded-lg flex items-center justify-center text-slate-950 font-black">
+        <i class="fa-solid fa-scissors text-xs"></i>
       </div>
-      <div>
-        <h1 class="font-black text-sm text-blue-400 uppercase tracking-wide">Karaoke Studio Pro</h1>
-        <p class="text-[10px] text-slate-400">Sync, Edit & Sing Along</p>
-      </div>
+      <h1 class="text-xs font-bold uppercase tracking-wider text-sky-400">CapCut Lyric Editor</h1>
     </div>
 
-    <!-- MODE SWITCHER -->
-    <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800">
-      <button id="tab-edit" onclick="switchTab('edit')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400">Editor</button>
-      <button id="tab-record" onclick="switchTab('record')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400">Sync Rec</button>
-      <button id="tab-play" onclick="switchTab('play')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow-md">Sing Play</button>
+    <div class="flex items-center gap-2">
+      <label class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-sky-400 border border-sky-500/30 rounded-lg text-xs font-bold cursor-pointer">
+        <i class="fa-solid fa-music"></i> Load MP3
+        <input type="file" id="audio-input" accept="audio/*" class="hidden" onchange="loadAudio(event)">
+      </label>
+      <button onclick="addLyricBlock()" class="px-3 py-1 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-bold">
+        + Add Block
+      </button>
     </div>
   </header>
 
-  <!-- CONTROL PANEL -->
-  <div class="bg-slate-900 border-b border-slate-800 p-3 flex flex-col gap-2 shrink-0 z-20">
-    <div class="flex items-center justify-between gap-2">
-      <!-- LOAD MP3 BUTTON -->
-      <label class="px-3 py-1.5 bg-blue-950 hover:bg-blue-900 text-blue-400 border border-blue-500/40 rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1.5">
-        <i class="fa-solid fa-file-audio"></i> <span>Load MP3 Song</span>
-        <input type="file" id="audio-input" accept="audio/*" class="hidden" onchange="handleAudioUpload(event)">
-      </label>
-
-      <span id="song-title" class="text-[11px] text-slate-400 truncate max-w-[150px]">Pumili ng MP3 file...</span>
-
-      <!-- SYNC TAP BUTTON (FOR RECORD MODE) -->
-      <button id="btn-sync-tap" onclick="registerWordTap()" class="px-4 py-1.5 bg-emerald-600 active:scale-95 text-white font-black rounded-lg text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-600/30">
-        <i class="fa-solid fa-hand-pointer"></i> <span>SYNC WORD</span>
-      </button>
+  <!-- VIDEO / KARAOKE DISPLAY CANVAS -->
+  <div class="flex-1 bg-slate-950 flex flex-col items-center justify-center p-6 relative">
+    <div id="preview-text" class="lyric-preview text-center max-w-xl">
+      [I-paste/I-add ang Lyrics sa ibaba]
     </div>
 
-    <!-- AUDIO PLAYER CONTROLS -->
-    <div class="flex items-center gap-3">
-      <button id="btn-play" onclick="toggleAudio()" class="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm shrink-0 active:scale-95">
-        <i class="fa-solid fa-play" id="play-icon"></i>
-      </button>
-
-      <input type="range" id="audio-seeker" value="0" min="0" max="100" class="w-full accent-blue-500 h-2 bg-slate-800 rounded-lg cursor-pointer" oninput="seekAudio(event)">
-
-      <span id="time-display" class="text-xs text-slate-300 font-mono shrink-0 font-bold">00:00</span>
+    <div class="absolute top-4 left-4 text-xs font-mono text-slate-500">
+      Time: <span id="time-display" class="text-sky-400 font-bold">00:00.00</span>
     </div>
-
-    <audio id="audio-player"></audio>
   </div>
 
-  <!-- MAIN WORKSPACE -->
-  <main class="flex-1 relative overflow-hidden bg-slate-950">
-    <!-- 1. TEXT EDITOR VIEW -->
-    <div id="view-edit" class="absolute inset-0 p-4 flex flex-col gap-2 hidden">
-      <div class="flex justify-between items-center">
-        <label class="text-xs font-bold text-blue-400 uppercase">Paste Lyrics Below (1 line per verse):</label>
-        <button onclick="exportLRC()" class="text-[10px] bg-slate-800 text-slate-300 px-2.5 py-1 rounded border border-slate-700 hover:bg-slate-700"><i class="fa-solid fa-download"></i> Export Synced Text</button>
-      </div>
-      <textarea id="lyrics-editor" class="flex-1 w-full bg-slate-900 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 focus:outline-none focus:border-blue-500 resize-none font-mono" placeholder="I-paste ang raw lyrics dito..."></textarea>
-      <button onclick="saveEditorText()" class="w-full py-3 bg-blue-600 text-white font-bold rounded-xl text-sm shadow-lg shadow-blue-600/30"><i class="fa-solid fa-check"></i> Save Lyrics & Start</button>
+  <!-- PLAYBACK CONTROLS -->
+  <div class="bg-slate-900 border-t border-slate-800 p-2 flex items-center justify-between px-4">
+    <button id="btn-play" onclick="togglePlay()" class="w-8 h-8 bg-sky-500 text-slate-950 rounded-full flex items-center justify-center font-bold text-xs">
+      <i class="fa-solid fa-play" id="play-icon"></i>
+    </button>
+    <div class="flex-1 mx-4">
+      <input type="range" id="audio-seekbar" value="0" min="0" max="100" class="w-full accent-sky-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer" oninput="seekAudio(event)">
+    </div>
+    <span id="duration-display" class="text-xs font-mono text-slate-400">00:00</span>
+  </div>
+
+  <!-- CAPCUT TIMELINE TRACK EDITOR -->
+  <div class="h-64 bg-slate-900 border-t border-slate-800 flex flex-col shrink-0">
+    <div class="px-3 py-1 bg-slate-950 border-b border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+      <span><i class="fa-solid fa-layer-group"></i> TIMELINE TRACKS (Drag edges to adjust duration)</span>
+      <span>Scale: <input type="range" min="10" max="100" value="30" id="zoom-scale" oninput="renderTimeline()" class="accent-sky-400 w-20"></span>
     </div>
 
-    <!-- 2. KARAOKE DISPLAY VIEW (PLAY / RECORD) -->
-    <div id="view-play" class="absolute inset-0 overflow-y-auto custom-scrollbar p-6 text-center">
-      <div id="karaoke-screen" class="max-w-2xl mx-auto pt-10 pb-32">
-        <p class="text-slate-600 italic text-sm">Pumili ng MP3 at pindutin ang Play para magsimula...</p>
-      </div>
+    <!-- DRAGGABLE TIMELINE CONTAINER -->
+    <div id="timeline-container" class="flex-1 overflow-x-auto custom-scrollbar relative p-2 bg-slate-950">
+      <!-- PLAYHEAD RED LINE -->
+      <div id="playhead" class="absolute top-0 bottom-0 w-0.5 bg-rose-500 z-30 pointer-events-none"></div>
+
+      <!-- TRACKS AREA -->
+      <div id="timeline-tracks" class="relative min-w-[2000px] h-full"></div>
     </div>
-  </main>
+  </div>
+
+  <audio id="audio-player"></audio>
   <script>
-    // DEFAULT LYRICS DEMO
-    let rawLyrics = "Ako'y nananabik sa iyong pagbabalik\nLahat ng luha ay kusa nang mapapawi\nSama-sama tayong aawit sa ligaya";
-    
-    let wordsData = []; // Array storing: { word: "Ako'y", time: 1.25, lineIdx: 0, wordIdx: 0, el: DOM }
-    let activeWordIndex = -1;
-    let syncRecordIndex = 0;
+    let tracksData = [
+      { id: 1, text: "Ako'y nananabik", start: 1.0, end: 4.5 },
+      { id: 2, text: "Sa 'yong pagbabalik", start: 5.0, end: 8.5 },
+      { id: 3, text: "Lahat ng luha ay mapapawi", start: 9.0, end: 13.0 }
+    ];
+
+    let pps = 30; // Pixels per second zoom factor
+    let selectedId = null;
+    let isDragging = false;
+    let dragMode = null; // 'move', 'left-resize', 'right-resize'
+    let dragStartX = 0;
+    let initialStart = 0;
+    let initialEnd = 0;
 
     const audio = document.getElementById('audio-player');
 
     window.onload = () => {
-      document.getElementById('lyrics-editor').value = rawLyrics;
-      buildKaraokeDisplay();
-      setupAudioEngine();
-      setupKeyboardControls();
+      renderTimeline();
+      setupAudioListeners();
     };
 
-    function handleAudioUpload(e) {
+    function loadAudio(e) {
       const file = e.target.files[0];
       if (file) {
-        document.getElementById('song-title').innerText = file.name;
         audio.src = URL.createObjectURL(file);
         audio.load();
       }
     }
 
-    function toggleAudio() {
-      if (!audio.src) {
-        alert("Mag-load muna ng MP3 song!");
-        return;
-      }
+    function togglePlay() {
+      if (!audio.src) return alert("Mag-load muna ng MP3!");
       if (audio.paused) {
         audio.play();
         document.getElementById('play-icon').className = "fa-solid fa-pause";
@@ -166,163 +176,117 @@
       audio.currentTime = (e.target.value / 100) * audio.duration;
     }
 
-    function setupAudioEngine() {
+    function setupAudioListeners() {
       audio.ontimeupdate = () => {
         if (!audio.duration) return;
+        const cur = audio.currentTime;
 
-        // Update Seeker Progress
-        const progress = (audio.currentTime / audio.duration) * 100;
-        document.getElementById('audio-seeker').value = progress;
+        // Update seeker & time display
+        document.getElementById('audio-seekbar').value = (cur / audio.duration) * 100;
+        const m = Math.floor(cur / 60);
+        const s = (cur % 60).toFixed(2);
+        document.getElementById('time-display').innerText = `${m < 10 ? '0':''}${m}:${s < 10 ? '0':''}${s}`;
 
-        // Format Time Display
-        const mins = Math.floor(audio.currentTime / 60);
-        const secs = Math.floor(audio.currentTime % 60);
-        document.getElementById('time-display').innerText = `${mins < 10 ? '0':''}${mins}:${secs < 10 ? '0':''}${secs}`;
+        // Move Playhead line
+        const playhead = document.getElementById('playhead');
+        playhead.style.left = `${cur * pps}px`;
 
-        // PLAYBACK KARAOKE ANIMATION
-        updateKaraokeHighlight(audio.currentTime);
+        // Update Lyrics Display
+        const activeBlock = tracksData.find(b => cur >= b.start && cur <= b.end);
+        const preview = document.getElementById('preview-text');
+        if (activeBlock) {
+          preview.innerText = activeBlock.text;
+          preview.className = "lyric-preview active";
+        } else {
+          preview.className = "lyric-preview";
+        }
       };
-
-      audio.onended = () => document.getElementById('play-icon').className = "fa-solid fa-play";
     }
 
-    // RECORD MODE: PRESS SPACEBAR OR CLICK TO SYNC TIME
-    function registerWordTap() {
-      if (syncRecordIndex < wordsData.length && audio.currentTime > 0) {
-        wordsData[syncRecordIndex].time = audio.currentTime;
-        
-        // Visual indicator that word was recorded
-        wordsData[syncRecordIndex].el.classList.add('passed');
-        
-        syncRecordIndex++;
-        if (syncRecordIndex < wordsData.length) {
-          wordsData[syncRecordIndex].el.classList.add('active');
-        }
-      }
-    }
-
-    function setupKeyboardControls() {
-      document.addEventListener('keydown', (e) => {
-        if (e.code === 'Space' && document.activeElement.tagName !== 'TEXTAREA') {
-          e.preventDefault();
-          const recordTab = document.getElementById('tab-record');
-          if (recordTab.classList.contains('bg-blue-600')) {
-            registerWordTap();
-          } else {
-            toggleAudio();
-          }
-        }
-      });
-    }
-
-    function updateKaraokeHighlight(currentTime) {
-      let currentActiveIdx = -1;
-
-      for (let i = wordsData.length - 1; i >= 0; i--) {
-        if (wordsData[i].time >= 0 && currentTime >= wordsData[i].time) {
-          currentActiveIdx = i;
-          break;
-        }
-      }
-
-      if (currentActiveIdx !== activeWordIndex) {
-        activeWordIndex = currentActiveIdx;
-
-        wordsData.forEach((item, idx) => {
-          if (idx < activeWordIndex) {
-            item.el.className = "word-item passed";
-          } else if (idx === activeWordIndex) {
-            item.el.className = "word-item active";
-            item.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          } else {
-            item.el.className = "word-item";
-          }
-        });
-      }
-    }
-
-    function buildKaraokeDisplay() {
-      const container = document.getElementById('karaoke-screen');
+    function renderTimeline() {
+      pps = parseInt(document.getElementById('zoom-scale').value);
+      const container = document.getElementById('timeline-tracks');
       container.innerHTML = '';
-      wordsData = [];
-      activeWordIndex = -1;
 
-      const lines = rawLyrics.split('\n');
+      tracksData.forEach((item, index) => {
+        const block = document.createElement('div');
+        block.className = `timeline-block ${selectedId === item.id ? 'selected' : ''}`;
+        block.style.left = `${item.start * pps}px`;
+        block.style.width = `${(item.end - item.start) * pps}px`;
+        block.style.top = `${index * 42}px`;
 
-      lines.forEach((lineStr, lineIdx) => {
-        if (!lineStr.trim()) return;
+        block.innerHTML = `
+          <div class="drag-handle drag-handle-left" onmousedown="initDrag(event, ${item.id}, 'left-resize')" ontouchstart="initDrag(event, ${item.id}, 'left-resize')"></div>
+          <span class="truncate px-2 pointer-events-none">${item.text}</span>
+          <div class="drag-handle drag-handle-right" onmousedown="initDrag(event, ${item.id}, 'right-resize')" ontouchstart="initDrag(event, ${item.id}, 'right-resize')"></div>
+        `;
 
-        const lineEl = document.createElement('div');
-        lineEl.className = 'lyric-line';
+        // Drag Whole Block
+        block.onmousedown = (e) => { if (!e.target.classList.contains('drag-handle')) initDrag(e, item.id, 'move'); };
+        block.ontouchstart = (e) => { if (!e.target.classList.contains('drag-handle')) initDrag(e, item.id, 'move'); };
 
-        const words = lineStr.trim().split(/\s+/);
-        words.forEach((w, wordIdx) => {
-          const span = document.createElement('span');
-          span.className = 'word-item';
-          span.innerText = w;
-
-          // Click word to jump audio directly
-          span.onclick = () => {
-            const targetData = wordsData.find(item => item.el === span);
-            if (targetData && targetData.time >= 0) {
-              audio.currentTime = targetData.time;
-            }
-          };
-
-          lineEl.appendChild(span);
-
-          wordsData.push({
-            word: w,
-            time: -1, // Unsynced initially
-            lineIdx: lineIdx,
-            wordIdx: wordIdx,
-            el: span
-          });
-        });
-
-        container.appendChild(lineEl);
+        container.appendChild(block);
       });
     }
 
-    function switchTab(mode) {
-      document.getElementById('view-edit').classList.toggle('hidden', mode !== 'edit');
-      document.getElementById('view-play').classList.toggle('hidden', mode === 'edit');
+    function initDrag(e, id, mode) {
+      e.stopPropagation();
+      selectedId = id;
+      isDragging = true;
+      dragMode = mode;
+      
+      const target = tracksData.find(t => t.id === id);
+      initialStart = target.start;
+      initialEnd = target.end;
+      dragStartX = e.touches ? e.touches[0].clientX : e.clientX;
 
-      // Style Tab Buttons
-      ['edit', 'record', 'play'].forEach(t => {
-        const btn = document.getElementById(`tab-${t}`);
-        if (t === mode) {
-          btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow-md";
-        } else {
-          btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400";
-        }
-      });
+      document.onmousemove = doDrag;
+      document.ontouchmove = doDrag;
+      document.onmouseup = stopDrag;
+      document.ontouchend = stopDrag;
 
-      if (mode === 'record') {
-        syncRecordIndex = 0;
-        alert("RECORD SYNC MODE:\nI-play ang MP3 at i-press ang SPACEBAR o i-tap ang 'SYNC WORD' button sa bawat salitang binibigkas!");
+      renderTimeline();
+    }
+
+    function doDrag(e) {
+      if (!isDragging) return;
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const deltaX = clientX - dragStartX;
+      const deltaTime = deltaX / pps;
+
+      const target = tracksData.find(t => t.id === selectedId);
+
+      if (dragMode === 'move') {
+        const duration = initialEnd - initialStart;
+        target.start = Math.max(0, initialStart + deltaTime);
+        target.end = target.start + duration;
+      } else if (dragMode === 'left-resize') {
+        target.start = Math.max(0, Math.min(initialEnd - 0.5, initialStart + deltaTime));
+      } else if (dragMode === 'right-resize') {
+        target.end = Math.max(target.start + 0.5, initialEnd + deltaTime);
       }
+
+      renderTimeline();
     }
 
-    function saveEditorText() {
-      rawLyrics = document.getElementById('lyrics-editor').value;
-      buildKaraokeDisplay();
-      switchTab('play');
+    function stopDrag() {
+      isDragging = false;
+      document.onmousemove = null;
+      document.ontouchmove = null;
     }
 
-    function exportLRC() {
-      let output = "";
-      wordsData.forEach(w => {
-        if (w.time >= 0) {
-          const m = Math.floor(w.time / 60);
-          const s = (w.time % 60).toFixed(2);
-          output += `[${m < 10 ? '0':''}${m}:${s < 10 ? '0':''}${s}] ${w.word} `;
-        } else {
-          output += `${w.word} `;
-        }
-      });
-      navigator.clipboard.writeText(output);
-      alert("Naka-copy na sa clipboard ang synced text format!");
+    function addLyricBlock() {
+      const text = prompt("I-enter ang Linya ng Lyrics:", "Bagong Lyrics Line");
+      if (text) {
+        const lastEnd = tracksData.length > 0 ? tracksData[tracksData.length - 1].end : 0;
+        tracksData.push({
+          id: Date.now(),
+          text: text,
+          start: lastEnd + 1,
+          end: lastEnd + 5
+        });
+        renderTimeline();
+      }
     }
   </script>
 </body>
