@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Touch-Friendly CapCut Karaoke Editor</title>
+  <title>Easy CapCut Karaoke Editor</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -11,10 +11,9 @@
     .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 4px; }
 
-    /* TIMELINE TRACKS */
     .timeline-block {
       position: absolute;
-      height: 48px;
+      height: 52px;
       background: linear-gradient(90deg, #1e3a8a, #0284c7);
       border: 2px solid #38bdf8;
       border-radius: 8px;
@@ -25,7 +24,7 @@
       align-items: center;
       justify-content: space-between;
       user-select: none;
-      touch-action: none; /* Crucial for smooth mobile drag */
+      touch-action: none;
       box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
 
@@ -36,9 +35,8 @@
       z-index: 20;
     }
 
-    /* PULL TO ADJUST HANDLES (TOUCH-FRIENDLY & BIGGER) */
     .drag-handle {
-      width: 22px;
+      width: 26px;
       height: 100%;
       background: #ffffff;
       display: flex;
@@ -50,24 +48,16 @@
       z-index: 10;
     }
     
-    .drag-handle-left {
-      border-radius: 6px 0 0 6px;
-      border-right: 2px solid #0284c7;
-    }
-    
-    .drag-handle-right {
-      border-radius: 0 6px 6px 0;
-      border-left: 2px solid #0284c7;
-    }
+    .drag-handle-left { border-radius: 6px 0 0 6px; border-right: 2px solid #0284c7; }
+    .drag-handle-right { border-radius: 0 6px 6px 0; border-left: 2px solid #0284c7; }
 
     .drag-handle::after {
       content: "||";
-      font-size: 10px;
+      font-size: 11px;
       color: #0f172a;
       font-weight: 900;
     }
 
-    /* LYRIC GLOW PREVIEW */
     .lyric-preview {
       font-size: 1.8rem;
       font-weight: 900;
@@ -104,9 +94,9 @@
   </header>
 
   <!-- KARAOKE PREVIEW DISPLAY -->
-  <div class="flex-1 bg-slate-950 flex flex-col items-center justify-center p-6 relative">
+  <div class="flex-1 bg-slate-950 flex flex-col items-center justify-center p-4 relative">
     <div id="preview-text" class="lyric-preview max-w-xl">
-      [Load MP3 at subukang i-drag ang lyrics sa ibaba]
+      [I-tap ang lyrics sa ibaba para ma-edit]
     </div>
 
     <div class="absolute top-3 left-4 text-xs font-mono text-slate-500">
@@ -114,22 +104,45 @@
     </div>
   </div>
 
+  <!-- SELECTED BLOCK FINE-TUNE DRAWER -->
+  <div id="edit-panel" class="bg-slate-900 border-t border-slate-800 p-2 text-xs flex flex-col gap-2 shrink-0">
+    <div class="flex items-center justify-between gap-2">
+      <input type="text" id="edit-text-input" oninput="updateSelectedText(this.value)" class="flex-1 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-slate-200 font-bold focus:border-sky-500 focus:outline-none" placeholder="Selected Lyric Text...">
+      <button onclick="deleteSelected()" class="px-3 py-1 bg-rose-950 border border-rose-600/50 text-rose-400 rounded font-bold"><i class="fa-solid fa-trash"></i></button>
+    </div>
+
+    <div class="flex items-center justify-between text-[11px]">
+      <!-- START TIME NUDGE -->
+      <div class="flex items-center gap-1">
+        <span class="text-slate-400">Start:</span>
+        <button onclick="adjustTime('start', -0.2)" class="px-2 py-1 bg-slate-800 text-sky-400 rounded font-bold">-0.2s</button>
+        <span id="label-start-time" class="font-mono text-sky-400 font-bold">0.0s</span>
+        <button onclick="adjustTime('start', 0.2)" class="px-2 py-1 bg-slate-800 text-sky-400 rounded font-bold">+0.2s</button>
+      </div>
+
+      <!-- DURATION / END TIME NUDGE -->
+      <div class="flex items-center gap-1">
+        <span class="text-slate-400">Duration:</span>
+        <button onclick="adjustTime('duration', -0.2)" class="px-2 py-1 bg-slate-800 text-emerald-400 rounded font-bold">-0.2s</button>
+        <span id="label-duration" class="font-mono text-emerald-400 font-bold">0.0s</span>
+        <button onclick="adjustTime('duration', 0.2)" class="px-2 py-1 bg-slate-800 text-emerald-400 rounded font-bold">+0.2s</button>
+      </div>
+    </div>
+  </div>
+
   <!-- AUDIO PLAYBAR -->
-  <div class="bg-slate-900 border-t border-slate-800 p-2.5 flex items-center justify-between px-4">
-    <button id="btn-play" onclick="togglePlay()" class="w-9 h-9 bg-sky-500 text-slate-950 rounded-full flex items-center justify-center font-bold text-sm shrink-0 active:scale-95">
+  <div class="bg-slate-900 border-t border-slate-800 p-2 flex items-center justify-between px-4 shrink-0">
+    <button id="btn-play" onclick="togglePlay()" class="w-8 h-8 bg-sky-500 text-slate-950 rounded-full flex items-center justify-center font-bold text-sm shrink-0 active:scale-95">
       <i class="fa-solid fa-play" id="play-icon"></i>
     </button>
     <div class="flex-1 mx-4">
       <input type="range" id="audio-seekbar" value="0" min="0" max="100" class="w-full accent-sky-400 h-2 bg-slate-800 rounded-lg cursor-pointer" oninput="seekAudio(event)">
     </div>
-    <button onclick="deleteSelected()" class="px-2.5 py-1 bg-rose-950 border border-rose-600/40 text-rose-400 rounded-lg text-xs font-bold">
-      <i class="fa-solid fa-trash"></i>
-    </button>
   </div>
 
   <!-- CAPCUT TIMELINE TRACK EDITOR -->
-  <div class="h-64 bg-slate-900 border-t border-slate-800 flex flex-col shrink-0">
-    <div class="px-3 py-1.5 bg-slate-950 border-b border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+  <div class="h-56 bg-slate-900 border-t border-slate-800 flex flex-col shrink-0">
+    <div class="px-3 py-1 bg-slate-950 border-b border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
       <span><i class="fa-solid fa-layer-group"></i> TIMELINE TRACKS</span>
       <span>Zoom: <input type="range" min="15" max="80" value="35" id="zoom-scale" oninput="renderTimeline()" class="accent-sky-400 w-24"></span>
     </div>
@@ -153,7 +166,7 @@
     ];
 
     let pps = 35; // Pixels Per Second
-    let activeBlockId = null;
+    let activeBlockId = 1;
     let dragMode = null; // 'move', 'resize-left', 'resize-right'
     let startX = 0;
     let origStart = 0;
@@ -165,6 +178,7 @@
       renderTimeline();
       setupAudioListeners();
       setupGlobalTouchEvents();
+      updateEditPanelUI();
     };
 
     function loadAudio(e) {
@@ -201,10 +215,8 @@
         const s = (cur % 60).toFixed(2);
         document.getElementById('time-display').innerText = `${m < 10 ? '0':''}${m}:${s < 10 ? '0':''}${s}`;
 
-        // Move Red Playhead Line
         document.getElementById('playhead').style.left = `${cur * pps}px`;
 
-        // Highlight active lyric text
         const activeBlock = tracksData.find(b => cur >= b.start && cur <= b.end);
         const preview = document.getElementById('preview-text');
         if (activeBlock) {
@@ -225,33 +237,29 @@
         const block = document.createElement('div');
         block.className = `timeline-block ${activeBlockId === item.id ? 'selected' : ''}`;
         block.style.left = `${item.start * pps}px`;
-        block.style.width = `${Math.max((item.end - item.start) * pps, 50)}px`;
-        block.style.top = `${index * 54}px`;
+        block.style.width = `${Math.max((item.end - item.start) * pps, 60)}px`;
+        block.style.top = `${index * 56}px`;
 
-        // LEFT HANDLE (PULL TO ADJUST START TIME)
         const leftHandle = document.createElement('div');
         leftHandle.className = 'drag-handle drag-handle-left';
         leftHandle.addEventListener('touchstart', (e) => startDrag(e, item.id, 'resize-left'), { passive: false });
         leftHandle.addEventListener('mousedown', (e) => startDrag(e, item.id, 'resize-left'));
 
-        // MIDDLE TEXT (MOVE WHOLE BLOCK / EDIT TEXT)
         const textSpan = document.createElement('span');
         textSpan.className = 'truncate px-2 flex-1 text-center cursor-pointer';
         textSpan.innerText = item.text;
         
-        // Double tap / click to edit text
         textSpan.onclick = () => {
           activeBlockId = item.id;
           renderTimeline();
+          updateEditPanelUI();
         };
 
-        // RIGHT HANDLE (PULL TO ADJUST END TIME / DURATION)
         const rightHandle = document.createElement('div');
         rightHandle.className = 'drag-handle drag-handle-right';
         rightHandle.addEventListener('touchstart', (e) => startDrag(e, item.id, 'resize-right'), { passive: false });
         rightHandle.addEventListener('mousedown', (e) => startDrag(e, item.id, 'resize-right'));
 
-        // DRAG WHOLE BLOCK (TOUCH MIDDLE)
         block.addEventListener('touchstart', (e) => {
           if (!e.target.classList.contains('drag-handle')) startDrag(e, item.id, 'move');
         }, { passive: false });
@@ -282,6 +290,7 @@
       startX = pageX;
 
       renderTimeline();
+      updateEditPanelUI();
     }
 
     function setupGlobalTouchEvents() {
@@ -305,11 +314,10 @@
         }
 
         renderTimeline();
+        updateEditPanelUI();
       };
 
-      const handleEnd = () => {
-        dragMode = null;
-      };
+      const handleEnd = () => { dragMode = null; };
 
       window.addEventListener('touchmove', handleMove, { passive: false });
       window.addEventListener('mousemove', handleMove);
@@ -317,25 +325,62 @@
       window.addEventListener('mouseup', handleEnd);
     }
 
-    function addLyricBlock() {
-      const text = prompt("I-enter ang Bagong Linya ng Lyrics:", "Bagong Lyrics Line");
-      if (text) {
-        const lastEnd = tracksData.length > 0 ? tracksData[tracksData.length - 1].end : 0;
-        tracksData.push({
-          id: Date.now(),
-          text: text,
-          start: lastEnd + 0.5,
-          end: lastEnd + 4.5
-        });
+    function updateEditPanelUI() {
+      const target = tracksData.find(t => t.id === activeBlockId);
+      if (target) {
+        document.getElementById('edit-text-input').value = target.text;
+        document.getElementById('label-start-time').innerText = `${target.start.toFixed(1)}s`;
+        document.getElementById('label-duration').innerText = `${(target.end - target.start).toFixed(1)}s`;
+      }
+    }
+
+    function updateSelectedText(val) {
+      const target = tracksData.find(t => t.id === activeBlockId);
+      if (target) {
+        target.text = val;
         renderTimeline();
       }
     }
 
-    function deleteSelected() {
-      if (!activeBlockId) return alert("Pumili muna ng lyrics block na buburahin!");
-      tracksData = tracksData.filter(t => t.id !== activeBlockId);
-      activeBlockId = null;
+    function adjustTime(type, delta) {
+      const target = tracksData.find(t => t.id === activeBlockId);
+      if (!target) return;
+
+      if (type === 'start') {
+        const duration = target.end - target.start;
+        target.start = Math.max(0, target.start + delta);
+        target.end = target.start + duration;
+      } else if (type === 'duration') {
+        target.end = Math.max(target.start + 0.4, target.end + delta);
+      }
+
       renderTimeline();
+      updateEditPanelUI();
+    }
+
+    function addLyricBlock() {
+      const text = prompt("I-enter ang Bagong Linya ng Lyrics:", "Bagong Lyrics Line");
+      if (text) {
+        const lastEnd = tracksData.length > 0 ? tracksData[tracksData.length - 1].end : 0;
+        const newBlock = {
+          id: Date.now(),
+          text: text,
+          start: lastEnd + 0.5,
+          end: lastEnd + 4.5
+        };
+        tracksData.push(newBlock);
+        activeBlockId = newBlock.id;
+        renderTimeline();
+        updateEditPanelUI();
+      }
+    }
+
+    function deleteSelected() {
+      if (!activeBlockId) return alert("Pumili muna ng lyrics block!");
+      tracksData = tracksData.filter(t => t.id !== activeBlockId);
+      activeBlockId = tracksData.length > 0 ? tracksData[0].id : null;
+      renderTimeline();
+      updateEditPanelUI();
     }
   </script>
 </body>
