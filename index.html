@@ -3,69 +3,82 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>CapCut Style Karaoke Editor</title>
+  <title>Touch-Friendly CapCut Karaoke Editor</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { font-family: system-ui, -apple-system, sans-serif; background-color: #0d1117; color: #f0f6fc; }
+    body { font-family: system-ui, -apple-system, sans-serif; background-color: #0b0f19; color: #f8fafc; touch-action: manipulation; }
     .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 4px; }
 
     /* TIMELINE TRACKS */
-    .timeline-ruler {
-      height: 24px;
-      background: #161b22;
-      border-bottom: 1px solid #30363d;
-      position: relative;
-    }
-    
     .timeline-block {
       position: absolute;
-      height: 36px;
+      height: 48px;
       background: linear-gradient(90deg, #1e3a8a, #0284c7);
-      border: 1px solid #38bdf8;
-      border-radius: 6px;
+      border: 2px solid #38bdf8;
+      border-radius: 8px;
       color: #ffffff;
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 700;
       display: flex;
       align-items: center;
-      padding: 0 8px;
+      justify-content: space-between;
       user-select: none;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-      white-space: nowrap;
-      overflow: hidden;
+      touch-action: none; /* Crucial for smooth mobile drag */
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
 
     .timeline-block.selected {
-      border: 2px solid #f43f5e;
-      box-shadow: 0 0 10px rgba(244, 63, 94, 0.6);
+      border-color: #f43f5e;
+      background: linear-gradient(90deg, #881337, #e11d48);
+      box-shadow: 0 0 15px rgba(244, 63, 94, 0.8);
+      z-index: 20;
     }
 
-    /* DRAG HANDLES (CAPCUT STYLE) */
+    /* PULL TO ADJUST HANDLES (TOUCH-FRIENDLY & BIGGER) */
     .drag-handle {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 10px;
+      width: 22px;
+      height: 100%;
       background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: ew-resize;
-      opacity: 0.8;
+      touch-action: none;
+      shrink: 0;
+      z-index: 10;
     }
-    .drag-handle-left { left: 0; border-radius: 4px 0 0 4px; }
-    .drag-handle-right { right: 0; border-radius: 0 4px 4px 0; }
+    
+    .drag-handle-left {
+      border-radius: 6px 0 0 6px;
+      border-right: 2px solid #0284c7;
+    }
+    
+    .drag-handle-right {
+      border-radius: 0 6px 6px 0;
+      border-left: 2px solid #0284c7;
+    }
 
-    /* KARAOKE PREVIEW GLOW */
+    .drag-handle::after {
+      content: "||";
+      font-size: 10px;
+      color: #0f172a;
+      font-weight: 900;
+    }
+
+    /* LYRIC GLOW PREVIEW */
     .lyric-preview {
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 900;
       color: #475569;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
+      text-align: center;
     }
     .lyric-preview.active {
       color: #38bdf8;
       transform: scale(1.1);
-      text-shadow: 0 0 20px rgba(56, 189, 248, 0.8);
+      text-shadow: 0 0 20px rgba(56, 189, 248, 0.9);
     }
   </style>
 </head>
@@ -73,59 +86,61 @@
   <!-- TOP HEADER -->
   <header class="bg-slate-900 border-b border-slate-800 px-4 py-2 flex items-center justify-between shrink-0">
     <div class="flex items-center gap-2">
-      <div class="w-7 h-7 bg-sky-500 rounded-lg flex items-center justify-center text-slate-950 font-black">
-        <i class="fa-solid fa-scissors text-xs"></i>
+      <div class="w-8 h-8 bg-sky-500 rounded-lg flex items-center justify-center text-slate-950 font-black">
+        <i class="fa-solid fa-scissors"></i>
       </div>
       <h1 class="text-xs font-bold uppercase tracking-wider text-sky-400">CapCut Lyric Editor</h1>
     </div>
 
     <div class="flex items-center gap-2">
-      <label class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-sky-400 border border-sky-500/30 rounded-lg text-xs font-bold cursor-pointer">
-        <i class="fa-solid fa-music"></i> Load MP3
+      <label class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-sky-400 border border-sky-500/30 rounded-lg text-xs font-bold cursor-pointer">
+        <i class="fa-solid fa-music"></i> MP3
         <input type="file" id="audio-input" accept="audio/*" class="hidden" onchange="loadAudio(event)">
       </label>
-      <button onclick="addLyricBlock()" class="px-3 py-1 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-bold">
-        + Add Block
+      <button onclick="addLyricBlock()" class="px-3 py-1.5 bg-sky-600 active:scale-95 text-white rounded-lg text-xs font-bold shadow-md">
+        + Line
       </button>
     </div>
   </header>
 
-  <!-- VIDEO / KARAOKE DISPLAY CANVAS -->
+  <!-- KARAOKE PREVIEW DISPLAY -->
   <div class="flex-1 bg-slate-950 flex flex-col items-center justify-center p-6 relative">
-    <div id="preview-text" class="lyric-preview text-center max-w-xl">
-      [I-paste/I-add ang Lyrics sa ibaba]
+    <div id="preview-text" class="lyric-preview max-w-xl">
+      [Load MP3 at subukang i-drag ang lyrics sa ibaba]
     </div>
 
-    <div class="absolute top-4 left-4 text-xs font-mono text-slate-500">
+    <div class="absolute top-3 left-4 text-xs font-mono text-slate-500">
       Time: <span id="time-display" class="text-sky-400 font-bold">00:00.00</span>
     </div>
   </div>
 
-  <!-- PLAYBACK CONTROLS -->
-  <div class="bg-slate-900 border-t border-slate-800 p-2 flex items-center justify-between px-4">
-    <button id="btn-play" onclick="togglePlay()" class="w-8 h-8 bg-sky-500 text-slate-950 rounded-full flex items-center justify-center font-bold text-xs">
+  <!-- AUDIO PLAYBAR -->
+  <div class="bg-slate-900 border-t border-slate-800 p-2.5 flex items-center justify-between px-4">
+    <button id="btn-play" onclick="togglePlay()" class="w-9 h-9 bg-sky-500 text-slate-950 rounded-full flex items-center justify-center font-bold text-sm shrink-0 active:scale-95">
       <i class="fa-solid fa-play" id="play-icon"></i>
     </button>
     <div class="flex-1 mx-4">
-      <input type="range" id="audio-seekbar" value="0" min="0" max="100" class="w-full accent-sky-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer" oninput="seekAudio(event)">
+      <input type="range" id="audio-seekbar" value="0" min="0" max="100" class="w-full accent-sky-400 h-2 bg-slate-800 rounded-lg cursor-pointer" oninput="seekAudio(event)">
     </div>
-    <span id="duration-display" class="text-xs font-mono text-slate-400">00:00</span>
+    <button onclick="deleteSelected()" class="px-2.5 py-1 bg-rose-950 border border-rose-600/40 text-rose-400 rounded-lg text-xs font-bold">
+      <i class="fa-solid fa-trash"></i>
+    </button>
   </div>
 
   <!-- CAPCUT TIMELINE TRACK EDITOR -->
   <div class="h-64 bg-slate-900 border-t border-slate-800 flex flex-col shrink-0">
-    <div class="px-3 py-1 bg-slate-950 border-b border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
-      <span><i class="fa-solid fa-layer-group"></i> TIMELINE TRACKS (Drag edges to adjust duration)</span>
-      <span>Scale: <input type="range" min="10" max="100" value="30" id="zoom-scale" oninput="renderTimeline()" class="accent-sky-400 w-20"></span>
+    <div class="px-3 py-1.5 bg-slate-950 border-b border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+      <span><i class="fa-solid fa-layer-group"></i> TIMELINE TRACKS</span>
+      <span>Zoom: <input type="range" min="15" max="80" value="35" id="zoom-scale" oninput="renderTimeline()" class="accent-sky-400 w-24"></span>
     </div>
 
     <!-- DRAGGABLE TIMELINE CONTAINER -->
     <div id="timeline-container" class="flex-1 overflow-x-auto custom-scrollbar relative p-2 bg-slate-950">
-      <!-- PLAYHEAD RED LINE -->
+      <!-- PLAYHEAD LINE -->
       <div id="playhead" class="absolute top-0 bottom-0 w-0.5 bg-rose-500 z-30 pointer-events-none"></div>
 
       <!-- TRACKS AREA -->
-      <div id="timeline-tracks" class="relative min-w-[2000px] h-full"></div>
+      <div id="timeline-tracks" class="relative min-w-[3000px] h-full"></div>
     </div>
   </div>
 
@@ -137,19 +152,19 @@
       { id: 3, text: "Lahat ng luha ay mapapawi", start: 9.0, end: 13.0 }
     ];
 
-    let pps = 30; // Pixels per second zoom factor
-    let selectedId = null;
-    let isDragging = false;
-    let dragMode = null; // 'move', 'left-resize', 'right-resize'
-    let dragStartX = 0;
-    let initialStart = 0;
-    let initialEnd = 0;
+    let pps = 35; // Pixels Per Second
+    let activeBlockId = null;
+    let dragMode = null; // 'move', 'resize-left', 'resize-right'
+    let startX = 0;
+    let origStart = 0;
+    let origEnd = 0;
 
     const audio = document.getElementById('audio-player');
 
     window.onload = () => {
       renderTimeline();
       setupAudioListeners();
+      setupGlobalTouchEvents();
     };
 
     function loadAudio(e) {
@@ -161,7 +176,7 @@
     }
 
     function togglePlay() {
-      if (!audio.src) return alert("Mag-load muna ng MP3!");
+      if (!audio.src) return alert("Pumili muna ng MP3 file!");
       if (audio.paused) {
         audio.play();
         document.getElementById('play-icon').className = "fa-solid fa-pause";
@@ -181,17 +196,15 @@
         if (!audio.duration) return;
         const cur = audio.currentTime;
 
-        // Update seeker & time display
         document.getElementById('audio-seekbar').value = (cur / audio.duration) * 100;
         const m = Math.floor(cur / 60);
         const s = (cur % 60).toFixed(2);
         document.getElementById('time-display').innerText = `${m < 10 ? '0':''}${m}:${s < 10 ? '0':''}${s}`;
 
-        // Move Playhead line
-        const playhead = document.getElementById('playhead');
-        playhead.style.left = `${cur * pps}px`;
+        // Move Red Playhead Line
+        document.getElementById('playhead').style.left = `${cur * pps}px`;
 
-        // Update Lyrics Display
+        // Highlight active lyric text
         const activeBlock = tracksData.find(b => cur >= b.start && cur <= b.end);
         const preview = document.getElementById('preview-text');
         if (activeBlock) {
@@ -210,83 +223,119 @@
 
       tracksData.forEach((item, index) => {
         const block = document.createElement('div');
-        block.className = `timeline-block ${selectedId === item.id ? 'selected' : ''}`;
+        block.className = `timeline-block ${activeBlockId === item.id ? 'selected' : ''}`;
         block.style.left = `${item.start * pps}px`;
-        block.style.width = `${(item.end - item.start) * pps}px`;
-        block.style.top = `${index * 42}px`;
+        block.style.width = `${Math.max((item.end - item.start) * pps, 50)}px`;
+        block.style.top = `${index * 54}px`;
 
-        block.innerHTML = `
-          <div class="drag-handle drag-handle-left" onmousedown="initDrag(event, ${item.id}, 'left-resize')" ontouchstart="initDrag(event, ${item.id}, 'left-resize')"></div>
-          <span class="truncate px-2 pointer-events-none">${item.text}</span>
-          <div class="drag-handle drag-handle-right" onmousedown="initDrag(event, ${item.id}, 'right-resize')" ontouchstart="initDrag(event, ${item.id}, 'right-resize')"></div>
-        `;
+        // LEFT HANDLE (PULL TO ADJUST START TIME)
+        const leftHandle = document.createElement('div');
+        leftHandle.className = 'drag-handle drag-handle-left';
+        leftHandle.addEventListener('touchstart', (e) => startDrag(e, item.id, 'resize-left'), { passive: false });
+        leftHandle.addEventListener('mousedown', (e) => startDrag(e, item.id, 'resize-left'));
 
-        // Drag Whole Block
-        block.onmousedown = (e) => { if (!e.target.classList.contains('drag-handle')) initDrag(e, item.id, 'move'); };
-        block.ontouchstart = (e) => { if (!e.target.classList.contains('drag-handle')) initDrag(e, item.id, 'move'); };
+        // MIDDLE TEXT (MOVE WHOLE BLOCK / EDIT TEXT)
+        const textSpan = document.createElement('span');
+        textSpan.className = 'truncate px-2 flex-1 text-center cursor-pointer';
+        textSpan.innerText = item.text;
+        
+        // Double tap / click to edit text
+        textSpan.onclick = () => {
+          activeBlockId = item.id;
+          renderTimeline();
+        };
+
+        // RIGHT HANDLE (PULL TO ADJUST END TIME / DURATION)
+        const rightHandle = document.createElement('div');
+        rightHandle.className = 'drag-handle drag-handle-right';
+        rightHandle.addEventListener('touchstart', (e) => startDrag(e, item.id, 'resize-right'), { passive: false });
+        rightHandle.addEventListener('mousedown', (e) => startDrag(e, item.id, 'resize-right'));
+
+        // DRAG WHOLE BLOCK (TOUCH MIDDLE)
+        block.addEventListener('touchstart', (e) => {
+          if (!e.target.classList.contains('drag-handle')) startDrag(e, item.id, 'move');
+        }, { passive: false });
+        block.addEventListener('mousedown', (e) => {
+          if (!e.target.classList.contains('drag-handle')) startDrag(e, item.id, 'move');
+        });
+
+        block.appendChild(leftHandle);
+        block.appendChild(textSpan);
+        block.appendChild(rightHandle);
 
         container.appendChild(block);
       });
     }
 
-    function initDrag(e, id, mode) {
+    function startDrag(e, id, mode) {
       e.stopPropagation();
-      selectedId = id;
-      isDragging = true;
+      if (e.cancelable) e.preventDefault();
+
+      activeBlockId = id;
       dragMode = mode;
       
       const target = tracksData.find(t => t.id === id);
-      initialStart = target.start;
-      initialEnd = target.end;
-      dragStartX = e.touches ? e.touches[0].clientX : e.clientX;
+      origStart = target.start;
+      origEnd = target.end;
 
-      document.onmousemove = doDrag;
-      document.ontouchmove = doDrag;
-      document.onmouseup = stopDrag;
-      document.ontouchend = stopDrag;
+      const pageX = e.touches ? e.touches[0].pageX : e.pageX;
+      startX = pageX;
 
       renderTimeline();
     }
 
-    function doDrag(e) {
-      if (!isDragging) return;
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const deltaX = clientX - dragStartX;
-      const deltaTime = deltaX / pps;
+    function setupGlobalTouchEvents() {
+      const handleMove = (e) => {
+        if (!dragMode || !activeBlockId) return;
 
-      const target = tracksData.find(t => t.id === selectedId);
+        const pageX = e.touches ? e.touches[0].pageX : e.pageX;
+        const deltaX = pageX - startX;
+        const deltaTime = deltaX / pps;
 
-      if (dragMode === 'move') {
-        const duration = initialEnd - initialStart;
-        target.start = Math.max(0, initialStart + deltaTime);
-        target.end = target.start + duration;
-      } else if (dragMode === 'left-resize') {
-        target.start = Math.max(0, Math.min(initialEnd - 0.5, initialStart + deltaTime));
-      } else if (dragMode === 'right-resize') {
-        target.end = Math.max(target.start + 0.5, initialEnd + deltaTime);
-      }
+        const target = tracksData.find(t => t.id === activeBlockId);
 
-      renderTimeline();
-    }
+        if (dragMode === 'move') {
+          const duration = origEnd - origStart;
+          target.start = Math.max(0, origStart + deltaTime);
+          target.end = target.start + duration;
+        } else if (dragMode === 'resize-left') {
+          target.start = Math.max(0, Math.min(origEnd - 0.4, origStart + deltaTime));
+        } else if (dragMode === 'resize-right') {
+          target.end = Math.max(target.start + 0.4, origEnd + deltaTime);
+        }
 
-    function stopDrag() {
-      isDragging = false;
-      document.onmousemove = null;
-      document.ontouchmove = null;
+        renderTimeline();
+      };
+
+      const handleEnd = () => {
+        dragMode = null;
+      };
+
+      window.addEventListener('touchmove', handleMove, { passive: false });
+      window.addEventListener('mousemove', handleMove);
+      window.addEventListener('touchend', handleEnd);
+      window.addEventListener('mouseup', handleEnd);
     }
 
     function addLyricBlock() {
-      const text = prompt("I-enter ang Linya ng Lyrics:", "Bagong Lyrics Line");
+      const text = prompt("I-enter ang Bagong Linya ng Lyrics:", "Bagong Lyrics Line");
       if (text) {
         const lastEnd = tracksData.length > 0 ? tracksData[tracksData.length - 1].end : 0;
         tracksData.push({
           id: Date.now(),
           text: text,
-          start: lastEnd + 1,
-          end: lastEnd + 5
+          start: lastEnd + 0.5,
+          end: lastEnd + 4.5
         });
         renderTimeline();
       }
+    }
+
+    function deleteSelected() {
+      if (!activeBlockId) return alert("Pumili muna ng lyrics block na buburahin!");
+      tracksData = tracksData.filter(t => t.id !== activeBlockId);
+      activeBlockId = null;
+      renderTimeline();
     }
   </script>
 </body>
